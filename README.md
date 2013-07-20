@@ -36,14 +36,14 @@ class UserService {
     function createUserByName($name)
     	$user = new User;
     	$user->setName($name);
-    	return $user->save();
+    	$user->save();
 	}
 }
 ?>
 ```
 
-We dont want that method `$user->save` was actually executed, because it wil hit the database.
-We will replace it with dummy, and check it was actually called on `createUserByName` call.
+We dont want that method `$user->save` was actually executed, because it will hit the database.
+Instead we will replace it with dummy, and check it was actually called on `createUserByName` call.
 
 ``` php
 <?php
@@ -90,5 +90,51 @@ $user->verifyMethodInvoked('setName', ['davert']);
 
 PHP >= 5.4 + [Go! AOP Requirements](https://github.com/lisachenko/go-aop-php#requirements)
 
-## Installation
+## Installation via Composer
+
+##### 1. Add `aspect-mock` to your `composer.yml`.
+
+``` json
+{
+	'require-dev': {
+		'codeception/aspect-mock': '*'
+	}
+}
+```
+
+##### 2. Install AspectMock with Go! AOP as a dependency.
+
+```
+php composer.phar update
+```
+
+#### 3. Configure AspectMock\Kernel in front controller of your application.
+
+Include `AspectMock\Kernel` class into your bootstrap file. 
+Details and examples on AspectKernel configuation you can find in [Go! AOP Documentation].
+
+In your `index.php`:
+
+``` php
+<?php
+include __DIR__.'/../vendor/autoload.php'; // composer autoload
+
+$kernel = \AspectMock\Kernel::getInstance();
+$kernel->init([
+    'debug' => true,
+    'cacheDir' => __DIR__.'/../tests/cache',
+    'includePaths' => [__DIR__.'/../src']
+]);
+?>
+```
+
+AspectMock\Kernel should be initialized after the autoloader was required.
+
+Aspects configuration in:
+* [Symfony](https://github.com/lisachenko/symfony-aspect)
+* [Laravel](https://github.com/lisachenko/laravel-aspect)
+* [Zend Framework 2](https://github.com/lisachenko/zf2-aspect)
+* [Yii](https://github.com/lisachenko/yii-aspect)
+
+* 
 
