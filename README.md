@@ -24,7 +24,7 @@ With AspectMock you can unit-test practically any OOP code. PHP powered with AOP
 
 * create stubs and mocks for **static methods**.
 * create stubs and mocks for **class methods called anywhere**.
-* redefine methods in existing objects
+* redefine methods on the fly
 * a simple syntax you don't need to remember.
 
 ## Code Pitch
@@ -202,6 +202,9 @@ class CodeHelper extends \Codeception\Module
 ?>
 ```
 
+## Improvements?
+
+Sure there is a room for improvements, this framework was not designed to do everything you might ever need (see notes below). But If you feel like you require a feature, please submit a Pull Request. This is pretty easy, there is not to much code, and Go! library is very well documented. 
 
 ## Credits
 
