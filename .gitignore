@@ -1,5 +1,5 @@
 vendor
 .idea
-.composer.phar
+composer.phar
 tests/_data/cache
 composer.lock
