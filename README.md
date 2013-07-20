@@ -42,8 +42,8 @@ class UserService {
 ?>
 ```
 
-Method `$user->save` should not be executed, for not to access database.
-Instead we will check it was actually called in this unit.
+We dont want that method `$user->save` was actually executed, because it wil hit the database.
+We will replace it with dummy, and check it was actually called on `createUserByName` call.
 
 ``` php
 <?php
