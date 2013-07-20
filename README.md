@@ -5,9 +5,16 @@ AspectMock is not just an ordinary mocking framework you might ever seen in PHP.
 With the power of Aspect Oriented programming and awesome [Go-AOP](https://github.com/lisachenko/go-aop-php) library,
 AspectMock allows you to stub and mock practically anything in your PHP code!
 
+## Features
+
+* create stubs and mocks for **static methods**.
+* create stubs and mocks for **class methods called anywhere**.
+* redefine methods in existing objects
+* a simple syntax you won't need to remember.
+
 ## Code Pitch
 
-### Stub and Mock Static Methods.
+#### 1. Allows to stub and mock static methods.
 
 ``` php
 <?php
@@ -21,7 +28,7 @@ function testTableName()
 ?>
 ```
 
-### Stub and Mock Methods of a Class.
+#### 2. Allows to stub and mock methods of a class.
 
 ``` php
 <?php
@@ -53,11 +60,11 @@ function testUserCreate()
 
 The method `$user->save` was called, but was replaced with a dummy. Thus, nothing was inserted to database.
 
-### Really simple syntax
+#### 3. Beautifuly simple
 
 Only 4 methods for method call verification and one method to define stubs.
 
-```
+``` php
 <?php
 function testSimpleStubAndMock()
 {	
@@ -78,4 +85,5 @@ To check that method `setName` was called with `davert` as argument.
 $user->verifyMethodInvoked('setName', ['davert']);
 ?>
 ```
+
 
