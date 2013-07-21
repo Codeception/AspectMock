@@ -3,6 +3,11 @@
 
 namespace AspectMock\Invocation;
 
+/**
+ * Interface `Verifiable` defines methods to verify method calls.
+ * Implementation may differ for class methods and instance methods.
+ *   
+ */
 
 interface Verifiable {
 

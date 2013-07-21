@@ -19,8 +19,8 @@ function clean_doc($doc, $indent = 3)
 
 $root = __DIR__.'/../src/AspectMock';
 $files = [
-    'AspectMock\test',
-    'AspectMock\Invocation\Verifiable',
+    'Test Double Builder' => 'AspectMock\test',
+    'Mock Verification' => 'AspectMock\Invocation\Verifiable',
 ];
 
 foreach ($files as $className) {
@@ -37,26 +37,13 @@ foreach ($files as $className) {
     foreach ($class->getMethods() as $method) {
         if ($method->isConstructor() or $method->isDestructor()) continue;
         if ($method->isPublic()) {
-            $title = "\n### " . $method->name . "\n\n";
-            $doc = $method->getDocComment();
-            $method->getStartLine();
-            if (!$doc) {
-                $interfaces = $class->getInterfaces();
-                foreach ($interfaces as $interface) {
-                    $i = new \ReflectionClass($interface->name);
-                    if ($i->hasMethod($method->name)) {
-                        $doc = $i->getMethod($method->name)->getDocComment();
-                        break;
-                    }
-                }
+            if ($method->isStatic()) {
+                $title = "\n## ".$class->getShortName()."::" . $method->name . "\n\n";
+            } else {
+                $title = "\n## ->" . $method->name . "\n\n";
             }
 
-            if (!$doc) {
-                $parent = new \ReflectionClass($class->getParentClass()->name);
-                if ($parent->hasMethod($method->name)) {
-                    $doc = $parent->getMethod($method->name)->getDocComment();
-                }
-            }
+            $doc = $method->getDocComment();
             $doc = $doc ? clean_doc($doc, 7) : "__not documented__\n";
             $reference[$method->name] = $title . $doc;
         }

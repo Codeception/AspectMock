@@ -1,6 +1,10 @@
 # Verifiable
 
-### verifyInvoked
+Interface `Verifiable` defines methods to verify method calls.
+Implementation may differ for class methods and instance methods.
+  
+
+## ->verifyInvoked
 
 
 Verifies a method was invoked at least once.
@@ -19,7 +23,7 @@ $user->verifyInvoked('setName',['davert']);
  * return mixed
 
 
-### verifyInvokedMultipleTimes
+## ->verifyInvokedMultipleTimes
 
 
 Verifies that method was called exactly $times times.
@@ -39,7 +43,7 @@ $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
  * return mixed
 
 
-### verifyInvokedOnce
+## ->verifyInvokedOnce
 
 
 Verifies that method was invoked only once.
@@ -49,7 +53,7 @@ Verifies that method was invoked only once.
  * return mixed
 
 
-### verifyNeverInvoked
+## ->verifyNeverInvoked
 
 
 Verifies that method was not called.

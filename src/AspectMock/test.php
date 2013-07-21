@@ -2,9 +2,13 @@
 namespace AspectMock;
 
 /**
- * @api
- * Class test
- * @package AspectMock
+ * `AspectMock\test` class is a builder of test doubles.
+ * Any object can be enhanced and turned to test double with the call to `double` method.
+ * This allows to redefine any method of object with your own, and adds mock verification methods.
+ *
+ * If a class name is passed to `test::double`, instance of `ClassProxy` class is returned.
+ * You can redefine class methods the same way, also mock verification methods are included as well.
+ *
  */
 class test {
 

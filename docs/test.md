@@ -1,17 +1,21 @@
 # test
 
- * api
-Class test
- * package AspectMock
+`AspectMock\test` class is a builder of test doubles.
+Any object can be enhanced and turned to test double with the call to `double` method.
+This allows to redefine any method of object with your own, and adds mock verification methods.
 
-### clean
+If a class name is passed to `test::double`, instance of `ClassProxy` class is returned.
+You can redefine class methods the same way, also mock verification methods are included as well.
+
+
+## test::clean
 
 
 Clears test doubles registry.
 Should be called between tests.
 
 
-### double
+## test::double
 
 
 test::double registers class or object for to track its calls.
@@ -55,7 +59,7 @@ $user->verifyInvoked('tableName'); // success
  * return Core\ClassProxy|object
 
 
-### dummy
+## test::dummy
 
 
 Dummy is a class instance created without calling a constructor.
@@ -72,7 +76,7 @@ $connection = test::dummy('MySQLConnection', ['connect' => null]);
  * return Core\ClassProxy|object
 
 
-### fake
+## test::fake
 
 
 Fake has all methods replaced with dummies and created without calling a constructor.
@@ -87,7 +91,7 @@ test::fake('MySQLConnection');
  * return Core\ClassProxy|object
 
 
-### fakeExcept
+## test::fakeExcept
 
 
 As you may guess fakeExcepts is a fake where some methods are not replaced with dummies.
