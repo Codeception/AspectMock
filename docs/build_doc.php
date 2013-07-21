@@ -26,7 +26,7 @@ $files = [
 foreach ($files as $className) {
 
     $fileName = end(explode('\\', $className));
-    $text = '# ' . $fileName . "\n";
+    $text = '# ' . $className . "\n";
 
     $class = new ReflectionClass($className);
 

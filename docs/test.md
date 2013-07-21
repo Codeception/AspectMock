@@ -1,4 +1,4 @@
-# test
+# AspectMock\test
 
 `AspectMock\test` class is a builder of test doubles.
 Any object can be enhanced and turned to test double with the call to `double` method.
