@@ -21,10 +21,10 @@ With AspectMock you can unit-test practically any OOP code. PHP powered with AOP
 
 ## Features
 
-* create stubs and mocks for **static methods**.
-* create stubs and mocks for **class methods called anywhere**.
+* create test doubles for **static methods**.
+* create test doubles for **class methods called anywhere**.
 * redefine methods on the fly
-* a simple syntax you don't need to remember.
+* simple syntax you don't need to remember.
 
 ## Code Pitch
 
@@ -207,7 +207,7 @@ Sure there is a room for improvements, this framework was not designed to do eve
 
 ## Credits
 
-Developed in 1 day by **Michael Bodnarchuk**.
+Initial version developed in 1 day by **Michael Bodnarchuk**.
 
 License: **MIT**.
 
