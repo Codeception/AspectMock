@@ -65,7 +65,9 @@ interface Verifiable {
      * <?php
      * $user->setName('davert');
      * $user->verifyNeverInvoked('setName'); // fail
-     * $user->verifyNeverInvoked('setName',['davert']); // success
+     * $user->verifyNeverInvoked('setName',['davert']); // fail
+     * $user->verifyNeverInvoked('setName',['bob']); // success
+     * $user->verifyNeverInvoked('setName',[]); // success
      * ?>
      * ```
      *
