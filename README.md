@@ -11,11 +11,10 @@ PHP as a language that was not designed to be testable. Really.
 How would you fake the `time()` function so it produced the same result for each test call?
 Is there any way to stub a static method of a class? Can you redefine a class method in runtime?
 Dynamic languages like Ruby or JavaScript allow us to do this. 
-This features are essential for testing. And finally they are brought to PHP with AspectMock mocking framework.
+This features are essential for testing. And finally they are brought to PHP by AspectMock mocking framework.
 
-There are lots of code parts written in PHP, not because this code is actually bad, 
-but because PHP does not provide capabilities to get it tested. You may suggest to rewrite that all code from scratch following test driven design practices and use dependency injection whenever it is possible. 
-But is that really that necessary? 
+Million lines of untested code are written everyday in PHP. In most cases, this code is not actually that bad, 
+but PHP does not provide capabilities to get it tested. You may suggest to rewrite that code from scratch following test driven design practices and use dependency injection wherever it is possible. Should this be done for stable working code? Well, there are much more better ways to waste a time.
 
 With AspectMock you can unit-test practically any OOP code. PHP powered with AOP takes all the features of dynamic languages, we missed before. Thus, there is no excuse for not testing your code. You do not have to rewrite it from scratch to make it testable. Just install AspectMock with PHPUnit or Codeception. And try to write some tests. It's really really simple.
 
@@ -82,7 +81,7 @@ The method `$user->save` was called, but was replaced with a dummy. Thus, nothin
 
 #### 3. Beautifuly simple
 
-Only 4 methods for method call verification and one method to define stubs.
+Only 4 methods for method call verification and one method to define test doubles.
 
 ``` php
 <?php
