@@ -60,6 +60,20 @@ class test {
         }
     }
 
+    /**
+     * Dummy is a class instance created without calling a constructor.
+     * In a second argument you can redefine methods of that class instance.
+     *
+     * ``` php
+     * <?php
+     * $connection = test::dummy('MySQLConnection', ['connect' => null]);
+     * ?>
+     * ```
+     *
+     * @param $className
+     * @param array $params
+     * @return Core\ClassProxy|object
+     */
     public static function dummy($className, $params = array())
     {
         $reflectionClass = new \ReflectionClass($className);
@@ -67,11 +81,36 @@ class test {
         return self::double($instance, $params);
     }
 
+    /**
+     * Fake has all methods replaced with dummies and created without calling a constructor.
+     *
+     * ``` php
+     * <?php
+     * test::fake('MySQLConnection');
+     * ?>
+     * ```
+     *
+     * @param $className
+     * @return Core\ClassProxy|object
+     */
     public static function fake($className)
     {
         return self::fakeExcept($className, []);
     }
 
+    /**
+     * As you may guess fakeExcepts is a fake where some methods are not replaced with dummies.
+     *
+     * ``` php
+     * <?php
+     * test::fakeExcept('MySQLConnection',['getConnectionName']);
+     * ?>
+     * ```
+     *
+     * @param $className
+     * @param array $exceptParams
+     * @return Core\ClassProxy|object
+     */
     public static function fakeExcept($className, array $exceptParams)
     {
         $reflectionClass = new \ReflectionClass($className);
@@ -85,6 +124,10 @@ class test {
         return self::double($instance, $params);
     }
 
+    /**
+     * Clears test doubles registry.
+     * Should be called between tests.
+     */
     public static function clean()
     {
         Core\Registry::clean();
