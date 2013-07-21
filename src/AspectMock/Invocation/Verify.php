@@ -5,15 +5,16 @@ use \PHPUnit_Framework_ExpectationFailedException as fail;
 
 trait Verify {
 
-    protected $__calls = array();
+    // too long for not to conflict with other properties.
+    protected $____calls = array();
 
     public function verifyInvoked($name, $params = null)
     {
         $class = get_class($this);
-        if (!isset($this->__calls[$name])) throw new fail("Expected $class->$name to be invoked but it never occured.");
+        if (!isset($this->____calls[$name])) throw new fail("Expected $class->$name to be invoked but it never occured.");
 
         if (is_array($params)) {
-            foreach ($this->__calls[$name] as $args) {
+            foreach ($this->____calls[$name] as $args) {
                 $cut = empty($params) ?
                     $cut = $args :
                     array_slice($args, 0, count($params));
@@ -33,10 +34,10 @@ trait Verify {
     {
         if ($times == 0) return $this->verifyNeverInvoked($name, $params);
         $class = get_class($this);
-        if (!isset($this->__calls[$name])) throw new fail("Expected $class->$name to be invoked $times times but it never occur.");
+        if (!isset($this->____calls[$name])) throw new fail("Expected $class->$name to be invoked $times times but it never occur.");
         if (is_array($params)) {
             $equals = 0;
-            foreach ($this->__calls[$name] as $args) {
+            foreach ($this->____calls[$name] as $args) {
                 $cut = empty($params) ?
                     $cut = [] :
                     array_slice($args, 0, count($params));
@@ -46,8 +47,8 @@ trait Verify {
             $params = ArgumentsFormatter::toString($params);
             throw new fail("Expected $class->$name($params) to be invoked but called $equals.");
         }
-        $calls = count($this->__calls[$name]);
-        if (count($this->__calls[$name]) != $times) throw new fail("Expected $class->$name to be invoked $times times but called $calls.");
+        $calls = count($this->____calls[$name]);
+        if (count($this->____calls[$name]) != $times) throw new fail("Expected $class->$name to be invoked $times times but called $calls.");
 
     }
 
@@ -55,9 +56,9 @@ trait Verify {
     {
         $class = get_class($this);
         if (is_array($params)) {
-            if (!isset($this->__calls[$name])) return;
+            if (!isset($this->____calls[$name])) return;
             $params = ArgumentsFormatter::toString($params);
-            foreach ($this->__calls[$name] as $args) {
+            foreach ($this->____calls[$name] as $args) {
                 $cut = empty($params) ?
                     $cut = [] :
                     array_slice($args, 0, count($params));
@@ -66,7 +67,7 @@ trait Verify {
             return;
 
         }
-        if (isset($this->__calls[$name])) throw new fail("Expected $class->$name not to be invoked but it was.");
+        if (isset($this->____calls[$name])) throw new fail("Expected $class->$name not to be invoked but it was.");
     }
 
 }
