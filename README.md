@@ -5,7 +5,7 @@ AspectMock is not an ordinary mocking framework you might ever seen in PHP.
 With the power of Aspect Oriented programming and awesome [Go-AOP](https://github.com/lisachenko/go-aop-php) library,
 AspectMock allows you to stub and mock practically anything in your PHP code!
 
-[![Build Status](https://secure.travis-ci.org/Codeception/AspectMock?branch=master)](https://travis-ci.org/Codeception/AspectMock)
+[![Build Status](https://travis-ci.org/Codeception/AspectMock.png?branch=master)](https://travis-ci.org/Codeception/AspectMock)
 
 ## Motivation
 
@@ -183,8 +183,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
 ```
 
 ## Usage in Codeception.
-
-**Should not be used with phar version of Codeception.**
 
 Include `AspectMock\Kernel` into `tests/_bootstrap.php`.
 We recommend to include `test::clean()` call to your `CodeHelper` class.
