@@ -15,8 +15,8 @@ Is there any way to stub a static method of a class? Can you redefine a class me
 Dynamic languages like Ruby or JavaScript allow us to do this. 
 This features are essential for testing. And finally they are brought to PHP by AspectMock mocking framework.
 
-Million lines of untested code are written everyday in PHP. In most cases, this code is not actually that bad, 
-but PHP does not provide capabilities to get it tested. You may suggest to rewrite that code from scratch following test driven design practices and use dependency injection wherever it is possible. Should this be done for stable working code? Well, there are much more better ways to waste a time.
+Dozens lines of untested code are written everyday in PHP. In most cases, this code is not actually that bad, 
+but PHP does not provide capabilities to get it tested. You may suggest to rewrite that code from scratch following test driven design practices and use dependency injection wherever it is possible. Should this be done for stable working code? Well, there are much more better ways to waste time.
 
 With AspectMock you can unit-test practically any OOP code. PHP powered with AOP takes all the features of dynamic languages, we missed before. Thus, there is no excuse for not testing your code. You do not have to rewrite it from scratch to make it testable. Just install AspectMock with PHPUnit or Codeception. And try to write some tests. It's really really simple.
 
@@ -30,7 +30,7 @@ With AspectMock you can unit-test practically any OOP code. PHP powered with AOP
 
 ## Code Pitch
 
-#### 1. Allows to stub and mock static methods.
+#### Allows to stub and mock static methods.
 
 We are redefining static methods and verify their calls in runtime.
 
@@ -46,10 +46,9 @@ function testTableName()
 ?>
 ```
 
-#### 2. Allows to stub and mock methods of a class.
+#### Allows to replace methods of a class.
 
-Testing code developed with **ActiveRecord** pattern. Without AspectMock you would need to 
-introduce `User` as explicit dependency into class `UserService`.
+Testing code developed with **ActiveRecord** pattern. Does usage of ActiveRecord pattern sounds like a bad practice? No. But the code below is untestable in classical unit testing.
 
 ``` php
 <?php
@@ -63,7 +62,10 @@ class UserService {
 ?>
 ```
 
-We don't want that method `$user->save` was actually executed, because it will hit the database.
+Without AspectMock you need to introduce `User` as explicit dependency into class `UserService` to get it tested.
+But lets leave the code as it is. It works. But lets test it to avoid regressions.
+
+At first, we don't want method `$user->save` was actually executed, as it will hit the database.
 Instead we will replace it with dummy, and check it was actually called on `createUserByName` call.
 
 ``` php
@@ -79,9 +81,7 @@ function testUserCreate()
 ?>
 ```
 
-The method `$user->save` was called, but was replaced with a dummy. Thus, nothing was inserted to database.
-
-#### 3. Beautifuly simple
+#### Beautifully simple
 
 Only 4 methods for method call verification and one method to define test doubles.
 
