@@ -5,6 +5,8 @@ AspectMock is not an ordinary mocking framework you might ever seen in PHP.
 With the power of Aspect Oriented programming and awesome [Go-AOP](https://github.com/lisachenko/go-aop-php) library,
 AspectMock allows you to stub and mock practically anything in your PHP code!
 
+[![Build Status](https://secure.travis-ci.org/Codeception/AspectMock?branch=master)](https://travis-ci.org/Codeception/AspectMock)
+
 ## Motivation
 
 PHP as a language that was not designed to be testable. Really. 
