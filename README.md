@@ -9,6 +9,9 @@ AspectMock allows you to stub and mock practically anything in your PHP code!
 
 [![Build Status](https://travis-ci.org/Codeception/AspectMock.png?branch=master)](https://travis-ci.org/Codeception/AspectMock)
 
+**Stability**: alpha.
+
+
 ## Motivation
 
 PHP as a language that was not designed to be testable. Really. 

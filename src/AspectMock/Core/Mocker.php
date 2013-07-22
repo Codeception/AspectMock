@@ -47,9 +47,9 @@ class Mocker implements Aspect {
         $obj = $invocation->getThis();
         $method = $invocation->getMethod()->name;
         if (is_object($obj)) {
-            isset($obj->____calls[$method])
-                ? $obj->____calls[$method][] = $invocation->getArguments()
-                : $obj->____calls[$method] = array($invocation->getArguments());
+            isset($obj->__calls[$method])
+                ? $obj->__calls[$method][] = $invocation->getArguments()
+                : $obj->__calls[$method] = array($invocation->getArguments());
             $class = get_class($obj);
         } else {
             $class = $obj;
