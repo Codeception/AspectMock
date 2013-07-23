@@ -6,6 +6,7 @@ With the power of Aspect Oriented programming and awesome [Go-AOP](https://githu
 AspectMock allows you to stub and mock practically anything in your PHP code!
 
 **Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [Class Calls Verification](https://github.com/Codeception/AspectMock/blob/master/docs/ClassVerifier.md) | [Instance Calls Verification](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceVerifier.md)
+
 **Stability**: alpha
 
 [![Build Status](https://travis-ci.org/Codeception/AspectMock.png?branch=master)](https://travis-ci.org/Codeception/AspectMock)
