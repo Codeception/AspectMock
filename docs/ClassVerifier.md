@@ -1,5 +1,20 @@
 # AspectMock\Core\ClassVerifier
 
+Verifies that class methods were called.
+In the same manner can be used for static and instance calls:
+
+``` php
+<?php
+$userModel = test::double('UserModel');
+UserModel::tableName();
+$user = new UserModel;
+$user->save();
+$userModel->verifyInvoked('tableName');
+$userModel->verifyInvoked('save');
+
+?>
+```
+
 ## ->hasMethod
 
 

@@ -4,7 +4,7 @@
 Any object can be enhanced and turned to test double with the call to `double` method.
 This allows to redefine any method of object with your own, and adds mock verification methods.
 
-Recommended Usage:
+**Recommended Usage**:
 
 ``` php
 <?php
