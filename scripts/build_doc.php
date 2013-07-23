@@ -54,6 +54,6 @@ foreach ($files as $className) {
     ksort($reference);
     $text .= implode("\n", $reference);
 
-    file_put_contents(__DIR__ . '/' . $fileName . '.md', $text);
+    file_put_contents(__DIR__ . '/../docs/' . $fileName . '.md', $text);
 
 }
