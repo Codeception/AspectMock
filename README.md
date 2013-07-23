@@ -150,13 +150,13 @@ include __DIR__.'/../vendor/autoload.php'; // composer autoload
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'debug' => true,
-    'cacheDir' => __DIR__.'/../tests/cache',
     'includePaths' => [__DIR__.'/../src']
 ]);
 ?>
 ```
 AspectMock\Kernel should be initialized after the autoloader was required.
 More about AspectKernel configuration in [Go! Aop documentation](https://github.com/lisachenko/go-aop-php#3-configure-the-aspect-kernel-in-the-front-controller)
+
 Demo Aspects configuration in:
 
 * [Symfony](https://github.com/lisachenko/symfony-aspect)
@@ -165,6 +165,14 @@ Demo Aspects configuration in:
 * [Yii](https://github.com/lisachenko/yii-aspect)
 
 ## Usage in PHPUnit
+
+Use newly created `bootstrap` in your `phpunit.xml` configuration. Also disable `backupGlobals`:
+
+``` xml
+<phpunit bootstrap="bootstrap.php" backupGlobals="false">
+```
+
+Clear test doubles registry between tests.
 
 ``` php
 <?php
