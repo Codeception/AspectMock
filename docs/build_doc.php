@@ -19,8 +19,9 @@ function clean_doc($doc, $indent = 3)
 
 $root = __DIR__.'/../src/AspectMock';
 $files = [
-    'Test Double Builder' => 'AspectMock\test',
-    'Mock Verification' => 'AspectMock\Invocation\Verifiable',
+    'Test Double Builder' => 'AspectMock\Test',
+    'Class Mocks Verification' => 'AspectMock\Core\ClassVerifier',
+    'Instance Mocks Verification' => 'AspectMock\Core\InstanceVerifier',
 ];
 
 foreach ($files as $className) {
@@ -36,6 +37,7 @@ foreach ($files as $className) {
     $reference = array();
     foreach ($class->getMethods() as $method) {
         if ($method->isConstructor() or $method->isDestructor()) continue;
+        if (strpos($method->name,'__')===0) continue;
         if ($method->isPublic()) {
             if ($method->isStatic()) {
                 $title = "\n## ".$class->getShortName()."::" . $method->name . "\n\n";

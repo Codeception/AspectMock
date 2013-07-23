@@ -1,24 +1,13 @@
 <?php
 namespace AspectMock\Core;
-use AspectMock\Invocation\Verify;
 use Go\Aop\Aspect;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
-use Go\Lang\Annotation\After;
-use Go\Lang\Annotation\DeclareParents;
 
 class Mocker implements Aspect {
 
     protected $classMap = [];
     protected $objectMap = [];
-    protected $classCalls = [];
-
-    /**
-     * @DeclareParents(value="**", interface="AspectMock\Invocation\Verifiable", defaultImpl="AspectMock\Invocation\Verify")
-     *
-     * @var null
-     */
-    protected $introduction = null;
 
     /**
      * @Around("within(**)")
@@ -40,21 +29,21 @@ class Mocker implements Aspect {
     }
 
     /**
-     * @After("within(**)", scope="target")
+     * @Around("within(**)")
      */
     public function registerMethodCalls(MethodInvocation $invocation)
     {
+        $result = $invocation->proceed();
         $obj = $invocation->getThis();
         $method = $invocation->getMethod()->name;
         if (is_object($obj)) {
-            isset($obj->__calls[$method])
-                ? $obj->__calls[$method][] = $invocation->getArguments()
-                : $obj->__calls[$method] = array($invocation->getArguments());
+            Registry::registerInstanceCall($obj, $method, $invocation->getArguments(), $result);
             $class = get_class($obj);
         } else {
             $class = $obj;
         }
-        Registry::registerClassCall($class, $method, $invocation->getArguments());
+        Registry::registerClassCall($class, $method, $invocation->getArguments(), $result);
+        return $result;
     }
 
     protected function getObjectMethodStubParams($obj, $method_name)
@@ -109,10 +98,10 @@ class Mocker implements Aspect {
         $this->objectMap[spl_object_hash($object)] = $params;
     }
 
+
     public function clean()
     {
         $this->classMap = [];
         $this->objectMap = [];
-        $this->classCalls = [];
     }
 }

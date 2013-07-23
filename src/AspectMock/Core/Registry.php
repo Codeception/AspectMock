@@ -10,7 +10,9 @@ use AspectMock\Kernel;
  */
 class Registry {
 
-    protected static $classCalls;
+    protected static $classCalls = [];
+    protected static $instanceCalls = [];
+    protected static $returned = [];
 
     /**
      * @return Mock
@@ -37,20 +39,44 @@ class Registry {
             : [];
     }
 
+    static function getInstanceCallsFor($instance)
+    {
+        $oid = spl_object_hash($instance);
+        return isset(self::$instanceCalls[$oid])
+            ? self::$instanceCalls[$oid]
+            : [];
+    }
+
+
     static function clean()
     {
         self::getMockAspect()->clean();
-        self::$classCalls = [];       
+        self::$classCalls = [];
+        self::$instanceCalls = [];
     }
-    
-    static function registerClassCall($class, $method, $args = array())
+
+    static function registerInstanceCall($instance, $method, $args = array(), $returned = null)
+    {
+        $oid = spl_object_hash($instance);
+        if (!isset(self::$instanceCalls[$oid])) self::$instanceCalls[$oid] = [];
+
+        isset(self::$instanceCalls[$oid][$method])
+            ? self::$instanceCalls[$oid][$method][] = $args
+            : self::$instanceCalls[$oid][$method] = array($args);
+
+        self::$returned["$oid->$method"] = $returned;
+        
+    }
+
+    static function registerClassCall($class, $method, $args = array(), $returned = null)
     {
         if (!isset(self::$classCalls[$class])) self::$classCalls[$class] = [];
 
         isset(self::$classCalls[$class][$method])
             ? self::$classCalls[$class][$method][] = $args
             : self::$classCalls[$class][$method] = array($args);
-           
+
+        self::$returned["$class.$method"] = $returned;
     }
 
 

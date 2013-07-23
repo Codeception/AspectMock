@@ -1,5 +1,5 @@
 <?php
-use AspectMock\test;
+use AspectMock\Test as test;
 
 class testDoubleTest extends \PHPUnit_Framework_TestCase
 {

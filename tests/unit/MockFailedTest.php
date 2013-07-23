@@ -1,8 +1,9 @@
 <?php
 namespace demo;
 
-use AspectMock\Core\ClassProxy;
 use \AspectMock\Core\Registry as double;
+use AspectMock\Core\InstanceVerifier;
+use AspectMock\Core\ClassVerifier;
 
 class MockFailedTest extends \PHPUnit_Framework_TestCase 
 {
@@ -20,12 +21,13 @@ class MockFailedTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserModel();
         double::registerObject($user);
+        $user = new InstanceVerifier($user);
         return $user;
     }
 
     protected function userProxy()
     {
-        $userProxy = new ClassProxy('demo\UserModel');
+        $userProxy = new ClassVerifier('demo\UserModel');
         double::registerClass('demo\UserModel');
         return $userProxy;
     }
@@ -37,34 +39,33 @@ class MockFailedTest extends \PHPUnit_Framework_TestCase
 
     public function testInstanceInvokedWothoutParams()
     {
-        $this->user()
-            ->setName('davert')
-            ->verifyInvoked('setName',[]);
+        $user = $this->user();
+        $user->setName('davert');
+        $user->verifyInvoked('setName',[]);
     }
 
     public function testInstanceInvokedMultipleTimes()
     {
-        $this->user()
-            ->setName('davert')
-            ->setName('jon')
-            ->verifyInvokedMultipleTimes('setName',3);
+        $user = $this->user();
+        $user->setName('davert');
+        $user->setName('jon');
+        $user->verifyInvokedMultipleTimes('setName',3);
     }
 
     public function testInstanceInvokedMultipleTimesWithoutParams()
     {
-        $this->user()
-            ->setName('davert')
-            ->setName('jon')
-            ->verifyInvokedMultipleTimes('setName',2,['davert']);
+        $user = $this->user();
+        $user->setName('davert');
+        $user->setName('jon');
+        $user->verifyInvokedMultipleTimes('setName',2,['davert']);
     }
 
     public function testClassMethodFails()
     {
-        double::registerClass('demo\UserModel');
-        $user = new ClassProxy('demo\UserModel');
+        $userProxy = $this->userProxy();
         UserModel::tableName();
         UserModel::tableName();
-        $user->verifyInvokedOnce('tableName');
+        $userProxy->verifyInvokedOnce('tableName');
     }
 
     public function testClassMethodNeverInvokedFails()

@@ -1,6 +1,8 @@
 <?php
 namespace demo;
 use AspectMock\Core\ClassProxy;
+use AspectMock\Core\ClassVerifier;
+use AspectMock\Core\InstanceVerifier;
 use \AspectMock\Core\Registry as double;
 
 class MockTest extends \PHPUnit_Framework_TestCase
@@ -15,6 +17,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserModel();
         double::registerObject($user);
+        $user = new InstanceVerifier($user);
         $user->setName('davert');
         $user->verifyInvoked('setName');
         $user->verifyInvoked('setName',['davert']);
@@ -28,7 +31,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     public function testVerifyClassMethods()
     {
         double::registerClass('demo\UserModel',['save' => null]);
-        $user = new ClassProxy('demo\UserModel');
+        $user = new ClassVerifier('demo\UserModel');
 
         $service = new UserService();
         $service->create(array('name' => 'davert'));
@@ -41,7 +44,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     public function testVerifyStaticMethods()
     {
         double::registerClass('demo\UserModel');
-        $user = new ClassProxy('demo\UserModel');
+        $user = new ClassVerifier('demo\UserModel');
         UserModel::tableName();
         $user->verifyInvoked('tableName');
     }
@@ -50,6 +53,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserModel();
         double::registerObject($user);
+        $user = new InstanceVerifier($user);
         $user->setName('davert');
         $user->setName('jon');
         $user->verifyInvokedOnce('setName',['davert']);
@@ -58,7 +62,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     public function testVerifyClassMethodCalled()
     {
         $user = new UserModel();
-        $userProxy = new ClassProxy('demo\UserModel');
+        $userProxy = new ClassVerifier('demo\UserModel');
         double::registerClass('demo\UserModel');
         $user->setName('davert');
         $user->setName('jon');

@@ -1,8 +1,33 @@
-# AspectMock\Invocation\Verifiable
+# AspectMock\Core\InstanceVerifier
 
-Interface `Verifiable` defines methods to verify method calls.
-Implementation may differ for class methods and instance methods.
-  
+Acts as **proxy class** for contained object.
+Contains verification methods and `class` property that points to class verificator.
+
+``` php
+<?php
+$user = new User(['name' => 'davert']);
+$user = test::double(new User);
+// now $user is a proxy class of user
+$this->assertEquals('davert', $user->getName()); // success
+$user->verifyInvoked('getName'); // success
+$this->assertInstanceOf('User', $user); // fail
+?>
+```
+
+A `class` property allows to verify method calls to any instance of this class.
+Constains a **ClassVerifier** object.
+
+``` php
+<?php
+$user = test::double(new User);
+$user->class->hasMethod('save');
+$user->setName('davert');
+$user->class->verifyInvoked('setName');
+?>
+```
+
+Class InstanceVerifier
+ * package AspectMock\Core
 
 ## ->verifyInvoked
 
@@ -20,6 +45,7 @@ $user->verifyInvoked('setName',['davert']);
 
  * param $name
  * param array $params
+ * throws fail
  * return mixed
 
 
@@ -40,6 +66,7 @@ $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
  * param $name
  * param $times
  * param array $params
+ * throws \PHPUnit_Framework_ExpectationFailedException
  * return mixed
 
 
@@ -71,4 +98,5 @@ $user->verifyNeverInvoked('setName',[]); // success
 
  * param $name
  * param array $params
+ * throws \PHPUnit_Framework_ExpectationFailedException
  * return mixed
