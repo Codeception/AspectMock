@@ -56,7 +56,7 @@ abstract class Verifier {
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
 
-        if (empty($calls)) throw new fail(sprintf($this->invokedFail, $this->className));
+        if (empty($calls)) throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name));
 
         if (is_array($params)) {
             foreach ($calls as $args) {
