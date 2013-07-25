@@ -176,7 +176,7 @@ Clear test doubles registry between tests.
 
 ``` php
 <?php
-use AspectMock\test;
+use AspectMock\Test as test;
 
 class UserTest extends \PHPUnit_Framework_TestCase
 {
@@ -209,7 +209,7 @@ class CodeHelper extends \Codeception\Module
 {
 	function _after(\Codeception\TestCase $test)
 	{
-		\AspectMock\test::clean();
+		\AspectMock\Test::clean();
 	}
 }
 ?>
