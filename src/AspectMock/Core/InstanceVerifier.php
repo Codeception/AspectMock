@@ -45,7 +45,7 @@ class InstanceVerifier extends Verifier {
         $this->class = new ClassVerifier(get_class($object));
     }
 
-    protected function callSyntax()
+    protected function callSyntax($method)
     {
         return "->";
     }

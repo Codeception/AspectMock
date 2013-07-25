@@ -7,6 +7,8 @@ use \AspectMock\Core\Registry as double;
 
 class MockTest extends \PHPUnit_Framework_TestCase
 {
+    use \Codeception\Specify;
+
     protected function tearDown()
     {
         double::clean();
@@ -19,13 +21,20 @@ class MockTest extends \PHPUnit_Framework_TestCase
         double::registerObject($user);
         $user = new InstanceVerifier($user);
         $user->setName('davert');
-        $user->verifyInvoked('setName');
-        $user->verifyInvoked('setName',['davert']);
-        $user->verifyInvokedMultipleTimes('setName',1);
-        $user->verifyInvokedMultipleTimes('setName',1,['davert']);
-        $user->verifyNeverInvoked('save');
-        $user->verifyNeverInvoked('save',['params']);
-        $user->verifyNeverInvoked('setName',['bugoga']);
+
+        $this->specify('set name invoked', function() use ($user) {
+            $user->verifyInvoked('setName');
+            $user->verifyInvoked('setName',['davert']);
+            $user->verifyInvokedMultipleTimes('setName',1);
+            $user->verifyInvokedMultipleTimes('setName',1,['davert']);
+            $user->verifyNeverInvoked('setName',['bugoga']);
+        });
+
+        $this->specify('save not invoked', function() use ($user) {
+            $user->verifyNeverInvoked('save');
+            $user->verifyNeverInvoked('save',['params']);
+        });
+
     }
 
     public function testVerifyClassMethods()
@@ -70,6 +79,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
         $userProxy->verifyInvokedOnce('setName',['jon']);
         $userProxy->verifyNeverInvoked('save');
         $userProxy->verifyNeverInvoked('setName',['bob']);
+        verify($user->getName())->equals('jon');
 
     }
 
