@@ -5,7 +5,7 @@ AspectMock is not an ordinary mocking framework you might ever seen in PHP.
 With the power of Aspect Oriented programming and awesome [Go-AOP](https://github.com/lisachenko/go-aop-php) library,
 AspectMock allows you to stub and mock practically anything in your PHP code!
 
-**Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [ClassProxy](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) | [InstanceProxy](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) | [MethodProxy]()
+**Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [ClassProxy](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) | [InstanceProxy](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) | [MethodProxy](https://github.com/Codeception/AspectMock/blob/master/docs/MethodProxy.md)
 
 **Stability**: alpha
 
