@@ -5,7 +5,7 @@ AspectMock is not an ordinary mocking framework you might ever seen in PHP.
 With the power of Aspect Oriented programming and awesome [Go-AOP](https://github.com/lisachenko/go-aop-php) library,
 AspectMock allows you to stub and mock practically anything in your PHP code!
 
-**Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [Class Calls Verification](https://github.com/Codeception/AspectMock/blob/master/docs/ClassVerifier.md) | [Instance Calls Verification](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceVerifier.md)
+**Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [ClassProxy](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) | [InstanceProxy Verification](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) | [MethodProxy]()
 
 **Stability**: alpha
 
@@ -139,9 +139,11 @@ PHP >= 5.4 + [Go! AOP Requirements](https://github.com/lisachenko/go-aop-php#req
 php composer.phar update
 ```
 
-##### 3. Configure AspectMock\Kernel
+##### 3. Configure AspectMock
 
 Include `AspectMock\Kernel` class into your tests bootstrap file. 
+
+##### With Composer's Autoloader
 
 ``` php
 <?php
@@ -154,15 +156,48 @@ $kernel->init([
 ]);
 ?>
 ```
-AspectMock\Kernel should be initialized after the autoloader was required.
-More about AspectKernel configuration in [Go! Aop documentation](https://github.com/lisachenko/go-aop-php#3-configure-the-aspect-kernel-in-the-front-controller)
 
-Demo Aspects configuration in:
+If your project uses Composer's autoloader, this is quite enough for the start.
 
-* [Symfony](https://github.com/lisachenko/symfony-aspect)
-* [Laravel](https://github.com/lisachenko/laravel-aspect)
-* [Zend Framework 2](https://github.com/lisachenko/zf2-aspect)
-* [Yii](https://github.com/lisachenko/yii-aspect)
+##### With Custom Autoloader
+
+If you use a custom autoloader (like in Yii/Yii2 frameworks), you should explicitly point AspectMock to modify autoloaders:
+
+``` php
+<?php
+include __DIR__.'/../vendor/autoload.php'; // composer autoload
+
+$kernel = \AspectMock\Kernel::getInstance();
+$kernel->init([
+    'debug' => true,
+    'includePaths' => [__DIR__.'/../src']
+]);
+$kernel->loadFile('YourAutoloader.php'); // path to your autoloader
+?>
+```
+
+In this way you should load all autoloaders of your project if you do not rely on Composer entirely.
+
+##### Without Autoloader
+
+If it still didn't work for you... 
+
+Explicitly load all required files before the test:
+
+
+``` php
+<?php
+include __DIR__.'/../vendor/autoload.php'; // composer autoload
+
+$kernel = \AspectMock\Kernel::getInstance();
+$kernel->init([
+    'debug' => true,
+    'includePaths' => [__DIR__.'/../src']
+]);
+require 'YourAutoloader.php';
+$kernel->loadPhpFiles('/../common');
+?>
+```
 
 ## Usage in PHPUnit
 
