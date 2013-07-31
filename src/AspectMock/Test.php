@@ -142,8 +142,8 @@ class Test {
      * ?>
      * ```
      *
-     * None of this call will trigger an error on your test before the class is declared.
-     * Thus, you can write a valid test before the class.
+     * None of this calls will trigger error on your test.
+     * Thus, you can write a valid test before the class is declared.
      *
      * If class is already defined, `test::spec` will act as `test::double`.
      *
