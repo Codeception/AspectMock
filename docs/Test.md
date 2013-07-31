@@ -42,7 +42,9 @@ test::clean($user);
 test::double registers class or object for to track its calls.
 In second argument you may pass values that mocked mathods should return.
 
-Returns instance of **ClassProxy** or **InstanceProxy**.
+Returns either of [**ClassProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md)
+or [**InstanceProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md).
+Proxies are used to verify method invocations, and some other useful things.
 
 Example:
 
@@ -72,6 +74,12 @@ User::tableName(); // 'users'
 $user = test::double('User', ['tableName' => 'fake_users']);
 User::tableName(); // 'fake_users'
 $user->verifyInvoked('tableName'); // success
+
+# tests a method returned the desired result.
+
+$user = test::double(new User['name' => 'davert']);
+$user->getName();
+$user->verifyMethodInvoked('getName')->returned('davert');
 
 # append declaration
 

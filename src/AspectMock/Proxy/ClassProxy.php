@@ -20,7 +20,6 @@ use PHPUnit_Framework_Assert as a;
  * $user->save();
  * $userModel->verifyInvoked('tableName');
  * $userModel->verifyInvoked('save');
- *
  * ?>
  * ```
  *
@@ -32,7 +31,6 @@ use PHPUnit_Framework_Assert as a;
  * $userModel->className; // UserModel
  * ?>
  * ```
- *
  */
 class ClassProxy extends Verifier  {
 

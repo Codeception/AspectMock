@@ -15,7 +15,6 @@ $user = $userModel->construct();
 $user->save();
 $userModel->verifyInvoked('tableName');
 $userModel->verifyInvoked('save');
-
 ?>
 ```
 
@@ -27,7 +26,6 @@ $userModel = test::double('UserModel');
 $userModel->className; // UserModel
 ?>
 ```
-
 
 ## ->construct
 
