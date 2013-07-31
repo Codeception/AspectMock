@@ -91,7 +91,7 @@ class Mocker implements Aspect {
     {
         $class = ltrim($class,'\\');
         if (isset($this->classMap[$class])) {
-            $params = array_merge_recursive($this->classMap[$class], $params);
+            $params = array_merge($this->classMap[$class], $params);
         }
         $this->classMap[$class] = $params;
     }
@@ -100,7 +100,7 @@ class Mocker implements Aspect {
     {
         $hash = spl_object_hash($object);
         if (isset($this->objectMap[$hash])) {
-            $params = array_merge_recursive($this->objectMap[$hash], $params);
+            $params = array_merge($this->objectMap[$hash], $params);
         }
         $this->objectMap[$hash] = $params;
     }
