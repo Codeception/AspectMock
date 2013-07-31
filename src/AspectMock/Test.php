@@ -103,8 +103,9 @@ class Test {
     }
 
     /**
-     * If you follow TDD/BDD practice and you want to write a test for the class
-     * which is not defined yet, you can stub it with `spec` method and write a test with it.
+     * If you follow TDD/BDD practices a test should be written before the class is defined.
+     * If you would call undefined class in a test, a fatal error will be triggered.
+     * Instead you can use `test::spec` method that will create a proxy for an undefined class.
      *
      * ``` php
      * <?php
@@ -121,16 +122,29 @@ class Test {
      * $user->setName('davert');
      * $user->setNumPosts(count($user->getPosts()));
      * $this->assertEquals('davert', $user->getName()); // fail
+     *
      * ?>
      * ```
      *
-     * The test will be executed and normally and should fail on the first assertion.
+     * The test will be executed normally and will fail on the first assertion.
      *
      * `test::spec()->construct` creates an instance of `AspectMock\Proxy\Anything`
-     * which tries to act like anything. Thus, you will get no errors running test
-     * even if your class is not declared yet. You should define assertions to get the test failed.
+     * which tries to not cause errors whatever you try to do with it.
      *
-     * Thus, you have valid test before the class even exist.
+     * ``` php
+     * <?php
+     * $user = test::spec('Undefined')->construct();
+     * $user->can()->be->called()->anything();
+     * $user->can['be used as array'];
+     * foreach ($user->names as $name) {
+     *      $name->canBeIterated();
+     * }
+     * ?>
+     * ```
+     *
+     * None of this call will trigger an error on your test before the class is declared.
+     * Thus, you can write a valid test before the class.
+     *
      * If class is already defined, `test::spec` will act as `test::double`.
      *
      * @api
