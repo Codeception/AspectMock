@@ -1,7 +1,7 @@
 # AspectMock\Test
 
 `AspectMock\Test` class is a builder of test doubles.
-Any object can be enhanced and turned to test double with the call to `double` method.
+Any object can be enhanced and turned to a test double with the call to `double` method.
 This allows to redefine any method of object with your own, and adds mock verification methods.
 
 **Recommended Usage**:
@@ -39,7 +39,7 @@ test::clean($user);
 ## Test::double
 
 
-test::double registers class or object for to track its calls.
+test::double registers class or object to track its calls.
 In second argument you may pass values that mocked mathods should return.
 
 Returns either of [**ClassProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md)
@@ -61,7 +61,7 @@ $user = test::double(new User, ['getName' => function() { return $this->login; }
 $user->login = 'davert';
 $user->getName(); // => davert
 
-# on class
+# on a class
 $ar = test::double('ActiveRecord', ['save' => null]);
 $user = new User;
 $user->name = 'davert';
@@ -107,7 +107,7 @@ test::double('User')->make(); // without calling constructor
 ## Test::methods
 
 
-Replaces all methods in a class with a dummies, expect specified.
+Replaces all methods in a class with a dummies, except specified.
 
 ``` php
 <?php
@@ -118,7 +118,7 @@ $user->getName(); // jon
 ?>
 ```
 
-You can create a dummy without constructor with all methods disabled
+You can create a dummy without a constructor with all methods disabled
 
 ``` php
 <?php
