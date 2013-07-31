@@ -1,5 +1,10 @@
 <?php
 namespace AspectMock;
+use AspectMock\Core\Registry;
+use AspectMock\Proxy\Anything;
+use AspectMock\Proxy\AnythingClassProxy;
+use AspectMock\Proxy\ClassProxy;
+use AspectMock\Proxy\InstanceProxy;
 
 /**
  * `AspectMock\Test` class is a builder of test doubles.
@@ -13,17 +18,14 @@ namespace AspectMock;
  * use AspectMock\Test as test;
  * ?>
  * ```
- *
- * If a class name is passed to `test::double`, instance of `ClassProxy` class is returned.
- * You can redefine class methods the same way, also mock verification methods are included as well.
- *
  */
 class Test {
 
     /**
      * test::double registers class or object for to track its calls.
-     * In second argument you may pass return values of its methods to redefine them.
-     * Returns an object with call verification methods.
+     * In second argument you may pass values that mocked mathods should return.
+     *
+     * Returns instance of **ClassProxy** or **InstanceProxy**.
      *
      * Example:
      *
@@ -54,95 +56,160 @@ class Test {
      * User::tableName(); // 'fake_users'
      * $user->verifyInvoked('tableName'); // success
      *
+     * # append declaration
+     *
+     * $user = new User;
+     * test::double($user, ['getName' => 'davert']);
+     * test::double($user, ['getEmail' => 'davert@mail.ua']);
+     * $user->getName(); // => 'davert'
+     * $user->getEmail(); => 'davert@mail.ua'
+     *
+     * # create an instance of mocked class
+     *
+     * test::double('User')->construct(['name' => 'davert']); // via constructir
+     * test::double('User')->make(); // without calling constructor
+     *
      * ?>
      * ```
      *
+     * @api
      * @param $classOrObject
      * @param array $params
-     * @return Core\ClassProxy|object
+     * @throws \Exception
+     * @return Core\ClassProxy|Core\InstanceProxy
      */
     public static function double($classOrObject, $params = array())
     {
+        $classOrObject = Registry::getRealClassOrObject($classOrObject);
+        if (is_string($classOrObject)) {
+            if (!class_exists($classOrObject)) {
+                throw new \Exception("Class $classOrObject not loaded.\nIf you want to test undefined class use 'test::any' method");
+            }
+            Core\Registry::registerClass($classOrObject, $params);
+            return new Proxy\ClassProxy($classOrObject);
+        }
         if (is_object($classOrObject)) {
             Core\Registry::registerObject($classOrObject, $params);
-            return new Core\InstanceVerifier($classOrObject);
-        } elseif (is_string($classOrObject)) {
-            Core\Registry::registerClass($classOrObject, $params);
-            return new Core\ClassVerifier($classOrObject);
+            return new Proxy\InstanceProxy($classOrObject);
         }
     }
 
     /**
-     * Dummy is a class instance created without calling a constructor.
-     * In a second argument you can redefine methods of that class instance.
+     * If you follow TDD/BDD practice and you want to write a test for the class
+     * which is not defined yet, you can stub it with `spec` method and write a test with it.
      *
      * ``` php
      * <?php
-     * $connection = test::dummy('MySQLConnection', ['connect' => null]);
+     * $userClass = test::spec('User');
+     * $userClass->defined(); // false
      * ?>
      * ```
      *
-     * @param $className
+     * You can create instances of undefined classes and play with them.
+     *
+     * ``` php
+     * <?php
+     * $user = test::spec('User')->construct();
+     * $user->setName('davert');
+     * $user->setNumPosts(count($user->getPosts()));
+     * $this->assertEquals('davert', $user->getName()); // fail
+     * ?>
+     * ```
+     *
+     * The test will be executed and normally and should fail on the first assertion.
+     *
+     * `test::spec()->construct` creates an instance of `AspectMock\Proxy\Anything`
+     * which tries to act like anything. Thus, you will get no errors running test
+     * even if your class is not declared yet. You should define assertions to get the test failed.
+     *
+     * Thus, you have valid test before the class even exist.
+     * If class is already defined, `test::spec` will act as `test::double`.
+     *
+     * @api
+     * @param $classOrObject
      * @param array $params
-     * @return Core\ClassProxy|object
+     * @return Core\ClassProxy|Core\InstanceProxy|AnythingClassProxy
+     *
      */
-    public static function dummy($className, $params = array())
+    public static function spec($classOrObject, $params = array())
     {
-        $reflectionClass = new \ReflectionClass($className);
-        $instance = $reflectionClass->newInstanceWithoutConstructor();
-        return self::double($instance, $params);
+        if (is_object($classOrObject)) return self::double($classOrObject, $params);
+        if (class_exists($classOrObject)) return self::double($classOrObject, $params);
+        
+        return new AnythingClassProxy($classOrObject);
     }
 
     /**
-     * Fake has all methods replaced with dummies and created without calling a constructor.
+     * Replaces all methods in a class with a dummies, expect specified.
      *
      * ``` php
      * <?php
-     * test::fake('MySQLConnection');
+     * $user = new User(['name' => 'jon']);
+     * test::methods($user, ['getName']);
+     * $user->setName('davert'); // not invoked
+     * $user->getName(); // jon
      * ?>
      * ```
      *
-     * @param $className
-     * @return Core\ClassProxy|object
-     */
-    public static function fake($className)
-    {
-        return self::fakeExcept($className, []);
-    }
-
-    /**
-     * As you may guess fakeExcepts is a fake where some methods are not replaced with dummies.
+     * You can create a dummy without constructor with all methods disabled
      *
      * ``` php
      * <?php
-     * test::fakeExcept('MySQLConnection',['getConnectionName']);
+     * $user = test::double('User')->make();
+     * test::methods($user, []);
      * ?>
      * ```
      *
-     * @param $className
-     * @param array $exceptParams
-     * @return Core\ClassProxy|object
+     * @api
+     * @param $classOrObject
+     * @param array $only
+     * @return Core\ClassProxy|Core\InstanceProxy
+     * @throws \Exception
      */
-    public static function fakeExcept($className, array $exceptParams)
+    public static function methods($classOrObject, array $only = array())
     {
-        $reflectionClass = new \ReflectionClass($className);
-        $methods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $instance = $reflectionClass->newInstanceWithoutConstructor();
+        $classOrObject = Registry::getRealClassOrObject($classOrObject);
+        if (is_object($classOrObject)) {
+            $reflected = new \ReflectionClass(get_class($classOrObject));
+        } else {
+            if (!class_exists($classOrObject)) throw new \Exception("Class $classOrObject not defined.");
+            $reflected = new \ReflectionClass($classOrObject);
+        }
+        $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
         $params = array();
         foreach ($methods as $m) {
-            if (in_array($m->name, $exceptParams)) continue;
+            if ($m->isConstructor()) continue;
+            if ($m->isDestructor()) continue;
+            if (in_array($m->name, $only)) continue;
             $params[$m->name] = null;
         }
-        return self::double($instance, $params);
+        return self::double($classOrObject, $params);
     }
 
     /**
      * Clears test doubles registry.
      * Should be called between tests.
+     *
+     * ``` php
+     * <?php
+     * test::clean();
+     * ?>
+     * ```
+     *
+     * Also you can clean registry only for the specific class or object.
+     *
+     * ``` php
+     * <?php
+     * test::clean('User');
+     * test::clean($user);
+     * ?>
+     * ```
+     *
+     * @api
      */
-    public static function clean()
+    public static function clean($classOrInstance = null)
     {
-        Core\Registry::clean();
+        Core\Registry::clean($classOrInstance);
     }
 
 

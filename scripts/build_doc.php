@@ -20,8 +20,9 @@ function clean_doc($doc, $indent = 3)
 $root = __DIR__.'/../src/AspectMock';
 $files = [
     'Test Double Builder' => 'AspectMock\Test',
-    'Class Mocks Verification' => 'AspectMock\Core\ClassVerifier',
-    'Instance Mocks Verification' => 'AspectMock\Core\InstanceVerifier',
+    'ClassProxy' => 'AspectMock\Proxy\ClassProxy',
+    'InstanceProxy' => 'AspectMock\Proxy\InstanceProxy',
+    'MethodProxy' => 'AspectMock\Proxy\MethodProxy',
 ];
 
 foreach ($files as $className) {

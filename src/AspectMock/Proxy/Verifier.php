@@ -1,5 +1,7 @@
 <?php
-namespace AspectMock\Core;
+namespace AspectMock\Proxy;
+use AspectMock\Proxy\MethodProxy;
+use Go\Aop\Intercept\MethodInvocation;
 use \PHPUnit_Framework_ExpectationFailedException as fail;
 use AspectMock\Util\ArgumentsFormatter;
 
@@ -11,12 +13,18 @@ use AspectMock\Util\ArgumentsFormatter;
 
 abstract class Verifier {
 
+    /**
+     * Name of a class.
+     *
+     * @var
+     */
+    public $className;
+
     protected $invokedFail = "Expected %s to be invoked but it never occur.";
     protected $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occur.";
     protected $invokedMultipleTimesFail = "Expected %s to be invoked but called %s times but called %s.";
-    protected $neverInvoked = "Expected %s not to be invoked but it was.";
 
-    protected $className;
+    protected $neverInvoked = "Expected %s not to be invoked but it was.";
 
     abstract protected function getCallsForMethod($method);
 
@@ -38,10 +46,13 @@ abstract class Verifier {
      * Verifies a method was invoked at least once.
      * In second argument you can specify with which params method expected to be invoked;
      *
+     * Returns **MethodProxy** which can be used to verify invocation results.
+     *
      * ``` php
      * <?php
      * $user->verifyInvoked('save');
      * $user->verifyInvoked('setName',['davert']);
+     * $user->verifyInvoked('getName')->returned('davert');
      *
      * ?>
      * ```
@@ -49,7 +60,7 @@ abstract class Verifier {
      * @param $name
      * @param array $params
      * @throws fail
-     * @return mixed
+     * @return MethodProxy
      */
     public function verifyInvoked($name, $params = null)
     {
@@ -60,27 +71,32 @@ abstract class Verifier {
 
         if (is_array($params)) {
             foreach ($calls as $args) {
-                if ($this->onlyExpectedArguments($params, $args) === $params) return;
+                if ($this->onlyExpectedArguments($params, $args) === $params) return new MethodProxy($this, $name);
             }
             $params = ArgumentsFormatter::toString($params);
             throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name."($params)"));
         }
+        return new MethodProxy($this, $name);
     }
 
     /**
      * Verifies that method was invoked only once.
      *
+     * Returns **MethodProxy** which can be used to verify invocation results.
+     *
      * @param $name
      * @param array $params
-     * @return mixed
+     * @return MethodProxy
      */
     public function verifyInvokedOnce($name, $params = null)
     {
-        $this->verifyInvokedMultipleTimes($name, 1, $params);
+        return $this->verifyInvokedMultipleTimes($name, 1, $params);
     }
 
     /**
      * Verifies that method was called exactly $times times.
+     *
+     * Returns **MethodProxy** which can be used to verify invocation results.
      *
      * ``` php
      * <?php
@@ -95,7 +111,7 @@ abstract class Verifier {
      * @param $times
      * @param array $params
      * @throws \PHPUnit_Framework_ExpectationFailedException
-     * @return mixed
+     * @return MethodProxy
      */
     public function verifyInvokedMultipleTimes($name, $times, $params = null)
     {
@@ -110,12 +126,13 @@ abstract class Verifier {
             foreach ($calls as $args) {
                 if ($this->onlyExpectedArguments($params, $args) == $params) $equals++;
             }
-            if ($equals == $times) return;
+            if ($equals == $times) return new MethodProxy($this, $name);
             $params = ArgumentsFormatter::toString($params);
             throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name."($params)", $times, $equals));
         }
         $num_calls = count($calls);
         if ($num_calls != $times) throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
+        new MethodProxy($this, $name);
     }
 
     /**
@@ -133,9 +150,8 @@ abstract class Verifier {
      * ```
      *
      * @param $name
-     * @param array $params
+     * @param null $params
      * @throws \PHPUnit_Framework_ExpectationFailedException
-     * @return mixed
      */
     public function verifyNeverInvoked($name, $params = null)
     {
@@ -151,5 +167,6 @@ abstract class Verifier {
              return;
          }
          if (count($calls)) throw new fail(sprintf($this->neverInvoked, $this->className.$separator.$name));        
-    }        
+    }
+
 }

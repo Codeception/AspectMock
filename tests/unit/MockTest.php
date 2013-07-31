@@ -1,9 +1,8 @@
 <?php
 namespace demo;
-use AspectMock\Core\ClassProxy;
-use AspectMock\Core\ClassVerifier;
-use AspectMock\Core\InstanceVerifier;
 use \AspectMock\Core\Registry as double;
+use AspectMock\Proxy\ClassProxy;
+use AspectMock\Proxy\InstanceProxy;
 
 class MockTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,10 +18,10 @@ class MockTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserModel();
         double::registerObject($user);
-        $user = new InstanceVerifier($user);
+        $user = new InstanceProxy($user);
         $user->setName('davert');
 
-        $this->specify('set name invoked', function() use ($user) {
+        $this->specify('setName() was invoked', function() use ($user) {
             $user->verifyInvoked('setName');
             $user->verifyInvoked('setName',['davert']);
             $user->verifyInvokedMultipleTimes('setName',1);
@@ -30,7 +29,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
             $user->verifyNeverInvoked('setName',['bugoga']);
         });
 
-        $this->specify('save not invoked', function() use ($user) {
+        $this->specify('save() was not invoked', function() use ($user) {
             $user->verifyNeverInvoked('save');
             $user->verifyNeverInvoked('save',['params']);
         });
@@ -40,7 +39,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     public function testVerifyClassMethods()
     {
         double::registerClass('demo\UserModel',['save' => null]);
-        $user = new ClassVerifier('demo\UserModel');
+        $user = new ClassProxy('demo\UserModel');
 
         $service = new UserService();
         $service->create(array('name' => 'davert'));
@@ -53,7 +52,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     public function testVerifyStaticMethods()
     {
         double::registerClass('demo\UserModel');
-        $user = new ClassVerifier('demo\UserModel');
+        $user = new ClassProxy('demo\UserModel');
         UserModel::tableName();
         $user->verifyInvoked('tableName');
     }
@@ -62,7 +61,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserModel();
         double::registerObject($user);
-        $user = new InstanceVerifier($user);
+        $user = new InstanceProxy($user);
         $user->setName('davert');
         $user->setName('jon');
         $user->verifyInvokedOnce('setName',['davert']);
@@ -71,7 +70,7 @@ class MockTest extends \PHPUnit_Framework_TestCase
     public function testVerifyClassMethodCalled()
     {
         $user = new UserModel();
-        $userProxy = new ClassVerifier('demo\UserModel');
+        $userProxy = new ClassProxy('demo\UserModel');
         double::registerClass('demo\UserModel');
         $user->setName('davert');
         $user->setName('jon');
@@ -80,6 +79,28 @@ class MockTest extends \PHPUnit_Framework_TestCase
         $userProxy->verifyNeverInvoked('save');
         $userProxy->verifyNeverInvoked('setName',['bob']);
         verify($user->getName())->equals('jon');
+
+    }
+
+    public function testResults()
+    {
+        $user = new UserModel(['name' => 'jon']);
+        $userProxy = new ClassProxy('demo\UserModel');
+        double::registerClass('demo\UserModel');
+
+        verify($user->getName())->equals('jon');
+        $userProxy->verifyInvoked('getName')->returned('jon');
+        $user->getName();
+
+        $user->setName('davert');
+        verify($user->getName())->equals('davert');
+        $userProxy->verifyInvoked('getName')->returned('davert');
+        $userProxy->verifyInvoked('getName')->returned('jon');
+        $userProxy->verifyInvoked('getName')->neverReturned(null);
+        $userProxy->verifyInvoked('getName')->returnedMultipleTimes('jon', 2);
+        $userProxy->verifyInvoked('getName')->returnedOnce('davert');
+        verify($userProxy->verifyInvoked('getName')->result())->equals('davert');
+        verify($userProxy->verifyInvoked('getName')->results())->contains('jon');
 
     }
 

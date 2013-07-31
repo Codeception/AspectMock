@@ -52,7 +52,7 @@ class Mocker implements Aspect {
         if (!isset($this->objectMap[$oid])) return false;
         $params = $this->objectMap[$oid];
         if (!array_key_exists($method_name,$params)) return false;
-        return $params[$method_name];
+        return $params;
     }
 
     protected function getClassMethodStubParams($class_name, $method_name)
@@ -90,18 +90,30 @@ class Mocker implements Aspect {
     public function registerClass($class, $params = array())
     {
         $class = ltrim($class,'\\');
+        if (isset($this->classMap[$class])) {
+            $params = array_merge_recursive($this->classMap[$class], $params);
+        }
         $this->classMap[$class] = $params;
     }
 
     public function registerObject($object, $params = array())
     {
-        $this->objectMap[spl_object_hash($object)] = $params;
+        $hash = spl_object_hash($object);
+        if (isset($this->objectMap[$hash])) {
+            $params = array_merge_recursive($this->objectMap[$hash], $params);
+        }
+        $this->objectMap[$hash] = $params;
     }
 
-
-    public function clean()
+    public function clean($objectOrClass = null)
     {
-        $this->classMap = [];
-        $this->objectMap = [];
+        if (!$objectOrClass) {
+            $this->classMap = [];
+            $this->objectMap = [];
+        } elseif (is_object($objectOrClass)) {
+            unset($this->objectMap[spl_object_hash($objectOrClass)]);
+        } else {
+            unset($this->classMap[$objectOrClass]);
+        }
     }
 }

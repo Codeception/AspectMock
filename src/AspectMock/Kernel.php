@@ -9,7 +9,7 @@ class Kernel extends AspectKernel
 {
     protected function configureAop(AspectContainer $container)
     {
-        $this->options['excludePaths'][] = __DIR__;
+        ini_set('xdebug.max_nesting_level', 500);
         $container->registerAspect(new Core\Mocker);
     }
 

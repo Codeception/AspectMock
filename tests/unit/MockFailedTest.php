@@ -1,9 +1,11 @@
 <?php
 namespace demo;
 
+use AspectMock\Proxy\Anything;
+use AspectMock\Proxy\AnythingClassProxy;
+use AspectMock\Proxy\ClassProxy;
+use AspectMock\Proxy\InstanceProxy;
 use \AspectMock\Core\Registry as double;
-use AspectMock\Core\InstanceVerifier;
-use AspectMock\Core\ClassVerifier;
 
 class MockFailedTest extends \PHPUnit_Framework_TestCase 
 {
@@ -21,13 +23,13 @@ class MockFailedTest extends \PHPUnit_Framework_TestCase
     {
         $user = new UserModel();
         double::registerObject($user);
-        $user = new InstanceVerifier($user);
+        $user = new InstanceProxy($user);
         return $user;
     }
 
     protected function userProxy()
     {
-        $userProxy = new ClassVerifier('demo\UserModel');
+        $userProxy = new ClassProxy('demo\UserModel');
         double::registerClass('demo\UserModel');
         return $userProxy;
     }
@@ -93,6 +95,14 @@ class MockFailedTest extends \PHPUnit_Framework_TestCase
         $user->setName(1111);
         $userProxy->verifyInvoked('setName',[2222]);
 
+    }
+
+    public function testAnythingFail()
+    {
+        $anyProxy = new AnythingClassProxy('demo\UserModel');
+        $any = $anyProxy->construct();
+        $any->hello();
+        $anyProxy->verifyInvoked('hello');
     }
     
 }
