@@ -123,7 +123,7 @@ PHP >= 5.4 + [Go! AOP Requirements](https://github.com/lisachenko/go-aop-php#req
 
 ## Installation via Composer
 
-##### 1. Add aspect-mock to your composer.yml.
+##### 1. Add aspect-mock to your composer.json.
 
 ```
 {
