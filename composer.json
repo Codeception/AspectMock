@@ -13,7 +13,7 @@
            }
        },
     "require": {
-        "lisachenko/go-aop-php": "0.4.x-dev"
+        "lisachenko/go-aop-php": "~0.4"
     },
     "require-dev": {
         "codeception/codeception": "@stable",
