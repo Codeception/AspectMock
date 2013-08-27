@@ -82,12 +82,12 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('admin', UserModel::defaultRole());
     }
 
-    public function testStubFunctionCall()
-    {
-        double::registerFunc('file_put_contents', 'Done');
-        $user = new UserModel();
-        $user->setName('David Bovie');
-        $this->assertEquals('Done', $user->dump());
-    }
+//    public function testStubFunctionCall()
+//    {
+//        double::registerFunc('file_put_contents', 'Done');
+//        $user = new UserModel();
+//        $user->setName('David Bovie');
+//        $this->assertEquals('Done', $user->dump());
+//    }
 
 }

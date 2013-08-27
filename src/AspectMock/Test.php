@@ -209,11 +209,6 @@ class Test {
         return self::double($classOrObject, $params);
     }
 
-    public function func($name, $resultOrClosure)
-    {
-        Core\Registry::registerFunc($name, $resultOrClosure);
-    }
-
     /**
      * Clears test doubles registry.
      * Should be called between tests.

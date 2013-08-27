@@ -12,17 +12,21 @@ class Mocker implements Aspect {
     protected $funcMap = [];
 
     /**
+     * Will be enabled in 0.4
+     *
      * @Around("execution(**\*(*))")
      */
-    public function mockFunction(FunctionInvocation $invocation)
-    {
-        $name = $invocation->getFunction();
-        if (in_array($name, $this->funcMap)) {
-            $func = $this->turnToClosure($this->funcMap[$name]);
-            return $func();
-        }
-        return $invocation->proceed();
-    }
+//    public function mockFunction(FunctionInvocation $invocation)
+//    {
+//
+//        $name = $invocation->getFunction();
+//        if (!is_callable($name)) return $invocation->proceed();
+//        if (in_array($name, $this->funcMap)) {
+//            $func = $this->turnToClosure($this->funcMap[$name]);
+//            return $func();
+//        }
+//        return $invocation->proceed();
+//    }
 
     /**
      * @Around("within(**)")
@@ -168,10 +172,10 @@ class Mocker implements Aspect {
         $this->classMap[$class] = $params;
     }
 
-    public function registerFunc($func, $closure)
-    {
-        $this->funcMap[$func] = $closure;
-    }
+//    public function registerFunc($func, $closure)
+//    {
+//        $this->funcMap[$func] = $closure;
+//    }
 
     public function registerObject($object, $params = array())
     {
