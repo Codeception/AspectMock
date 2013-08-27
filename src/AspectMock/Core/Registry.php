@@ -35,6 +35,11 @@ class Registry {
         self::getMockAspect()->registerObject($object, $params);
     }
 
+    static function registerFunc($func, $resultOrClosure)
+    {
+        self::getMockAspect()->registerFunc($func, $resultOrClosure);
+    }
+
     static function getClassCallsFor($class)
     {
         return isset(self::$classCalls[$class])

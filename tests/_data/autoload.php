@@ -4,3 +4,4 @@
 //$loader->register();
 require_once __DIR__.'/demo/UserModel.php';
 require_once __DIR__.'/demo/UserService.php';
+require_once __DIR__.'/demo/AdminUserModel.php';

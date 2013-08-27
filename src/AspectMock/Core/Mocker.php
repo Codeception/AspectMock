@@ -1,6 +1,7 @@
 <?php
 namespace AspectMock\Core;
 use Go\Aop\Aspect;
+use Go\Aop\Intercept\FunctionInvocation;
 use Go\Aop\Intercept\MethodInvocation;
 use Go\Lang\Annotation\Around;
 
@@ -8,22 +9,17 @@ class Mocker implements Aspect {
 
     protected $classMap = [];
     protected $objectMap = [];
+    protected $funcMap = [];
 
     /**
-     * @Around("within(**)")
+     * @Around("execution(**\*(*))")
      */
-    public function stubMethods(MethodInvocation $invocation)
+    public function mockFunction(FunctionInvocation $invocation)
     {
-        $obj = $invocation->getThis();
-        if (is_object($obj)) {
-            $params = $this->getObjectMethodStubParams($obj, $invocation->getMethod()->name);
-            if ($params !== false) return $this->stub($invocation, $params);
-
-            $params = $this->getClassMethodStubParams(get_class($obj), $invocation->getMethod()->name);
-            if ($params !== false) return $this->stub($invocation, $params);
-        } else {
-            $params = $this->getClassMethodStubParams($obj, $invocation->getMethod()->name);
-            if ($params !== false) return $this->stub($invocation, $params);
+        $name = $invocation->getFunction();
+        if (in_array($name, $this->funcMap)) {
+            $func = $this->turnToClosure($this->funcMap[$name]);
+            return $func();
         }
         return $invocation->proceed();
     }
@@ -31,11 +27,13 @@ class Mocker implements Aspect {
     /**
      * @Around("within(**)")
      */
-    public function registerMethodCalls(MethodInvocation $invocation)
+    public function fakeMethodsAndRegisterCalls(MethodInvocation $invocation)
     {
-        $result = $invocation->proceed();
         $obj = $invocation->getThis();
         $method = $invocation->getMethod()->name;
+        
+        $result = $this->invokeFakedMethods($invocation);
+
         if (is_object($obj)) {
             Registry::registerInstanceCall($obj, $method, $invocation->getArguments(), $result);
             $class = get_class($obj);
@@ -44,6 +42,63 @@ class Mocker implements Aspect {
         }
         Registry::registerClassCall($class, $method, $invocation->getArguments(), $result);
         return $result;
+    }
+
+    protected function invokeFakedMethods(MethodInvocation $invocation)
+    {
+        $obj = $invocation->getThis();
+        $method = $invocation->getMethod()->name;
+
+        if (is_object($obj)) {
+            // instance method
+            $params = $this->getObjectMethodStubParams($obj, $method);
+            if ($params !== false) return $this->stub($invocation, $params);
+
+            // class method
+            $params = $this->getClassMethodStubParams(get_class($obj), $method);
+            if ($params !== false) return $this->stub($invocation, $params);
+
+            // inheritance
+            $calledClass = $this->getRealClassName($invocation->getMethod()->getDeclaringClass());
+            $params = $this->getClassMethodStubParams($calledClass, $method);
+            if ($params !== false) return $this->stub($invocation, $params);
+
+            // magic methods
+            if ($method == '__call') {
+                $method = reset($invocation->getArguments());
+
+                $params = $this->getObjectMethodStubParams($obj, $method);
+                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
+
+                // magic class method
+                $params = $this->getClassMethodStubParams(get_class($obj), $method);
+                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
+
+                // inheritance
+                $calledClass = $this->getRealClassName($invocation->getMethod()->getDeclaringClass());
+                $params = $this->getClassMethodStubParams($calledClass, $method);
+                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
+            }
+        } else {
+            // static method
+            $params = $this->getClassMethodStubParams($obj, $method);
+            if ($params !== false) return $this->stub($invocation, $params);
+
+            // magic static method (facade)
+            if ($method == '__callStatic') {
+                $method = reset($invocation->getArguments());
+
+                $params = $this->getClassMethodStubParams($obj, $method);
+                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
+
+                // inheritance
+                $calledClass = $this->getRealClassName($invocation->getMethod()->getDeclaringClass());
+                $params = $this->getClassMethodStubParams($calledClass, $method);
+                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
+            }
+
+        }
+        return $invocation->proceed();
     }
 
     protected function getObjectMethodStubParams($obj, $method_name)
@@ -69,19 +124,36 @@ class Mocker implements Aspect {
 
         $replacedMethod = $params[$name];
 
-        if (!($replacedMethod instanceof \Closure)) $replacedMethod = $this->turnToClosure($replacedMethod);
+        $replacedMethod = $this->turnToClosure($replacedMethod);
 
         if ($invocation->getMethod()->isStatic()) {
             \Closure::bind($replacedMethod, null, $invocation->getThis());
         } else {
             $replacedMethod = $replacedMethod->bindTo($invocation->getThis(), get_class($invocation->getThis()));
         }
-        $invocation->getArguments();
         return call_user_func_array($replacedMethod, $invocation->getArguments());
     }
 
+    protected function stubMagicMethod(MethodInvocation $invocation, $params)
+    {
+        $args = $invocation->getArguments();
+        $name = array_shift($args);
+
+        $replacedMethod = $params[$name];
+        $replacedMethod = $this->turnToClosure($replacedMethod);
+
+        if ($invocation->getMethod()->isStatic()) {
+            \Closure::bind($replacedMethod, null, $invocation->getThis());
+        } else {
+            $replacedMethod = $replacedMethod->bindTo($invocation->getThis(), get_class($invocation->getThis()));
+        }
+        return call_user_func_array($replacedMethod, $args);
+    }
+
+
     protected function turnToClosure($returnValue)
     {
+        if ($returnValue instanceof \Closure) return $returnValue;
         return function() use ($returnValue) {
             return $returnValue;
         };
@@ -94,6 +166,11 @@ class Mocker implements Aspect {
             $params = array_merge($this->classMap[$class], $params);
         }
         $this->classMap[$class] = $params;
+    }
+
+    public function registerFunc($func, $closure)
+    {
+        $this->funcMap[$func] = $closure;
     }
 
     public function registerObject($object, $params = array())
@@ -110,10 +187,16 @@ class Mocker implements Aspect {
         if (!$objectOrClass) {
             $this->classMap = [];
             $this->objectMap = [];
+            $this->funcMap = [];
         } elseif (is_object($objectOrClass)) {
             unset($this->objectMap[spl_object_hash($objectOrClass)]);
         } else {
             unset($this->classMap[$objectOrClass]);
         }
+    }
+
+    private function getRealClassName($class)
+    {
+        return str_replace('__AopProxied','', $class->name);
     }
 }

@@ -47,4 +47,47 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('my_users', UserModel::tableName());
     }
 
+    public function testInheritance()
+    {
+        double::registerClass('\demo\UserModel', ['save' => false]);
+        $admin = new AdminUserModel();
+        $admin->save();
+        $this->assertEquals('Admin_111', $admin->getName());
+    }
+
+    public function testMagic()
+    {
+        double::registerClass('\demo\UserService', ['rename' => 'David Copperfield']);
+        $admin = new UserService();
+        $this->assertEquals('David Copperfield', $admin->rename());
+
+    }
+
+    public function testMagicOfInheritedClass()
+    {
+        double::registerClass('\demo\AdminUserModel', ['renameUser' => 'David Copperfield']);
+        $admin = new AdminUserModel();
+        $this->assertEquals('David Copperfield', $admin->renameUser());
+    }
+
+    public function testMagicStaticInherited()
+    {
+        double::registerClass('\demo\AdminUserModel', ['defaultRole' => 'admin']);
+        $this->assertEquals('admin', AdminUserModel::defaultRole());
+    }
+
+    public function testMagicStatic()
+    {
+        double::registerClass('\demo\UserModel', ['defaultRole' => 'admin']);
+        $this->assertEquals('admin', UserModel::defaultRole());
+    }
+
+    public function testStubFunctionCall()
+    {
+        double::registerFunc('file_put_contents', 'Done');
+        $user = new UserModel();
+        $user->setName('David Bovie');
+        $this->assertEquals('Done', $user->dump());
+    }
+
 }

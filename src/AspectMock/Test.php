@@ -5,6 +5,7 @@ use AspectMock\Proxy\Anything;
 use AspectMock\Proxy\AnythingClassProxy;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
+use AspectMock\Proxy\Verifier;
 
 /**
  * `AspectMock\Test` class is a builder of test doubles.
@@ -84,7 +85,7 @@ class Test {
      * @param $classOrObject
      * @param array $params
      * @throws \Exception
-     * @return Core\ClassProxy|Core\InstanceProxy
+     * @return Verifier
      */
     public static function double($classOrObject, $params = array())
     {
@@ -150,7 +151,7 @@ class Test {
      * @api
      * @param $classOrObject
      * @param array $params
-     * @return Core\ClassProxy|Core\InstanceProxy|AnythingClassProxy
+     * @return Verifier
      *
      */
     public static function spec($classOrObject, $params = array())
@@ -206,6 +207,11 @@ class Test {
             $params[$m->name] = null;
         }
         return self::double($classOrObject, $params);
+    }
+
+    public function func($name, $resultOrClosure)
+    {
+        Core\Registry::registerFunc($name, $resultOrClosure);
     }
 
     /**

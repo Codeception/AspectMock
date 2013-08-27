@@ -14,4 +14,12 @@ class UserService {
         $user->setName("Current User");
         $user->save();
     }
+
+    public function __call($name, $args)
+    {
+        if ($name == 'rename') {
+            return 'David Blane';
+        }
+    }
+
 }
