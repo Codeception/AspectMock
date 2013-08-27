@@ -99,7 +99,7 @@ class Test {
         $classOrObject = Registry::getRealClassOrObject($classOrObject);
         if (is_string($classOrObject)) {
             if (!class_exists($classOrObject)) {
-                throw new \Exception("Class $classOrObject not loaded.\nIf you want to test undefined class use 'test::any' method");
+                throw new \Exception("Class $classOrObject not loaded.\nIf you want to test undefined class use 'test::spec' method");
             }
             Core\Registry::registerClass($classOrObject, $params);
             return new Proxy\ClassProxy($classOrObject);
