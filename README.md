@@ -89,6 +89,24 @@ function testUserCreate()
 ?>
 ```
 
+#### Intercept even parent class methods and magic methods
+
+``` php
+<?php
+// User extends ActiveRecord
+function testUserCreate()
+{
+	$AR = test::double('ActiveRecord', ['save' => null]));
+	test::double('User', ['findByNameAndEmail' => new User(['name' => 'jon'])])); 
+	$user = User::findByNameAndEmail('jon','jon@coltrane.com'); // magic method
+	$this->assertEquals('jon', $user->getName());
+	$user->save(['name' => 'miles']); // ActiveRecord->save did not hit database
+	$AR->verifyInvoked('save');
+	$this->assertEquals('miles', $user->getName());
+}
+?>
+```
+
 #### Beautifully simple
 
 Only 4 methods are necessary for method call verification and one method to define test doubles:
