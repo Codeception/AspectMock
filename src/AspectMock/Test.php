@@ -53,20 +53,17 @@ class Test {
      * $ar->verifyInvoked('save'); // true
      *
      * # on static method call
-     *
      * User::tableName(); // 'users'
      * $user = test::double('User', ['tableName' => 'fake_users']);
      * User::tableName(); // 'fake_users'
      * $user->verifyInvoked('tableName'); // success
      *
      * # tests a method returned the desired result.
-     *
      * $user = test::double(new User['name' => 'davert']);
      * $user->getName();
      * $user->verifyMethodInvoked('getName')->returned('davert');
      *
      * # append declaration
-     *
      * $user = new User;
      * test::double($user, ['getName' => 'davert']);
      * test::double($user, ['getEmail' => 'davert@mail.ua']);
@@ -74,9 +71,19 @@ class Test {
      * $user->getEmail(); => 'davert@mail.ua'
      *
      * # create an instance of mocked class
-     *
      * test::double('User')->construct(['name' => 'davert']); // via constructir
      * test::double('User')->make(); // without calling constructor
+     * 
+     * # stub for magic method
+     * test::double('User', ['findByUsernameAndPasswordAndEmail' => false]);
+     * User::findByUsernameAndPasswordAndEmail; // null
+     * 
+     * # stub for method of parent class
+     * # if User extends ActiveRecord
+     *
+     * test::double('ActiveRecord', ['save' => false]);
+     * $user = new User(['name' => 'davert']);
+     * $user->save(); // false
      *
      * ?>
      * ```
