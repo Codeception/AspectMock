@@ -69,20 +69,17 @@ $user->save(); // passes to ActiveRecord->save() and does not insert any SQL.
 $ar->verifyInvoked('save'); // true
 
 # on static method call
-
 User::tableName(); // 'users'
 $user = test::double('User', ['tableName' => 'fake_users']);
 User::tableName(); // 'fake_users'
 $user->verifyInvoked('tableName'); // success
 
 # tests a method returned the desired result.
-
 $user = test::double(new User['name' => 'davert']);
 $user->getName();
 $user->verifyMethodInvoked('getName')->returned('davert');
 
 # append declaration
-
 $user = new User;
 test::double($user, ['getName' => 'davert']);
 test::double($user, ['getEmail' => 'davert@mail.ua']);
@@ -90,9 +87,19 @@ $user->getName(); // => 'davert'
 $user->getEmail(); => 'davert@mail.ua'
 
 # create an instance of mocked class
-
 test::double('User')->construct(['name' => 'davert']); // via constructir
 test::double('User')->make(); // without calling constructor
+
+# stub for magic method
+test::double('User', ['findByUsernameAndPasswordAndEmail' => false]);
+User::findByUsernameAndPasswordAndEmail; // null
+
+# stub for method of parent class
+# if User extends ActiveRecord
+
+test::double('ActiveRecord', ['save' => false]);
+$user = new User(['name' => 'davert']);
+$user->save(); // false
 
 ?>
 ```
@@ -101,7 +108,7 @@ test::double('User')->make(); // without calling constructor
  * param $classOrObject
  * param array $params
  * throws \Exception
- * return Core\ClassProxy|Core\InstanceProxy
+ * return Verifier
 
 
 ## Test::methods
@@ -137,8 +144,9 @@ test::methods($user, []);
 ## Test::spec
 
 
-If you follow TDD/BDD practice and you want to write a test for the class
-which is not defined yet, you can stub it with `spec` method and write a test with it.
+If you follow TDD/BDD practices a test should be written before the class is defined.
+If you would call undefined class in a test, a fatal error will be triggered.
+Instead you can use `test::spec` method that will create a proxy for an undefined class.
 
 ``` php
 <?php
@@ -155,20 +163,33 @@ $user = test::spec('User')->construct();
 $user->setName('davert');
 $user->setNumPosts(count($user->getPosts()));
 $this->assertEquals('davert', $user->getName()); // fail
+
 ?>
 ```
 
-The test will be executed and normally and should fail on the first assertion.
+The test will be executed normally and will fail on the first assertion.
 
 `test::spec()->construct` creates an instance of `AspectMock\Proxy\Anything`
-which tries to act like anything. Thus, you will get no errors running test
-even if your class is not declared yet. You should define assertions to get the test failed.
+which tries to not cause errors whatever you try to do with it.
 
-Thus, you have valid test before the class even exist.
+``` php
+<?php
+$user = test::spec('Undefined')->construct();
+$user->can()->be->called()->anything();
+$user->can['be used as array'];
+foreach ($user->names as $name) {
+     $name->canBeIterated();
+}
+?>
+```
+
+None of this calls will trigger error on your test.
+Thus, you can write a valid test before the class is declared.
+
 If class is already defined, `test::spec` will act as `test::double`.
 
  * api
  * param $classOrObject
  * param array $params
- * return Core\ClassProxy|Core\InstanceProxy|AnythingClassProxy
+ * return Verifier
 
