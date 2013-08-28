@@ -307,7 +307,9 @@ There is guaranteed to be room for improvements. This framework was not designed
 
 ## Credits
 
-Initial version developed in 1 day by **Michael Bodnarchuk**.
+Follow [**@codeception**](http://twitter.com/codeception) for updates.
+
+Daveloped by **Michael Bodnarchuk**.
 
 License: **MIT**.
 
