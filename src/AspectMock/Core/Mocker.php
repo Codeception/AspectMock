@@ -69,7 +69,8 @@ class Mocker implements Aspect {
 
             // magic methods
             if ($method == '__call') {
-                $method = reset($invocation->getArguments());
+                $args = $invocation->getArguments();
+                $method = array_shift($args);
 
                 $params = $this->getObjectMethodStubParams($obj, $method);
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
@@ -90,7 +91,8 @@ class Mocker implements Aspect {
 
             // magic static method (facade)
             if ($method == '__callStatic') {
-                $method = reset($invocation->getArguments());
+                $args = $invocation->getArguments();
+                $method = array_shift($args);
 
                 $params = $this->getClassMethodStubParams($obj, $method);
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);

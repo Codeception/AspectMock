@@ -7,6 +7,13 @@ use Symfony\Component\Finder\Finder;
 
 class Kernel extends AspectKernel
 {
+    public function init(array $options = array())
+    {
+        if (!isset($options['excludePaths'])) $options['excludePaths'] = [];
+        $options['excludePaths'][] = __DIR__;
+        parent::init($options);
+    }
+
     protected function configureAop(AspectContainer $container)
     {
         ini_set('xdebug.max_nesting_level', 500);
