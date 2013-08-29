@@ -242,5 +242,15 @@ class Test {
         Core\Registry::clean($classOrInstance);
     }
 
+    /*
+     * Clears mock verifications, but not stub definitions.
+     *
+     * @api
+     */
+    public static function cleanInvocations()
+    {
+        Core\Registry::cleanInvocations();
+    }    
+
 
 }

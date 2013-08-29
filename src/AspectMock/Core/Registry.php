@@ -86,11 +86,16 @@ class Registry {
             unset(self::$classReturned[$classOrInstance]);
 
         } else {
-            self::$instanceCalls = [];
-            self::$classCalls = [];
-            self::$classReturned = [];
-            self::$instanceReturned = [];
+            self::cleanInvocations();
         }
+    }
+
+    static function cleanInvocations()
+    {
+        self::$instanceCalls = [];
+        self::$classCalls = [];
+        self::$classReturned = [];
+        self::$instanceReturned = [];
     }
 
     static function registerInstanceCall($instance, $method, $args = array(), $returned = null)
