@@ -184,7 +184,7 @@ class Test {
      * test::methods($user, []);
      * ?>
      * ```
-     *
+     *2
      * @api
      * @param $classOrObject
      * @param array $only

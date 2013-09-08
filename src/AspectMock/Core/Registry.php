@@ -17,7 +17,7 @@ class Registry {
     /**
      * @var Mocker
      */
-    protected static $mocker;
+    public static $mocker;
 
     static function registerClass($name, $params = array())
     {
@@ -107,11 +107,4 @@ class Registry {
         self::$mocker = $mocker;
     }
 
-    /**
-     * @return mixed
-     */
-    public static function getMocker()
-    {
-        return self::$mocker;
-    }
 }
