@@ -8,6 +8,7 @@ class Mocker implements Aspect {
     protected $classMap = [];
     protected $objectMap = [];
     protected $funcMap = [];
+    protected $methodMap = ['__call', '__callStatic'];
 
     public function fakeMethodsAndRegisterCalls(MethodInvocation $invocation)
     {
@@ -28,8 +29,10 @@ class Mocker implements Aspect {
 
     protected function invokeFakedMethods(MethodInvocation $invocation)
     {
-        $obj = $invocation->getThis();
         $method = $invocation->getMethod();
+        if (!in_array($method, $this->methodMap)) return __AM_CONTINUE__;
+
+        $obj = $invocation->getThis();
 
         if (is_object($obj)) {
             // instance method
@@ -147,13 +150,9 @@ class Mocker implements Aspect {
         if (isset($this->classMap[$class])) {
             $params = array_merge($this->classMap[$class], $params);
         }
+        $this->methodMap = array_merge($this->methodMap, array_keys($params));
         $this->classMap[$class] = $params;
     }
-
-//    public function registerFunc($func, $closure)
-//    {
-//        $this->funcMap[$func] = $closure;
-//    }
 
     public function registerObject($object, $params = array())
     {
@@ -162,6 +161,7 @@ class Mocker implements Aspect {
             $params = array_merge($this->objectMap[$hash], $params);
         }
         $this->objectMap[$hash] = $params;
+        $this->methodMap = array_merge($this->methodMap, array_keys($params));
     }
 
     public function clean($objectOrClass = null)
