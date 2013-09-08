@@ -60,7 +60,7 @@ class Mocker implements Aspect {
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
 
                 // inheritance
-                $calledClass = $this->getRealClassName($invocation->getDeclaredClass());
+                $calledClass = $invocation->getDeclaredClass();
                 $params = $this->getClassMethodStubParams($calledClass, $method);
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
             }
@@ -78,7 +78,7 @@ class Mocker implements Aspect {
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
 
                 // inheritance
-                $calledClass = $this->getRealClassName($invocation->getMethod()->getDeclaringClass());
+                $calledClass = $invocation->getDeclaredClass();
                 $params = $this->getClassMethodStubParams($calledClass, $method);
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
             }
@@ -169,6 +169,7 @@ class Mocker implements Aspect {
         if (!$objectOrClass) {
             $this->classMap = [];
             $this->objectMap = [];
+            $this->methodMap = ['__call','__callStatic'];
             $this->funcMap = [];
         } elseif (is_object($objectOrClass)) {
             unset($this->objectMap[spl_object_hash($objectOrClass)]);
@@ -177,8 +178,4 @@ class Mocker implements Aspect {
         }
     }
 
-    private function getRealClassName($class)
-    {
-        return str_replace('__AopProxied','', $class->name);
-    }
 }

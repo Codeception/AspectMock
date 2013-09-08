@@ -11,9 +11,8 @@ use TokenReflection\ReflectionFileNamespace as ParsedFileNamespace;
 
 class BeforeMockTransformer extends WeavingTransformer {
 
-    protected $before = "\$__am_res = __amock_before(\$this, __CLASS__, __FUNCTION__, array(%s), false);";
-    protected $beforeStatic = "\$__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true);";
-    protected $stopOnStub = "if (\$__am_res !== __AM_CONTINUE__) return \$__am_res;";
+    protected $before = "if ((\$__am_res = __amock_before(\$this, __CLASS__, __FUNCTION__, array(%s), false)) !== __AM_CONTINUE__) return \$__am_res;";
+    protected $beforeStatic = "if ((\$__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true)) !== __AM_CONTINUE__) return \$__am_res;";
 
     public function transform(StreamMetaData $metadata)
     {
@@ -80,7 +79,7 @@ class BeforeMockTransformer extends WeavingTransformer {
                         $params[] = '$'.$reflectedParam->getName();
                     }
                     $params = implode(", ", $params);
-                    $beforeDefinition = sprintf($beforeDefinition, $params).$this->stopOnStub;
+                    $beforeDefinition = sprintf($beforeDefinition, $params);
                     for ($i = $method->getStartLine()-1; $i < $method->getEndLine()-1; $i++) {
                         $pos = strpos($dataArray[$i],'{');
                         if ($pos === false) continue;
