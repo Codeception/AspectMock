@@ -81,18 +81,14 @@ class ClosureTransformer extends WeavingTransformer {
                     }
                     $params = implode(", ", $params);
                     $inject = sprintf($aroundDefinition, $params, $params);
-                    if (strpos($dataArray[$method->getStartLine()-1],'{')) {
-                        $dataArray[$method->getStartLine()-1] .= $inject.' { ';
-                    } else {
-                        $dataArray[$method->getStartLine()-1] .= '{ '.$inject;
+                    for ($i = $method->getStartLine()-1; $i < $method->getEndLine()-1; $i++) {
+                        $pos = strpos($dataArray[$i],'{');
+                        if ($pos === null) continue;
+                        $dataArray[$i] = substr($dataArray[$i], 0, $pos).$inject.' { '.substr($dataArray[$i], $pos);
+                        break;
                     }
 
-                    try {
-
-                        $dataArray[$method->getEndLine()-1] .= $this->after;
-                    } catch (\Exception $e) {
-                        $e;
-                    }
+                    $dataArray[$method->getEndLine()-1] .= $this->after;
                 }
             }
         }
