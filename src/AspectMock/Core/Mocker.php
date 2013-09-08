@@ -76,11 +76,11 @@ class Mocker implements Aspect {
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
 
                 // inheritance
-//                $calledClass = $this->getRealClassName($invocation->getMethod()->getDeclaringClass());
-//                $params = $this->getClassMethodStubParams($calledClass, $method);
-//                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
+                $calledClass = $this->getRealClassName($invocation->getMethod()->getDeclaringClass());
+                $params = $this->getClassMethodStubParams($calledClass, $method);
+                if ($params !== false) return $this->stubMagicMethod($invocation, $params);
             }
-            $closure = \Closure::bind($invocation->getClosure(), null, $invocation->getThis());
+            $closure = \Closure::bind($invocation->getClosure(), null, $invocation->getDeclaredClass());
         }
         return call_user_func_array($closure, $invocation->getArguments());
     }
