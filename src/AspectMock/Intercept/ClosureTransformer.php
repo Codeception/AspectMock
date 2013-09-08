@@ -11,8 +11,8 @@ use TokenReflection\ReflectionFileNamespace as ParsedFileNamespace;
 
 class ClosureTransformer extends WeavingTransformer {
 
-    protected $before = "{ return __amock_around(\$this, __CLASS__, __FUNCTION__, array(%s), false, function(%s)";
-    protected $beforeStatic = "{ return __amock_around(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true, function(%s)";
+    protected $before = " return __amock_around(\$this, __CLASS__, __FUNCTION__, array(%s), false, function(%s)";
+    protected $beforeStatic = " return __amock_around(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true, function(%s)";
     protected $after = ");}";
 
     public function transform(StreamMetaData $metadata)
@@ -80,7 +80,12 @@ class ClosureTransformer extends WeavingTransformer {
                         $params[] = '$'.$reflectedParam->getName();
                     }
                     $params = implode(", ", $params);
-                    $dataArray[$method->getStartLine()-1] .= sprintf($aroundDefinition, $params, $params);
+                    $inject = sprintf($aroundDefinition, $params, $params);
+                    if (strpos($dataArray[$method->getStartLine()-1],'{')) {
+                        $dataArray[$method->getStartLine()-1] .= $inject.' { ';
+                    } else {
+                        $dataArray[$method->getStartLine()-1] .= '{ '.$inject;
+                    }
 
                     try {
 
