@@ -1,5 +1,6 @@
 <?php
 namespace AspectMock\Intercept;
+use AspectMock\Core\Registry;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
 use TokenReflection\Exception\FileProcessingException;
@@ -17,6 +18,7 @@ class BeforeMockTransformer extends WeavingTransformer {
     public function transform(StreamMetaData $metadata)
     {
         $fileName = $metadata->uri;
+
         if ($this->includePaths) {
             $found = false;
             foreach ($this->includePaths as $includePath) {

@@ -103,6 +103,4 @@ class Registry {
         return $classOrObject;
     }
 
-
-
 }

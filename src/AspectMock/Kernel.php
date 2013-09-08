@@ -2,22 +2,24 @@
 namespace AspectMock;
 use AspectMock\Intercept\BeforeMockTransformer;
 use AspectMock\Intercept\ClosureTransformer;
+use AspectMock\Intercept\LoadPreachedTransformer;
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
 use Go\Instrument\Transformer\FilterInjectorTransformer;
 use Symfony\Component\Finder\Finder;
 use Go\Instrument\ClassLoading\SourceTransformingLoader;
-use Go\Instrument\Transformer\SourceTransformer;
-use Go\Instrument\Transformer\WeavingTransformer;
 use Go\Instrument\Transformer\CachingTransformer;
 use Go\Instrument\Transformer\MagicConstantTransformer;
 use TokenReflection;
+
+require_once __DIR__.'/Core/Registry.php';
 
 class Kernel extends AspectKernel
 {
     public function init(array $options = array())
     {
         if (!isset($options['excludePaths'])) $options['excludePaths'] = [];
+        $options['debug'] = true;
         $options['excludePaths'][] = __DIR__;
         parent::init($options);
     }
@@ -57,7 +59,6 @@ class Kernel extends AspectKernel
     {
         $sourceTransformers = array(
             new FilterInjectorTransformer($this->options, $sourceLoader->getId()),
-            new MagicConstantTransformer($this),
             new BeforeMockTransformer(
                 $this,
                 new TokenReflection\Broker(

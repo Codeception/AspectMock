@@ -12,10 +12,12 @@ class Mocker implements Aspect {
 
     public function fakeMethodsAndRegisterCalls(MethodInvocation $invocation)
     {
-        $obj = $invocation->getThis();
         $method = $invocation->getMethod();
-        
-        $result = $this->invokeFakedMethods($invocation);
+        $obj = $invocation->getThis();
+
+        $result = in_array($method, $this->methodMap)
+            ? $this->invokeFakedMethods($invocation)
+            : __AM_CONTINUE__;
 
         if (is_object($obj)) {
             if (isset($this->objectMap[spl_object_hash($obj)])) Registry::registerInstanceCall($obj, $method, $invocation->getArguments(), $result);
