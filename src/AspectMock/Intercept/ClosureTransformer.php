@@ -84,7 +84,7 @@ class ClosureTransformer extends WeavingTransformer {
                     for ($i = $method->getStartLine()-1; $i < $method->getEndLine()-1; $i++) {
                         $pos = strpos($dataArray[$i],'{');
                         if ($pos === false) continue;
-                        $dataArray[$i] = substr($dataArray[$i], 0, $pos).$inject.' { '.substr($dataArray[$i], $pos);
+                        $dataArray[$i] = substr($dataArray[$i], 0, $pos).' { '.$inject.substr($dataArray[$i], $pos);
                         break;
                     }
 
