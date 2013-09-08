@@ -10,22 +10,28 @@ class Mocker implements Aspect {
     protected $funcMap = [];
     protected $methodMap = ['__call', '__callStatic'];
 
-    public function fakeMethodsAndRegisterCalls(MethodInvocation $invocation)
+    public function fakeMethodsAndRegisterCalls($class, $declaredClass, $method, $params, $static)
     {
-        $method = $invocation->getMethod();
-        $obj = $invocation->getThis();
+//        $method = $invocation->getMethod();
+//        $obj = $invocation->getThis();
+        $result = __AM_CONTINUE__;
 
-        $result = in_array($method, $this->methodMap)
-            ? $this->invokeFakedMethods($invocation)
-            : __AM_CONTINUE__;
-
-        if (is_object($obj)) {
-            if (isset($this->objectMap[spl_object_hash($obj)])) Registry::registerInstanceCall($obj, $method, $invocation->getArguments(), $result);
-            $class = get_class($obj);
-        } else {
-            $class = $obj;
+        if (in_array($method, $this->methodMap)) {
+            $invocation = new \AspectMock\Intercept\MethodInvocation();
+            $invocation->setThis($class);
+            $invocation->setMethod($method);
+            $invocation->setArguments($params);
+            $invocation->isStatic($static);
+            $invocation->setDeclaredClass($declaredClass);
+            $result = $this->invokeFakedMethods($invocation);
         }
-        if (isset($this->classMap[$class])) Registry::registerClassCall($class, $method, $invocation->getArguments(), $result);
+
+        if (!$static) {
+            if (isset($this->objectMap[spl_object_hash($class)])) Registry::registerInstanceCall($class, $method, $params);
+            $class = get_class($class);
+        }
+
+        if (isset($this->classMap[$class])) Registry::registerClassCall($class, $method, $params);
         return $result;
     }
 
