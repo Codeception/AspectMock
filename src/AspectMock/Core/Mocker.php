@@ -17,12 +17,12 @@ class Mocker implements Aspect {
         $result = $this->invokeFakedMethods($invocation);
 
         if (is_object($obj)) {
-            Registry::registerInstanceCall($obj, $method, $invocation->getArguments(), $result);
+            if (isset($this->objectMap[spl_object_hash($obj)])) Registry::registerInstanceCall($obj, $method, $invocation->getArguments(), $result);
             $class = get_class($obj);
         } else {
             $class = $obj;
         }
-        Registry::registerClassCall($class, $method, $invocation->getArguments(), $result);
+        if (isset($this->classMap[$class])) Registry::registerClassCall($class, $method, $invocation->getArguments(), $result);
         return $result;
     }
 
