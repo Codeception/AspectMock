@@ -1,9 +1,16 @@
 <?php
 namespace AspectMock;
+use AspectMock\Intercept\ClosureTransformer;
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
 use Go\Instrument\Transformer\FilterInjectorTransformer;
 use Symfony\Component\Finder\Finder;
+use Go\Instrument\ClassLoading\SourceTransformingLoader;
+use Go\Instrument\Transformer\SourceTransformer;
+use Go\Instrument\Transformer\WeavingTransformer;
+use Go\Instrument\Transformer\CachingTransformer;
+use Go\Instrument\Transformer\MagicConstantTransformer;
+use TokenReflection;
 
 class Kernel extends AspectKernel
 {
@@ -32,6 +39,7 @@ class Kernel extends AspectKernel
         foreach ($files as $file) {
             $this->loadFile($file->getRealpath());
         }
+
     }
 
     /**
@@ -43,4 +51,25 @@ class Kernel extends AspectKernel
     {
         include FilterInjectorTransformer::rewrite($file);
     }
+
+    protected function registerTransformers(SourceTransformingLoader $sourceLoader)
+    {
+        $sourceTransformers = array(
+            new FilterInjectorTransformer($this->options, $sourceLoader->getId()),
+            new MagicConstantTransformer($this),
+            new ClosureTransformer(
+                $this,
+                new TokenReflection\Broker(
+                    new TokenReflection\Broker\Backend\Memory()
+                ),
+                $this->container->get('aspect.advice_matcher')
+            )
+        );
+
+        return array(
+            new CachingTransformer($this, $sourceTransformers)
+        );
+    }
 }
+
+require __DIR__.'/Intercept/around_mock.php';

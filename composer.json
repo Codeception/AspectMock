@@ -17,7 +17,7 @@
     },
     "require-dev": {
         "codeception/codeception": "@stable",
-        "codeception/verify": "@dev",
-        "codeception/specify": "@dev"
+        "codeception/verify": "*",
+        "codeception/specify": "*"
     }
 }
