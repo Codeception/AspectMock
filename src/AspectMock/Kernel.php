@@ -1,5 +1,6 @@
 <?php
 namespace AspectMock;
+use AspectMock\Intercept\BeforeMockTransformer;
 use AspectMock\Intercept\ClosureTransformer;
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
@@ -57,7 +58,7 @@ class Kernel extends AspectKernel
         $sourceTransformers = array(
             new FilterInjectorTransformer($this->options, $sourceLoader->getId()),
             new MagicConstantTransformer($this),
-            new ClosureTransformer(
+            new BeforeMockTransformer(
                 $this,
                 new TokenReflection\Broker(
                     new TokenReflection\Broker\Backend\Memory()
@@ -72,4 +73,4 @@ class Kernel extends AspectKernel
     }
 }
 
-require __DIR__.'/Intercept/around_mock.php';
+require __DIR__ . '/Intercept/before_mock.php';

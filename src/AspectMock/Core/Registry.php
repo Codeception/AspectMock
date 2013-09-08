@@ -14,8 +14,6 @@ class Registry {
 
     protected static $classCalls = [];
     protected static $instanceCalls = [];
-    protected static $classReturned = [];
-    protected static $instanceReturned = [];
 
     /**
      * @return Mock
@@ -55,23 +53,6 @@ class Registry {
             : [];
     }
 
-    static function getReturnedValues($classOrInstance, $method)
-    {
-        $classOrInstance = self::getRealClassOrObject($classOrInstance);
-        if (is_object($classOrInstance)) {
-            $oid = spl_object_hash($classOrInstance);
-            if (!isset(self::$instanceReturned[$oid])) return array();
-            $storage = self::$instanceReturned[$oid];
-        } else {
-            if (!isset(self::$classReturned[$classOrInstance])) return array();
-            $storage = self::$classReturned[$classOrInstance];
-        }
-
-        if (!isset($storage[$method])) return array();
-
-        return $storage[$method];
-    }
-
     static function clean($classOrInstance = null)
     {
         $classOrInstance = self::getRealClassOrObject($classOrInstance);
@@ -79,11 +60,9 @@ class Registry {
         if (is_object($classOrInstance)) {
             $oid = spl_object_hash($classOrInstance);
             unset(self::$instanceCalls[$oid]);
-            unset(self::$instanceReturned[$oid]);
 
         } elseif (is_string($classOrInstance)) {
             unset(self::$classCalls[$classOrInstance]);
-            unset(self::$classReturned[$classOrInstance]);
 
         } else {
             self::cleanInvocations();
@@ -94,11 +73,9 @@ class Registry {
     {
         self::$instanceCalls = [];
         self::$classCalls = [];
-        self::$classReturned = [];
-        self::$instanceReturned = [];
     }
 
-    static function registerInstanceCall($instance, $method, $args = array(), $returned = null)
+    static function registerInstanceCall($instance, $method, $args = array())
     {
         $oid = spl_object_hash($instance);
         if (!isset(self::$instanceCalls[$oid])) self::$instanceCalls[$oid] = [];
@@ -107,26 +84,15 @@ class Registry {
             ? self::$instanceCalls[$oid][$method][] = $args
             : self::$instanceCalls[$oid][$method] = array($args);
 
-        if (!isset(self::$instanceReturned[$oid])) self::$instanceReturned[$oid] = [];
-
-        isset(self::$instanceReturned[$method])
-            ? self::$instanceReturned[$method][] = $returned
-            : self::$instanceReturned[$method] = array($returned);
     }
 
-    static function registerClassCall($class, $method, $args = array(), $returned = null)
+    static function registerClassCall($class, $method, $args = array())
     {
         if (!isset(self::$classCalls[$class])) self::$classCalls[$class] = [];
 
         isset(self::$classCalls[$class][$method])
             ? self::$classCalls[$class][$method][] = $args
             : self::$classCalls[$class][$method] = array($args);
-
-        if (!isset(self::$classReturned[$class])) self::$classReturned[$class] = [];
-
-        isset(self::$classReturned[$class][$method])
-            ? self::$classReturned[$class][$method][] = $returned
-            : self::$classReturned[$class][$method] = array($returned);
 
     }
 

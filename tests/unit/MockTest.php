@@ -82,27 +82,4 @@ class MockTest extends \PHPUnit_Framework_TestCase
 
     }
 
-    public function testResults()
-    {
-        $user = new UserModel(['name' => 'jon']);
-        $userProxy = new ClassProxy('demo\UserModel');
-        double::registerClass('demo\UserModel');
-
-        verify($user->getName())->equals('jon');
-        $userProxy->verifyInvoked('getName')->returned('jon');
-        $user->getName();
-
-        $user->setName('davert');
-        verify($user->getName())->equals('davert');
-        $userProxy->verifyInvoked('getName')->returned('davert');
-        $userProxy->verifyInvoked('getName')->returned('jon');
-        $userProxy->verifyInvoked('getName')->neverReturned(null);
-        $userProxy->verifyInvoked('getName')->returnedMultipleTimes('jon', 2);
-        $userProxy->verifyInvoked('getName')->returnedOnce('davert');
-        verify($userProxy->verifyInvoked('getName')->result())->equals('davert');
-        verify($userProxy->verifyInvoked('getName')->results())->contains('jon');
-
-    }
-
-
 }

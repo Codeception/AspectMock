@@ -61,7 +61,6 @@ class Mocker implements Aspect {
                 $params = $this->getClassMethodStubParams($calledClass, $method);
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
             }
-            $closure = \Closure::bind($invocation->getClosure(), $invocation->getThis());
         } else {
             // static method
             $params = $this->getClassMethodStubParams($obj, $method);
@@ -80,9 +79,8 @@ class Mocker implements Aspect {
                 $params = $this->getClassMethodStubParams($calledClass, $method);
                 if ($params !== false) return $this->stubMagicMethod($invocation, $params);
             }
-            $closure = \Closure::bind($invocation->getClosure(), null, $invocation->getDeclaredClass());
         }
-        return call_user_func_array($closure, $invocation->getArguments());
+        return __AM_CONTINUE__;
     }
 
     protected function getObjectMethodStubParams($obj, $method_name)

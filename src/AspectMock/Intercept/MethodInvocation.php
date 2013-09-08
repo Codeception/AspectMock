@@ -5,7 +5,6 @@ class MethodInvocation
 {
     protected $method;
     protected $arguments;
-    protected $closure;
     protected $isStatic;
     protected $declaredClass;
 
