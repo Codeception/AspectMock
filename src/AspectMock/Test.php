@@ -58,11 +58,6 @@ class Test {
      * User::tableName(); // 'fake_users'
      * $user->verifyInvoked('tableName'); // success
      *
-     * # tests a method returned the desired result.
-     * $user = test::double(new User['name' => 'davert']);
-     * $user->getName();
-     * $user->verifyMethodInvoked('getName')->returned('davert');
-     *
      * # append declaration
      * $user = new User;
      * test::double($user, ['getName' => 'davert']);

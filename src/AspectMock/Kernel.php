@@ -1,5 +1,6 @@
 <?php
 namespace AspectMock;
+use AspectMock\Core\Registry;
 use AspectMock\Intercept\BeforeMockTransformer;
 use AspectMock\Intercept\ClosureTransformer;
 use AspectMock\Intercept\LoadPreachedTransformer;
@@ -26,8 +27,7 @@ class Kernel extends AspectKernel
 
     protected function configureAop(AspectContainer $container)
     {
-        ini_set('xdebug.max_nesting_level', 500);
-        $container->registerAspect(new Core\Mocker);
+        Registry::setMocker(new Core\Mocker);
     }
 
     /**

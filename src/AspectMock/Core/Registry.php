@@ -1,6 +1,5 @@
 <?php
 namespace AspectMock\Core;
-use AspectMock\Kernel;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 
@@ -16,26 +15,23 @@ class Registry {
     protected static $instanceCalls = [];
 
     /**
-     * @return Mock
+     * @var Mocker
      */
-    protected static function getMockAspect()
-    {
-        return Kernel::getInstance()->getContainer()->getAspect('AspectMock\Core\Mocker');
-    }
+    protected static $mocker;
 
     static function registerClass($name, $params = array())
     {
-        self::getMockAspect()->registerClass($name, $params);
+        self::$mocker->registerClass($name, $params);
     }
 
     static function registerObject($object, $params = array())
     {
-        self::getMockAspect()->registerObject($object, $params);
+        self::$mocker->registerObject($object, $params);
     }
 
     static function registerFunc($func, $resultOrClosure)
     {
-        self::getMockAspect()->registerFunc($func, $resultOrClosure);
+        self::$mocker->registerFunc($func, $resultOrClosure);
     }
 
     static function getClassCallsFor($class)
@@ -56,7 +52,7 @@ class Registry {
     static function clean($classOrInstance = null)
     {
         $classOrInstance = self::getRealClassOrObject($classOrInstance);
-        self::getMockAspect()->clean($classOrInstance);
+        self::$mocker->clean($classOrInstance);
         if (is_object($classOrInstance)) {
             $oid = spl_object_hash($classOrInstance);
             unset(self::$instanceCalls[$oid]);
@@ -103,4 +99,19 @@ class Registry {
         return $classOrObject;
     }
 
+    /**
+     * @param mixed $mocker
+     */
+    public static function setMocker(Mocker $mocker)
+    {
+        self::$mocker = $mocker;
+    }
+
+    /**
+     * @return mixed
+     */
+    public static function getMocker()
+    {
+        return self::$mocker;
+    }
 }

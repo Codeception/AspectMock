@@ -236,7 +236,6 @@ Example:
 <?php
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
-    'debug' => true,
     'appDir'    => __DIR__ . '/../../',
     'cacheDir'  => '/tmp/myapp',
     'includePaths' => [__DIR__.'/../src']
