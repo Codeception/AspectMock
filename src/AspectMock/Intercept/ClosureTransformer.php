@@ -67,6 +67,7 @@ class ClosureTransformer extends WeavingTransformer {
                 foreach ($methods as $method) {
                     /** @var $method ReflectionMethod`  **/
                     if ($method->getDeclaringClassName() != $class->getName()) continue;
+                    if ($method->isAbstract()) continue;
                      $aroundDefinition = $method->isStatic()
                         ? $this->beforeStatic
                         : $this->before;
