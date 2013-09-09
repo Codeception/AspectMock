@@ -58,21 +58,19 @@ Returns a real object that is proxified.
 Verifies a method was invoked at least once.
 In second argument you can specify with which params method expected to be invoked;
 
-Returns **MethodProxy** which can be used to verify invocation results.
-
 ``` php
 <?php
 $user->verifyInvoked('save');
 $user->verifyInvoked('setName',['davert']);
-$user->verifyInvoked('getName')->returned('davert');
 
 ?>
 ```
 
  * param $name
+ * param null $params
+ * throws \PHPUnit_Framework_ExpectationFailedException
  * param array $params
  * throws fail
- * return MethodProxy
 
 
 ## ->verifyInvokedMultipleTimes
@@ -80,14 +78,11 @@ $user->verifyInvoked('getName')->returned('davert');
 
 Verifies that method was called exactly $times times.
 
-Returns **MethodProxy** which can be used to verify invocation results.
-
 ``` php
 <?php
 $user->verifyInvokedMultipleTimes('save',2);
 $user->verifyInvokedMultipleTimes('dispatchEvent',3,['before_validate']);
 $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
-
 ?>
 ```
 
@@ -95,7 +90,6 @@ $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
  * param $times
  * param array $params
  * throws \PHPUnit_Framework_ExpectationFailedException
- * return MethodProxy
 
 
 ## ->verifyInvokedOnce
@@ -103,11 +97,8 @@ $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
 
 Verifies that method was invoked only once.
 
-Returns **MethodProxy** which can be used to verify invocation results.
-
  * param $name
  * param array $params
- * return MethodProxy
 
 
 ## ->verifyNeverInvoked

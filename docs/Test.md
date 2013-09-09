@@ -36,6 +36,11 @@ test::clean($user);
  * api
 
 
+## Test::cleanInvocations
+
+__not documented__
+
+
 ## Test::double
 
 
@@ -73,11 +78,6 @@ User::tableName(); // 'users'
 $user = test::double('User', ['tableName' => 'fake_users']);
 User::tableName(); // 'fake_users'
 $user->verifyInvoked('tableName'); // success
-
-# tests a method returned the desired result.
-$user = test::double(new User['name' => 'davert']);
-$user->getName();
-$user->verifyMethodInvoked('getName')->returned('davert');
 
 # append declaration
 $user = new User;
@@ -139,6 +139,26 @@ test::methods($user, []);
  * param array $only
  * return Core\ClassProxy|Core\InstanceProxy
  * throws \Exception
+
+
+## Test::ns
+
+
+Adds a namespace / namespaces for classes to be searched.
+Useful if you have long namespaces and classes there.
+
+``` php
+<?php
+test::ns('Company\App\ProjectBundle');
+test::double('Entity\User'); // => Company\App\ProjectBundle\Entity\User
+
+?>
+```
+Using `ns` helps in refactoring: test doubles do not depend on long class names.
+
+When declared in `test::double` not exists, AspectMock will try to match it by prepending a namespace.
+To ignore namespace guessing, use `\` in the beginning of class name: `\User`;
+
 
 
 ## Test::spec

@@ -22,7 +22,6 @@ $files = [
     'Test Double Builder' => 'AspectMock\Test',
     'ClassProxy' => 'AspectMock\Proxy\ClassProxy',
     'InstanceProxy' => 'AspectMock\Proxy\InstanceProxy',
-    'MethodProxy' => 'AspectMock\Proxy\MethodProxy',
 ];
 
 foreach ($files as $className) {
