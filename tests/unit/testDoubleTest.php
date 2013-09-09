@@ -47,7 +47,7 @@ class testDoubleTest extends \Codeception\TestCase\Test
     {
         $class = test::spec('MyVirtualClass');
         /** @var $class ClassProxy **/
-        $this->assertFalse($class->defined());
+        $this->assertFalse($class->isDefined());
         $this->assertFalse($class->hasMethod('__toString'));
         $this->assertFalse($class->hasMethod('edit'));
         verify($class->interfaces())->isEmpty();

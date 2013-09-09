@@ -58,7 +58,7 @@ class ClassProxy extends Verifier  {
      *
      * @return bool
      */
-    public function defined()
+    public function isDefined()
     {
        return true;
     }

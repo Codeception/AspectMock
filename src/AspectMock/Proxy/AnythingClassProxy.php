@@ -10,7 +10,7 @@ class AnythingClassProxy extends ClassProxy {
         $this->reflected = new \ReflectionClass('AspectMock\Proxy\Anything');
     }
 
-    public function defined()
+    public function isDefined()
     {
        return false;
     }

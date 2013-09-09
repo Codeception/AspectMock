@@ -12,7 +12,7 @@ class ClassProxyTest extends \Codeception\TestCase\Test {
     {
         $class = test::double('demo\UserModel');
         /** @var $class ClassProxy **/
-        verify($class->defined())->true();
+        verify($class->isDefined())->true();
         verify($class->hasMethod('setName'))->true();
         verify($class->hasMethod('setNothing'))->false();
         verify($class->hasProperty('name'))->true();
@@ -26,7 +26,7 @@ class ClassProxyTest extends \Codeception\TestCase\Test {
     {
         $class = test::double('demo\MegaClass');
         /** @var $class ClassProxy **/
-        verify($class->defined())->true();
+        verify($class->isDefined())->true();
         verify($class->hasMethod('setName'))->false();
         verify($class->traits())->contains('Codeception\Specify');
         verify($class->interfaces())->contains('Iterator');
