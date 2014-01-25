@@ -31,6 +31,13 @@ use PHPUnit_Framework_Assert as a;
  * $userModel->className; // UserModel
  * ?>
  * ```
+ *
+ * Also, you can get the list of calls for a specific method.
+ *
+ * ```php
+ * $user = test::double('UserModel');
+ * $user->someMethod('arg1', 'arg2');
+ * $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
  */
 class ClassProxy extends Verifier  {
 
@@ -44,7 +51,7 @@ class ClassProxy extends Verifier  {
 
     }
 
-    protected function getCallsForMethod($method)
+    public function getCallsForMethod($method)
     {
         $calls = Registry::getClassCallsFor($this->className);
         return isset($calls[$method])

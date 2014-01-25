@@ -24,7 +24,7 @@ abstract class Verifier {
 
     protected $neverInvoked = "Expected %s not to be invoked but it was.";
 
-    abstract protected function getCallsForMethod($method);
+    abstract public function getCallsForMethod($method);
 
     protected function callSyntax($method)
     {
