@@ -43,6 +43,12 @@ use AspectMock\Test;
  * $user->class->verifyInvoked('setName');
  * ?>
  * ```
+ * Also, you can get the list of calls for a specific method.
+ *
+ * ```php
+ * $user = test::double(new UserModel);
+ * $user->someMethod('arg1', 'arg2');
+ * $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
  *
  * Class InstanceVerifier
  * @package AspectMock\Core
@@ -74,7 +80,7 @@ class InstanceProxy extends Verifier {
         return $this->instance;
     }
     
-    protected function getCallsForMethod($method)
+    public function getCallsForMethod($method)
     {
         $calls = Registry::getInstanceCallsFor($this->instance);
         return isset($calls[$method])
