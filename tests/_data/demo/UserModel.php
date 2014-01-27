@@ -4,6 +4,7 @@ namespace demo;
 class UserModel {
 
     protected $name;
+    protected $info;
 
     static function tableName()
     {
@@ -33,6 +34,23 @@ class UserModel {
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param array $info
+     */
+    public function setInfo($info)
+    {
+        $this->info = $info;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfo($info)
+    {
+        return $this->info;
     }
 
     function save()

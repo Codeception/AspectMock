@@ -71,6 +71,8 @@ abstract class Verifier {
             }
             $params = ArgumentsFormatter::toString($params);
             throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name."($params)"));
+        } else if(is_callable($params)) {
+            $params($calls);
         }
     }
 
@@ -117,6 +119,8 @@ abstract class Verifier {
             if ($equals == $times) return;
             $params = ArgumentsFormatter::toString($params);
             throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name."($params)", $times, $equals));
+        } else if(is_callable($params)) {
+            $params($calls);
         }
         $num_calls = count($calls);
         if ($num_calls != $times) throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
