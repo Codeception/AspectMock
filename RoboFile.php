@@ -9,17 +9,24 @@ class Robofile extends \Robo\Tasks
         'docs/InstanceProxy.md' => 'AspectMock\Proxy\InstanceProxy'
     ];
 
+    protected function version()
+    {
+        return file_get_contents(__DIR__.'/VERSION');
+    }
+
     public function release()
     {
         $this->say("Releasing AspectMock");
 
+        $this->docs();
+        
         $this->taskGit()
             ->add('CHANGELOG.md')
             ->commit('updated')
             ->push()
             ->run();
 
-        $this->taskGitHubRelease(file_get_contents('VERSION'))
+        $this->taskGitHubRelease($this->version())
             ->uri('Codeception/AspectMock')
             ->askDescription()
             ->run();
@@ -43,7 +50,7 @@ class Robofile extends \Robo\Tasks
     public function added($addition)
     {
         $this->taskChangelog()
-            ->version(file_get_contents('VERSION'))
+            ->version($this->version())
             ->change($addition)
             ->run();
     }
@@ -51,13 +58,12 @@ class Robofile extends \Robo\Tasks
     public function bump($version = null)
     {
         if (!$version) {
-            $versionParts = explode('.', file_get_contents('VERSION'));
+            $versionParts = explode('.', $this->version());
             $versionParts[count($versionParts)-1]++;
             $version = implode('.', $versionParts);
         }
-        $this->taskWriteToFile('VERSION')
-            ->line($version)
-            ->run();
+
+        file_put_contents('VERSION', $version);
     }
 
 }
