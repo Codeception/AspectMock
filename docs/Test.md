@@ -1,4 +1,6 @@
-# AspectMock\Test
+
+## AspectMock\Test
+
 
 `AspectMock\Test` class is a builder of test doubles.
 Any object can be enhanced and turned to a test double with the call to `double` method.
@@ -12,36 +14,7 @@ use AspectMock\Test as test;
 ?>
 ```
 
-## Test::clean
-
-
-Clears test doubles registry.
-Should be called between tests.
-
-``` php
-<?php
-test::clean();
-?>
-```
-
-Also you can clean registry only for the specific class or object.
-
-``` php
-<?php
-test::clean('User');
-test::clean($user);
-?>
-```
-
- * api
-
-
-## Test::cleanInvocations
-
-__not documented__
-
-
-## Test::double
+### Methods
 
 
 test::double registers class or object to track its calls.
@@ -111,59 +84,6 @@ $user->save(); // false
  * return Verifier
 
 
-## Test::methods
-
-
-Replaces all methods in a class with a dummies, except specified.
-
-``` php
-<?php
-$user = new User(['name' => 'jon']);
-test::methods($user, ['getName']);
-$user->setName('davert'); // not invoked
-$user->getName(); // jon
-?>
-```
-
-You can create a dummy without a constructor with all methods disabled
-
-``` php
-<?php
-$user = test::double('User')->make();
-test::methods($user, []);
-?>
-```
-
- * api
- * param $classOrObject
- * param array $only
- * return Core\ClassProxy|Core\InstanceProxy
- * throws \Exception
-
-
-## Test::ns
-
-
-Adds a namespace / namespaces for classes to be searched.
-Useful if you have long namespaces and classes there.
-
-``` php
-<?php
-test::ns('Company\App\ProjectBundle');
-test::double('Entity\User'); // => Company\App\ProjectBundle\Entity\User
-
-?>
-```
-Using `ns` helps in refactoring: test doubles do not depend on long class names.
-
-When declared in `test::double` not exists, AspectMock will try to match it by prepending a namespace.
-To ignore namespace guessing, use `\` in the beginning of class name: `\User`;
-
-
-
-## Test::spec
-
-
 If you follow TDD/BDD practices a test should be written before the class is defined.
 If you would call undefined class in a test, a fatal error will be triggered.
 Instead you can use `test::spec` method that will create a proxy for an undefined class.
@@ -212,4 +132,71 @@ If class is already defined, `test::spec` will act as `test::double`.
  * param $classOrObject
  * param array $params
  * return Verifier
+
+
+
+Replaces all methods in a class with a dummies, except specified.
+
+``` php
+<?php
+$user = new User(['name' => 'jon']);
+test::methods($user, ['getName']);
+$user->setName('davert'); // not invoked
+$user->getName(); // jon
+?>
+```
+
+You can create a dummy without a constructor with all methods disabled
+
+``` php
+<?php
+$user = test::double('User')->make();
+test::methods($user, []);
+?>
+```
+
+ * api
+ * param $classOrObject
+ * param array $only
+ * return Core\ClassProxy|Core\InstanceProxy
+ * throws \Exception
+
+
+Adds a namespace / namespaces for classes to be searched.
+Useful if you have long namespaces and classes there.
+
+``` php
+<?php
+test::ns('Company\App\ProjectBundle');
+test::double('Entity\User'); // => Company\App\ProjectBundle\Entity\User
+
+?>
+```
+Using `ns` helps in refactoring: test doubles do not depend on long class names.
+
+When declared in `test::double` not exists, AspectMock will try to match it by prepending a namespace.
+To ignore namespace guessing, use `\` in the beginning of class name: `\User`;
+
+
+
+Clears test doubles registry.
+Should be called between tests.
+
+``` php
+<?php
+test::clean();
+?>
+```
+
+Also you can clean registry only for the specific class or object.
+
+``` php
+<?php
+test::clean('User');
+test::clean($user);
+?>
+```
+
+ * api
+
 

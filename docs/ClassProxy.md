@@ -1,4 +1,6 @@
-# AspectMock\Proxy\ClassProxy
+
+## AspectMock\Proxy\ClassProxy
+
 
 ClassProxy represents a class of your project.
 
@@ -27,7 +29,45 @@ $userModel->className; // UserModel
 ?>
 ```
 
-## ->construct
+Also, you can get the list of calls for a specific method.
+
+```php
+$user = test::double('UserModel');
+$user->someMethod('arg1', 'arg2');
+$user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
+
+### Methods
+
+
+
+
+Returns true if class exists.
+Returns false if class is not defined yet, and was declared via `test::spec`.
+
+ * return bool
+
+
+Returns an array with all interface names of a class
+
+ * return array
+
+
+Returns a name of the parent of a class.
+
+ * return null
+
+
+ * param $method
+ * return bool
+
+
+ * param $property
+ * return bool
+
+
+Returns array of all trait names of a class.
+
+ * return array
 
 
 Creates an instance of a class via constructor.
@@ -44,40 +84,6 @@ $user = test::double('User')->construct([
  * return object
 
 
-## ->hasMethod
-
-
- * param $method
- * return bool
-
-
-## ->hasProperty
-
-
- * param $property
- * return bool
-
-
-## ->interfaces
-
-
-Returns an array with all interface names of a class
-
- * return array
-
-
-## ->isDefined
-
-
-Returns true if class exists.
-Returns false if class is not defined yet, and was declared via `test::spec`.
-
- * return bool
-
-
-## ->make
-
-
 Creates a class instance without calling a constructor.
 
 ``` php
@@ -88,24 +94,6 @@ $user = test::double('User')->make();
 ```
  * return object
 
-
-## ->parent
-
-
-Returns a name of the parent of a class.
-
- * return null
-
-
-## ->traits
-
-
-Returns array of all trait names of a class.
-
- * return array
-
-
-## ->verifyInvoked
 
 
 Verifies a method was invoked at least once.
@@ -126,7 +114,10 @@ $user->verifyInvoked('setName',['davert']);
  * throws fail
 
 
-## ->verifyInvokedMultipleTimes
+Verifies that method was invoked only once.
+
+ * param $name
+ * param array $params
 
 
 Verifies that method was called exactly $times times.
@@ -145,18 +136,6 @@ $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
  * throws \PHPUnit_Framework_ExpectationFailedException
 
 
-## ->verifyInvokedOnce
-
-
-Verifies that method was invoked only once.
-
- * param $name
- * param array $params
-
-
-## ->verifyNeverInvoked
-
-
 Verifies that method was not called.
 In second argument with which arguments is not expected to be called.
 
@@ -173,3 +152,4 @@ $user->verifyNeverInvoked('setName',[]); // success
  * param $name
  * param null $params
  * throws \PHPUnit_Framework_ExpectationFailedException
+

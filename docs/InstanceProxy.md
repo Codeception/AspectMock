@@ -1,4 +1,6 @@
-# AspectMock\Proxy\InstanceProxy
+
+## AspectMock\Proxy\InstanceProxy
+
 
 InstanceProxy is a proxy for underlying object, mocked with test::double.
 A real object can be returned with `getObject` methods.
@@ -39,12 +41,19 @@ $user->setName('davert');
 $user->class->verifyInvoked('setName');
 ?>
 ```
+Also, you can get the list of calls for a specific method.
+
+```php
+$user = test::double(new UserModel);
+$user->someMethod('arg1', 'arg2');
+$user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 
 Class InstanceVerifier
- * package AspectMock\Core
- * property $class ClassProxy
+@package AspectMock\Core
+@property $class ClassProxy
 
-## ->getObject
+### Methods
+
 
 
 Returns a real object that is proxified.
@@ -52,7 +61,8 @@ Returns a real object that is proxified.
  * return mixed
 
 
-## ->verifyInvoked
+
+
 
 
 Verifies a method was invoked at least once.
@@ -73,7 +83,10 @@ $user->verifyInvoked('setName',['davert']);
  * throws fail
 
 
-## ->verifyInvokedMultipleTimes
+Verifies that method was invoked only once.
+
+ * param $name
+ * param array $params
 
 
 Verifies that method was called exactly $times times.
@@ -92,18 +105,6 @@ $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
  * throws \PHPUnit_Framework_ExpectationFailedException
 
 
-## ->verifyInvokedOnce
-
-
-Verifies that method was invoked only once.
-
- * param $name
- * param array $params
-
-
-## ->verifyNeverInvoked
-
-
 Verifies that method was not called.
 In second argument with which arguments is not expected to be called.
 
@@ -120,3 +121,4 @@ $user->verifyNeverInvoked('setName',[]); // success
  * param $name
  * param null $params
  * throws \PHPUnit_Framework_ExpectationFailedException
+

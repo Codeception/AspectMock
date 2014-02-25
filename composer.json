@@ -18,6 +18,7 @@
     "require-dev": {
         "codeception/codeception": "@stable",
         "codeception/verify": "*",
-        "codeception/specify": "*"
+        "codeception/specify": "*",
+        "codegyre/robo": "*"
     }
 }
