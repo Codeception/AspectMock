@@ -68,6 +68,8 @@ class BeforeMockTransformer extends WeavingTransformer {
                 foreach ($methods as $method) {
                     /** @var $method ReflectionMethod`  **/
                     if ($method->getDeclaringClassName() != $class->getName()) continue;
+                    // methods from traits have the same declaring class name, so check that the filenames match, too
+                    if ($method->getFileName() != $class->getFileName()) continue;
                     if ($method->isAbstract()) continue;
                      $beforeDefinition = $method->isStatic()
                         ? $this->beforeStatic

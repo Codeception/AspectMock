@@ -55,4 +55,20 @@ class ClassProxyTest extends \Codeception\TestCase\Test {
         });
     }
 
+    public function testClassWithTraits() {
+        // if a trait is used by more than one doubled class, when BeforeMockTransformer
+        // runs on the second class it will see the trait's methods as being a part of
+        // the class itself, and try to inject its code into the class, rather than the
+        // trait. in failure mode, this test will result in:
+        // Parse error: syntax error, unexpected 'if' (T_IF), expecting function (T_FUNCTION)
+        // in [...]/TraitedModel2.php
+
+        $unused = test::double('demo\TraitedClass1'); // this model uses `TraitedModelTrait`
+        $class = test::double('demo\TraitedClass2');  // so does this one
+        /** @var $class ClassProxy **/
+        verify($class->isDefined())->true();
+        verify($class->hasMethod('method1InTrait'))->true();
+        verify($class->hasMethod('methodInClass'))->true();
+    }
+
 }
