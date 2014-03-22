@@ -36,7 +36,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
             verify($empty)->isEmpty();
         };
 
-        $this->specify('closure was called', function() use ($user, $info) {
+        $this->specify('closure was called', function() use ($user, $info, $matcher) {
             $user->verifyInvokedMultipleTimes('setInfo', 2, $matcher);
             $user->verifyInvoked('setInfo', $matcher);
         });
