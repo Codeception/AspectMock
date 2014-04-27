@@ -18,6 +18,8 @@ class Robofile extends \Robo\Tasks
     {
         $this->say("Releasing AspectMock");
 
+        $this->test();
+
         $this->docs();
         
         $this->taskGit()
@@ -66,4 +68,12 @@ class Robofile extends \Robo\Tasks
         file_put_contents('VERSION', $version);
     }
 
+    public function test()
+    {
+        $res = $this->taskCodecept()->run();
+        if (!$res) {
+            $this->say('Tests didnt pass, release declined');
+            exit;
+        }
+    }
 }
