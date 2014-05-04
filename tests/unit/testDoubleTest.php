@@ -4,6 +4,7 @@ use AspectMock\Test as test;
 class testDoubleTest extends \Codeception\TestCase\Test
 {
     use Codeception\Specify;
+    use demo\WorkingTrait;
 
     protected function tearDown()
     {
@@ -109,8 +110,12 @@ class testDoubleTest extends \Codeception\TestCase\Test
         test::clean($user1);
         verify($user1->getName())->null();
         verify($user2->getName())->equals('good boy');
+    }
 
-
+    public function testDoubleTraits()
+    {
+        test::double('demo\WorkingTrait', ['thisShouldWork' => null]);
+        verify($this->thisShouldWork())->equals('done!');
     }
 
 

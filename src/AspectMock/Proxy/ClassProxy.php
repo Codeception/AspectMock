@@ -35,9 +35,12 @@ use PHPUnit_Framework_Assert as a;
  * Also, you can get the list of calls for a specific method.
  *
  * ```php
+ * <?php
  * $user = test::double('UserModel');
  * $user->someMethod('arg1', 'arg2');
  * $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
+ * ?>
+ * ```
  */
 class ClassProxy extends Verifier  {
 

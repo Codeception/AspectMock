@@ -276,6 +276,7 @@ class Test {
 
 function class_exists($class_name)
 {
+    if (\trait_exists($class_name)) return true;
     if (\class_exists($class_name)) return true;
     if (strpos($class_name, '\\') === 0) return false;
     return \class_exists(Registry::getNamespace() .'\\'.$class_name);
