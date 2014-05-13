@@ -112,11 +112,5 @@ class testDoubleTest extends \Codeception\TestCase\Test
         verify($user2->getName())->equals('good boy');
     }
 
-    public function testDoubleTraits()
-    {
-        test::double('demo\WorkingTrait', ['thisShouldWork' => null]);
-        verify($this->thisShouldWork())->equals('done!');
-    }
-
 
 }

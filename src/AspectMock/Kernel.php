@@ -55,10 +55,10 @@ class Kernel extends AspectKernel
         include FilterInjectorTransformer::rewrite($file);
     }
 
-    protected function registerTransformers(SourceTransformingLoader $sourceLoader)
+    protected function registerTransformers()
     {
         $sourceTransformers = array(
-            new FilterInjectorTransformer($this->options, $sourceLoader->getId()),
+            new FilterInjectorTransformer($this->options, SourceTransformingLoader::getId()),
             new BeforeMockTransformer(
                 $this,
                 new TokenReflection\Broker(
