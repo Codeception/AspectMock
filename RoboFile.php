@@ -20,7 +20,7 @@ class Robofile extends \Robo\Tasks
 
         $this->docs();
         
-        $this->taskGit()
+        $this->taskGitStack()
             ->add('CHANGELOG.md')
             ->commit('updated')
             ->push()
@@ -70,7 +70,7 @@ class Robofile extends \Robo\Tasks
     {
         $res = $this->taskCodecept()->run();
         if (!$res) {
-            $this->say('Tests didnt pass, release declined');
+            $this->say('Tests did not pass, release declined');
             exit;
         }
     }
