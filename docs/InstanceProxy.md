@@ -59,7 +59,7 @@ $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 
 
 
-#### *public* __construct($object) 
+
 
 #### *public* getObject() 
 Returns a real object that is proxified.
@@ -67,9 +67,9 @@ Returns a real object that is proxified.
  * return mixed
 
 #### *public* getCallsForMethod($method) 
-#### *public* __call($method, $args) 
-#### *public* __get($property) 
-#### *public* __set($property, $value) 
+
+
+
 
 #### *public* verifyInvoked($name, $params = null) 
 Verifies a method was invoked at least once.

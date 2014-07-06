@@ -46,7 +46,7 @@ $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 
 
 
-#### *public* __construct($class_name) 
+
 #### *public* getCallsForMethod($method) 
 #### *public* isDefined() 
 Returns true if class exists.
@@ -103,7 +103,7 @@ $user = test::double('User')->make();
 ```
  * return object
 
-#### *public* __call($method, $args) 
+
 
 
 #### *public* verifyInvoked($name, $params = null) 

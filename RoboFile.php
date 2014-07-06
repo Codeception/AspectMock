@@ -40,6 +40,12 @@ class Robofile extends \Robo\Tasks
             class_exists($class, true);
             $this->taskGenDoc($file)
                 ->docClass($class)
+                ->filterMethods(function(\ReflectionMethod $method) {
+                    if ($method->isConstructor() or $method->isDestructor()) return false;
+                    if (!$method->isPublic()) return false;
+                    if (strpos($method->name, '_') === 0) return false;
+                    return true;
+                })
                 ->processMethodDocBlock(
                     function (\ReflectionMethod $m, $doc) {
                         $doc = str_replace(array('@since'), array(' * available since version'), $doc);
