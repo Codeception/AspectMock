@@ -80,7 +80,7 @@ class BeforeMockTransformer extends WeavingTransformer {
 
                     foreach ($reflectedParams as $reflectedParam) {
                         /** @var $reflectedParam ReflectionParameter  **/
-                        $params[] = '$'.$reflectedParam->getName();
+                        $params[] = ($reflectedParam->isPassedByReference() ? '&$' : '$').$reflectedParam->getName();
                     }
                     $params = implode(", ", $params);
                     $beforeDefinition = sprintf($beforeDefinition, $params);
