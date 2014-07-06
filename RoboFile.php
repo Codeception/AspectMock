@@ -1,4 +1,6 @@
 <?php
+require_once 'vendor/autoload.php';
+
 class Robofile extends \Robo\Tasks
 {
     protected $docs = [
@@ -35,15 +37,16 @@ class Robofile extends \Robo\Tasks
     public function docs()
     {
         foreach ($this->docs as $file => $class) {
+            class_exists($class, true);
             $this->taskGenDoc($file)
                 ->docClass($class)
-                ->processMethod(
+                ->processMethodDocBlock(
                     function (\ReflectionMethod $m, $doc) {
                         $doc = str_replace(array('@since'), array(' * available since version'), $doc);
                         $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
                         return $doc;
-                    }
-                )->run();
+                    })
+                ->run();
         }
     }
 
