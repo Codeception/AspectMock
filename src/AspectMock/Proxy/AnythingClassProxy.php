@@ -30,7 +30,7 @@ class AnythingClassProxy extends ClassProxy {
         return array();
     }
 
-    public function hasMethod()
+    public function hasMethod($method)
     {
         return false;
     }
