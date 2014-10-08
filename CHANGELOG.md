@@ -1,5 +1,10 @@
 # Changelog
 
+#### 0.5.0
+
+* Debug mode can be disabled in options with debug => false *2014-10-08*
+* Updated to Go\Aop 0.5.0
+
 #### 0.5.0-beta 05/14/2014
 
 * moved to Go\Aop 0.5.x-dev

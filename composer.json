@@ -17,8 +17,8 @@
         "lisachenko/go-aop-php": "0.5.*"
     },
     "require-dev": {
-        "codeception/codeception": "@stable",
-        "codeception/verify": "*",
-        "codeception/specify": "*"
+        "codeception/codeception": "~2.0",
+        "codeception/verify": "~0.2",
+        "codeception/specify": "~0.3"
     }
 }

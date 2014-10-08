@@ -39,6 +39,7 @@ class Test {
      * $user = test::double(new User, ['getName' => 'davert']);
      * $user->getName() // => davert
      * $user->verifyInvoked('getName'); // => success
+     * $user->getObject() // => returns instance of User, i.e. real, not proxified object
      *
      * # with closure
      * $user = test::double(new User, ['getName' => function() { return $this->login; }]);

@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "af40fe4eb7cb222e2b34d05dfbdecb2c",
+    "hash": "8dd75b78971fcb9ad95a7d704353cc71",
     "packages": [
         {
             "name": "andrewsville/php-token-reflection",
@@ -1705,18 +1705,12 @@
             "time": "2014-09-22 09:14:18"
         }
     ],
-    "aliases": [
-
-    ],
+    "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "codeception/codeception": 0
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "platform": {
         "php": ">=5.4.0"
     },
-    "platform-dev": [
-
-    ]
+    "platform-dev": []
 }
