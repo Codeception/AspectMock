@@ -20,7 +20,7 @@ class Kernel extends AspectKernel
     public function init(array $options = array())
     {
         if (!isset($options['excludePaths'])) $options['excludePaths'] = [];
-        $options['debug'] = true;
+        if (!isset($options['debug'])) $options['debug'] = true;
         $options['excludePaths'][] = __DIR__;
         parent::init($options);
     }
