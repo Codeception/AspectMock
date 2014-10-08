@@ -92,9 +92,33 @@ class InstanceProxy extends Verifier {
     // proxify calls to the methods
     public function __call($method, $args)
     {
-        if (method_exists($this->instance, $method)) {
-            return call_user_func_array([$this->instance, $method], $args);
+        if (method_exists($this->instance, $method))
+        {
+            // Is the method expecting any argument passed by reference?
+            $passed_args = array();
+            $reflMethod  = new \ReflectionMethod($this->instance, $method);
+            $params      = $reflMethod->getParameters();
+
+            for($i = 0; $i < count($params); $i++)
+            {
+                if(!isset($args[$i]))
+                {
+                    break;
+                }
+
+                if($params[$i]->isPassedByReference())
+                {
+                    $passed_args[] = &$args[$i];
+                }
+                else
+                {
+                    $passed_args[] = $args[$i];
+                }
+            }
+
+            return call_user_func_array([$this->instance, $method], $passed_args);
         }
+        
         if (method_exists($this->instance, '__call')) {
             return call_user_func([$this->instance, '__call'], $method, $args);
         }
