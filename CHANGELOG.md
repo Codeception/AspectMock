@@ -2,6 +2,7 @@
 
 #### 0.5.0
 
+* Fixed passing arguments by reference in InstanceProxy. Thanks to @tampe125. Issue #39 *2014-10-08*
 * Debug mode can be disabled in options with debug => false *2014-10-08*
 * Updated to Go\Aop 0.5.0
 

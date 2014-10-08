@@ -56,7 +56,7 @@ class Robofile extends \Robo\Tasks
         }
     }
 
-    public function added($addition)
+    public function changed($addition)
     {
         $this->taskChangelog()
             ->version($this->version())
