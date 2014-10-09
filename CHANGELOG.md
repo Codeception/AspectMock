@@ -2,9 +2,9 @@
 
 #### 0.5.0
 
+* test::ns() method removed *2014-10-10*
 * Mocking functions implemented with test::func method *2014-10-10*
 * Fixed mocking functions with arguments passed by reference #34 by @tampe125 *2014-10-09*
-* Fixed mocking functions with arguments passed by reference #34 by @tampe125 *2014-10-08*
 * Fixed passing arguments by reference in InstanceProxy. Thanks to @tampe125. Issue #39 *2014-10-08*
 * Debug mode can be disabled in options with debug => false *2014-10-08*
 * Updated to Go\Aop 0.5.0
@@ -18,10 +18,7 @@
 
 * depdendency on AspectMock ~0.4.0
 
-
-
 #### 0.4.1
- 02/25/2014
 
 * RoboFile
 * Verify invocation arguments with closures @gchaincl

@@ -215,28 +215,6 @@ class Test {
     }
 
     /**
-     * Adds a namespace / namespaces for classes to be searched.
-     * Useful if you have long namespaces and classes there.
-     *
-     * ``` php
-     * <?php
-     * test::ns('Company\App\ProjectBundle');
-     * test::double('Entity\User'); // => Company\App\ProjectBundle\Entity\User
-     *
-     * ?>
-     * ```
-     * Using `ns` helps in refactoring: test doubles do not depend on long class names.
-     *
-     * When declared in `test::double` not exists, AspectMock will try to match it by prepending a namespace.
-     * To ignore namespace guessing, use `\` in the beginning of class name: `\User`;
-     *
-     */
-    public static function ns($namespace)
-    {
-        Registry::setNamespace($namespace);
-    }
-
-    /**
      * Replaces function in provided namespace with user-defined function or value that function returns;
      * Function is restored to original on cleanup.
      *
@@ -305,7 +283,8 @@ class Test {
     }
 
     /*
-     * Clears mock verifications, but not stub definitions.
+     * Clears mock verifications but not stub definitions.
+     *
      *
      * @api
      */
@@ -314,13 +293,5 @@ class Test {
         Core\Registry::cleanInvocations();
     }
 
-
-}
-
-function class_exists($class_name)
-{
-    if (\class_exists($class_name)) return true;
-    if (strpos($class_name, '\\') === 0) return false;
-    return \class_exists(Registry::getNamespace() .'\\'.$class_name);
 
 }

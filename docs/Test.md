@@ -160,23 +160,6 @@ test::methods($user, []);
  * return Core\ClassProxy|Core\InstanceProxy
  * throws \Exception
 
-#### *public static* ns($namespace) 
-Adds a namespace / namespaces for classes to be searched.
-Useful if you have long namespaces and classes there.
-
-``` php
-<?php
-test::ns('Company\App\ProjectBundle');
-test::double('Entity\User'); // => Company\App\ProjectBundle\Entity\User
-
-?>
-```
-Using `ns` helps in refactoring: test doubles do not depend on long class names.
-
-When declared in `test::double` not exists, AspectMock will try to match it by prepending a namespace.
-To ignore namespace guessing, use `\` in the beginning of class name: `\User`;
-
-
 #### *public static* func($namespace, $function, $body) 
 Replaces function in provided namespace with user-defined function or value that function returns;
 Function is restored to original on cleanup.

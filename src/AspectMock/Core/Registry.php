@@ -14,7 +14,6 @@ class Registry {
     protected static $classCalls = [];
     protected static $instanceCalls = [];
     protected static $funcCalls = [];
-    protected static $ns = '';
 
     /**
      * @var Mocker
@@ -68,7 +67,6 @@ class Registry {
             unset(self::$classCalls[$classOrInstance]);
 
         } else {
-            self::$ns = '';
             self::cleanInvocations();
         }
     }
@@ -123,16 +121,6 @@ class Registry {
     public static function setMocker(Mocker $mocker)
     {
         self::$mocker = $mocker;
-    }
-
-    public static function setNamespace($namespace)
-    {
-        self::$ns = $namespace;
-    }
-
-    public static function getNamespace()
-    {
-        return self::$ns;
     }
 
 }
