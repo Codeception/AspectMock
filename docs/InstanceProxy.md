@@ -53,9 +53,7 @@ $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 ```
 
 
-#### *public* classNameName of a class.
 
-@var
 
 
 

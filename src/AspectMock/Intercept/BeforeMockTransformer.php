@@ -10,8 +10,8 @@ use TokenReflection\Php\ReflectionParameter;
 use TokenReflection\ReflectionClass as ParsedClass;
 use TokenReflection\ReflectionFileNamespace as ParsedFileNamespace;
 
-class BeforeMockTransformer extends WeavingTransformer {
-
+class BeforeMockTransformer extends WeavingTransformer
+{
     protected $before = " if ((\$__am_res = __amock_before(\$this, __CLASS__, __FUNCTION__, array(%s), false)) !== __AM_CONTINUE__) return \$__am_res; ";
     protected $beforeStatic = " if ((\$__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true)) !== __AM_CONTINUE__) return \$__am_res; ";
 
@@ -66,12 +66,18 @@ class BeforeMockTransformer extends WeavingTransformer {
 
                 $methods = $class->getMethods();
                 foreach ($methods as $method) {
-                    /** @var $method ReflectionMethod`  **/
-                    if ($method->getDeclaringClassName() != $class->getName()) continue;
+                    /** @var $method ReflectionMethod`  * */
+                    if ($method->getDeclaringClassName() != $class->getName()) {
+                        continue;
+                    }
                     // methods from traits have the same declaring class name, so check that the filenames match, too
-                    if ($method->getFileName() != $class->getFileName()) continue;
-                    if ($method->isAbstract()) continue;
-                     $beforeDefinition = $method->isStatic()
+                    if ($method->getFileName() != $class->getFileName()) {
+                        continue;
+                    }
+                    if ($method->isAbstract()) {
+                        continue;
+                    }
+                    $beforeDefinition = $method->isStatic()
                         ? $this->beforeStatic
                         : $this->before;
                     $reflectedParams = $method->getParameters();
@@ -79,15 +85,17 @@ class BeforeMockTransformer extends WeavingTransformer {
                     $params = [];
 
                     foreach ($reflectedParams as $reflectedParam) {
-                        /** @var $reflectedParam ReflectionParameter  **/
-                        $params[] = ($reflectedParam->isPassedByReference() ? '&$' : '$').$reflectedParam->getName();
+                        /** @var $reflectedParam ReflectionParameter  * */
+                        $params[] = ($reflectedParam->isPassedByReference() ? '&$' : '$') . $reflectedParam->getName();
                     }
                     $params = implode(", ", $params);
                     $beforeDefinition = sprintf($beforeDefinition, $params);
-                    for ($i = $method->getStartLine()-1; $i < $method->getEndLine()-1; $i++) {
-                        $pos = strpos($dataArray[$i],'{');
-                        if ($pos === false) continue;
-                        $dataArray[$i] = substr($dataArray[$i], 0, $pos+1).$beforeDefinition.substr($dataArray[$i], $pos+1);
+                    for ($i = $method->getStartLine() - 1; $i < $method->getEndLine() - 1; $i++) {
+                        $pos = strpos($dataArray[$i], '{');
+                        if ($pos === false) {
+                            continue;
+                        }
+                        $dataArray[$i] = substr($dataArray[$i], 0, $pos + 1) . $beforeDefinition . substr($dataArray[$i], $pos + 1);
                         break;
                     }
                 }
@@ -95,4 +103,5 @@ class BeforeMockTransformer extends WeavingTransformer {
         }
         $metadata->source = implode("\n", $dataArray);
     }
+
 }

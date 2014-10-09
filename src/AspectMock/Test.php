@@ -237,6 +237,48 @@ class Test {
     }
 
     /**
+     * Replaces function in provided namespace with user-defined function or value that function returns;
+     * Function is restored to original on cleanup.
+     *
+     * ```php
+     * <?php
+     * namespace demo;
+     * test::func('demo', 'date', 2004);
+     * date('Y'); // 2004
+     *
+     * test::func('demo', 'date', function($format) {
+     *    if ($format == 'Y') {
+     *      return 2004;
+     *    } else {
+     *      return \date($param);
+     *    }
+     * }
+     *
+     * ```
+     *
+     * Mocked functions can be verified for calls.
+     *
+     * ```php
+     * <?php
+     * namespace demo;
+     * $func = test::func('demo', 'date', 2004);
+     * date('Y'); // 2004
+     * $func->verifyInvoked();
+     * $func->verifyInvokedOnce(['Y']);
+     * ```
+     *
+     * @param $namespace
+     * @param $function
+     * @param $body
+     * @return Proxy\FuncProxy
+     */
+    public static function func($namespace, $function, $body)
+    {
+        Core\Registry::registerFunc($namespace, $function, $body);
+        return new Proxy\FuncProxy($namespace, $function);
+    }
+
+    /**
      * Clears test doubles registry.
      * Should be called between tests.
      *

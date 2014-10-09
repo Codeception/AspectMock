@@ -13,6 +13,7 @@ class Registry {
 
     protected static $classCalls = [];
     protected static $instanceCalls = [];
+    protected static $funcCalls = [];
     protected static $ns = '';
 
     /**
@@ -30,9 +31,9 @@ class Registry {
         self::$mocker->registerObject($object, $params);
     }
 
-    static function registerFunc($func, $resultOrClosure)
+    static function registerFunc($namespace, $function, $resultOrClosure)
     {
-        self::$mocker->registerFunc($func, $resultOrClosure);
+        self::$mocker->registerFunc($namespace, $function, $resultOrClosure);
     }
 
     static function getClassCallsFor($class)
@@ -48,6 +49,11 @@ class Registry {
         return isset(self::$instanceCalls[$oid])
             ? self::$instanceCalls[$oid]
             : [];
+    }
+
+    static function getFuncCallsFor($func)
+    {
+        return isset(self::$funcCalls[$func]) ? self::$funcCalls[$func] : [];
     }
 
     static function clean($classOrInstance = null)
@@ -71,6 +77,7 @@ class Registry {
     {
         self::$instanceCalls = [];
         self::$classCalls = [];
+        self::$funcCalls = [];
     }
 
     static function registerInstanceCall($instance, $method, $args = array())
@@ -92,6 +99,15 @@ class Registry {
             ? self::$classCalls[$class][$method][] = $args
             : self::$classCalls[$class][$method] = array($args);
 
+    }
+
+    static function registerFunctionCall($functionName, $args)
+    {
+        if (!isset(self::$funcCalls[$functionName])) self::$funcCalls[$functionName] = [];
+
+        isset(self::$funcCalls[$functionName])
+            ? self::$funcCalls[$functionName][] = $args
+            : self::$funcCalls[$functionName] = array($args);
     }
 
     public static function getRealClassOrObject($classOrObject)

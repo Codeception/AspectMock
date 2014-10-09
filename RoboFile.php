@@ -6,7 +6,8 @@ class Robofile extends \Robo\Tasks
     protected $docs = [
         'docs/Test.md' => 'AspectMock\Test',
         'docs/ClassProxy.md' => 'AspectMock\Proxy\ClassProxy',
-        'docs/InstanceProxy.md' => 'AspectMock\Proxy\InstanceProxy'
+        'docs/InstanceProxy.md' => 'AspectMock\Proxy\InstanceProxy',
+        'docs/FuncProxy.md' => 'AspectMock\Proxy\FuncProxy'
     ];
 
     protected function version()
@@ -52,6 +53,7 @@ class Robofile extends \Robo\Tasks
                         $doc = str_replace(array(' @', "\n@"), array("  * ", "\n * "), $doc);
                         return $doc;
                     })
+                ->processProperty(false)
                 ->run();
         }
     }

@@ -31,6 +31,7 @@ Example:
 $user = test::double(new User, ['getName' => 'davert']);
 $user->getName() // => davert
 $user->verifyInvoked('getName'); // => success
+$user->getObject() // => returns instance of User, i.e. real, not proxified object
 
 # with closure
 $user = test::double(new User, ['getName' => function() { return $this->login; }]);
@@ -132,10 +133,7 @@ If class is already defined, `test::spec` will act as `test::double`.
  * return Verifier
 
 
-#### *public static* methods($classOrObject, array $only = Array
-(
-)
-) 
+#### *public static* methods($classOrObject, array $only = Array ( ) ) 
 Replaces all methods in a class with a dummies, except specified.
 
 ``` php
@@ -178,6 +176,42 @@ Using `ns` helps in refactoring: test doubles do not depend on long class names.
 When declared in `test::double` not exists, AspectMock will try to match it by prepending a namespace.
 To ignore namespace guessing, use `\` in the beginning of class name: `\User`;
 
+
+#### *public static* func($namespace, $function, $body) 
+Replaces function in provided namespace with user-defined function or value that function returns;
+Function is restored to original on cleanup.
+
+```php
+<?php
+namespace demo;
+test::func('demo', 'date', 2004);
+date('Y'); // 2004
+
+test::func('demo', 'date', function($format) {
+   if ($format == 'Y') {
+     return 2004;
+   } else {
+     return \date($param);
+   }
+}
+
+```
+
+Mocked functions can be verified for calls.
+
+```php
+<?php
+namespace demo;
+$func = test::func('demo', 'date', 2004);
+date('Y'); // 2004
+$func->verifyInvoked();
+$func->verifyInvokedOnce(['Y']);
+```
+
+ * `param` $namespace
+ * `param` $function
+ * `param` $body
+ * return Proxy\FuncProxy
 
 #### *public static* clean($classOrInstance = null) 
 Clears test doubles registry.

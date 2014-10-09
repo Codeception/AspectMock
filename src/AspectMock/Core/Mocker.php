@@ -1,5 +1,6 @@
 <?php
 namespace AspectMock\Core;
+use AspectMock\Intercept\FunctionInjector;
 use Go\Aop\Aspect;
 use AspectMock\Intercept\MethodInvocation;
 
@@ -32,6 +33,23 @@ class Mocker implements Aspect {
         }
 
         if (isset($this->classMap[$class])) Registry::registerClassCall($class, $method, $params);
+        return $result;
+    }
+
+    public function fakeFunctionAndRegisterCalls($namespace, $function, $args)
+    {
+        $result = __AM_CONTINUE__;
+        $fullFuncName = "$namespace\\$function";
+        Registry::registerFunctionCall($fullFuncName, $args);
+
+        if (isset($this->funcMap[$fullFuncName])) {
+            $func = $this->funcMap[$fullFuncName];
+            if (is_callable($func)) {
+                $result = call_user_func_array($func, $args);
+            } else {
+                $result = $func;
+            }
+        }
         return $result;
     }
 
@@ -170,6 +188,16 @@ class Mocker implements Aspect {
         }
         $this->objectMap[$hash] = $params;
         $this->methodMap = array_merge($this->methodMap, array_keys($params));
+    }
+
+    public function registerFunc($namespace, $func, $body)
+    {
+        if (!function_exists("$namespace\\$func")) {
+            $injector = new FunctionInjector($namespace, $func);
+            $injector->save();
+            $injector->inject();
+        }
+        $this->funcMap["$namespace\\$func"] = $body;
     }
 
     public function clean($objectOrClass = null)

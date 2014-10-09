@@ -12,9 +12,7 @@ use AspectMock\Util\ArgumentsFormatter;
 abstract class Verifier {
 
     /**
-     * Name of a class.
-     *
-     * @var
+     *  Name of a class.
      */
     public $className;
 
