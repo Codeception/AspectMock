@@ -23,22 +23,23 @@ use AspectMock\Core\Registry;
  * ```
  *
  */
-class FuncProxy extends Verifier
+class FuncProxy
 {
     protected $func;
     protected $ns;
     protected $fullFuncName;
+
+    /**
+     * @var FuncVerifier
+     */
+    protected $funcVerifier;
 
     public function __construct($namespace, $func)
     {
         $this->func = $func;
         $this->ns = $namespace;
         $this->fullFuncName = $namespace . '/' . $func;
-    }
-
-    protected function callSyntax($method)
-    {
-        return "";
+        $this->funcVerifier = new FuncVerifier($namespace);
     }
 
     /**
@@ -46,7 +47,7 @@ class FuncProxy extends Verifier
      */
     public function verifyInvoked($params = null)
     {
-        parent::verifyInvoked($this->func, $params);
+        $this->funcVerifier->verifyInvoked($this->func, $params);
     }
 
     /**
@@ -54,7 +55,7 @@ class FuncProxy extends Verifier
      */
     public function verifyInvokedOnce($params = null)
     {
-        $this->verifyInvokedMultipleTimes(1, $params);
+        $this->funcVerifier->verifyInvokedMultipleTimes($this->func, 1, $params);
     }
 
     /**
@@ -62,7 +63,7 @@ class FuncProxy extends Verifier
      */
     public function verifyNeverInvoked($params = null)
     {
-        parent::verifyNeverInvoked($this->func, $params);
+        $this->funcVerifier->verifyNeverInvoked($this->func, $params);
     }
 
     /**
@@ -71,7 +72,7 @@ class FuncProxy extends Verifier
      */
     public function verifyInvokedMultipleTimes($times, $params = null)
     {
-        parent::verifyInvokedMultipleTimes($this->func, $times, $params);
+        $this->funcVerifier->verifyInvokedMultipleTimes($this->func, $times, $params);
     }
 
     /**

@@ -33,6 +33,8 @@ class Robofile extends \Robo\Tasks
             ->uri('Codeception/AspectMock')
             ->askDescription()
             ->run();
+        
+        $this->bump();
     }
 
     public function docs()

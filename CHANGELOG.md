@@ -1,5 +1,10 @@
 # Changelog
 
+#### 0.5.1
+
+* Fixed strict errors for func verifier *2014-10-16*
+
+
 #### 0.5.0
 
 * test::ns() method removed *2014-10-10*
