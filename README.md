@@ -21,7 +21,7 @@ Is there any way to stub a static method of a class? Can you redefine a class me
 Dynamic languages like Ruby or JavaScript allow us to do this. 
 These features are essential for testing. AspectMock to the rescue!
 
-Dozens of lines of untested code are written everyday in PHP.
+Thousands of lines of untested code are written everyday in PHP.
 In most cases, this code is not actually bad, 
 but PHP does not provide capabilities to test it. You may suggest rewriting it from scratch following test driven design practices and use dependency injection wherever possible. Should this be done for stable working code? Well, there are much better ways to waste time.
 
