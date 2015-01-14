@@ -14,7 +14,8 @@
        },
     "require": {
         "php": ">=5.4.0",
-        "lisachenko/go-aop-php": "0.5.*"
+        "lisachenko/go-aop-php": "0.5.*",
+        "symfony/finder": "~2.4"
     },
     "require-dev": {
         "codeception/codeception": "~2.0",
