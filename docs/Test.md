@@ -1,8 +1,6 @@
 
 ## AspectMock\Test
 
-
-
 `AspectMock\Test` class is a builder of test doubles.
 Any object can be enhanced and turned to a test double with the call to `double` method.
 This allows to redefine any method of object with your own, and adds mock verification methods.
@@ -14,15 +12,20 @@ This allows to redefine any method of object with your own, and adds mock verifi
 use AspectMock\Test as test;
 ?>
 ```
-#### *public static* double($classOrObject, $params = null) 
-test::double registers class or object to track its calls.
-In second argument you may pass values that mocked mathods should return.
+#### *public static* double(string|Object $classOrObject, array $params = null) 
 
-Returns either of [**ClassProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md)
-or [**InstanceProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md).
+throws \Exception
+
+return [Verifier](https://github.com/Codeception/AspectMock/blob/master/src/AspectMock/Proxy/Verifier.php)
+
+`test::double` registers class or object to track its calls.
+In second argument you may pass values that mocked methods should return. See below for examples.
+
+Returns either of [**ClassProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) (when a string was passed)
+or [**InstanceProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) (when an object was passed).
 Proxies are used to verify method invocations, and some other useful things.
 
-Example:
+Examples:
 
 ``` php
 <?php
@@ -64,11 +67,10 @@ test::double('User')->make(); // without calling constructor
 
 # stub for magic method
 test::double('User', ['findByUsernameAndPasswordAndEmail' => false]);
-User::findByUsernameAndPasswordAndEmail; // null
+User::findByUsernameAndPasswordAndEmail(); // null
 
 # stub for method of parent class
 # if User extends ActiveRecord
-
 test::double('ActiveRecord', ['save' => false]);
 $user = new User(['name' => 'davert']);
 $user->save(); // false
@@ -76,13 +78,10 @@ $user->save(); // false
 ?>
 ```
 
- * api
- * `param` $classOrObject
- * `param array` $params
- * throws \Exception
- * return Verifier
+#### *public static* spec(string|Object $classOrObject, array $params = null) 
 
-#### *public static* spec($classOrObject, $params = null) 
+return [Verifier](https://github.com/Codeception/AspectMock/blob/master/src/AspectMock/Proxy/Verifier.php)
+
 If you follow TDD/BDD practices a test should be written before the class is defined.
 If you would call undefined class in a test, a fatal error will be triggered.
 Instead you can use `test::spec` method that will create a proxy for an undefined class.
@@ -109,7 +108,7 @@ $this->assertEquals('davert', $user->getName()); // fail
 The test will be executed normally and will fail on the first assertion.
 
 `test::spec()->construct` creates an instance of `AspectMock\Proxy\Anything`
-which tries to not cause errors whatever you try to do with it.
+which tries not to cause errors whatever you try to do with it.
 
 ``` php
 <?php
@@ -122,19 +121,18 @@ foreach ($user->names as $name) {
 ?>
 ```
 
-None of this calls will trigger error on your test.
+None of those calls will trigger an error in your test.
 Thus, you can write a valid test before the class is declared.
 
 If class is already defined, `test::spec` will act as `test::double`.
 
- * api
- * `param` $classOrObject
- * `param array` $params
- * return Verifier
 
+#### *public static* methods(string|Object $classOrObject, array $only = []) 
+Replaces all methods in a class with dummies, except those specified in the `$only` param.
 
-#### *public static* methods($classOrObject, array $only = Array ( ) ) 
-Replaces all methods in a class with a dummies, except specified.
+return [Core\ClassProxy](https://github.com/Codeception/AspectMock/blob/master/src/AspectMock/Proxy/ClassProxy.php)|[Core\InstanceProxy](https://github.com/Codeception/AspectMock/blob/master/src/AspectMock/Proxy/InstanceProxy.php)
+
+throws \Exception
 
 ``` php
 <?php
@@ -145,7 +143,7 @@ $user->getName(); // jon
 ?>
 ```
 
-You can create a dummy without a constructor with all methods disabled
+You can create a dummy without a constructor with all methods disabled:
 
 ``` php
 <?php
@@ -154,14 +152,12 @@ test::methods($user, []);
 ?>
 ```
 
- * api
- * `param` $classOrObject
- * `param array` $only
- * return Core\ClassProxy|Core\InstanceProxy
- * throws \Exception
 
-#### *public static* func($namespace, $function, $body) 
-Replaces function in provided namespace with user-defined function or value that function returns;
+#### *public static* func(string $namespace, string $functionName, Callable $body) 
+
+return [Proxy\FuncProxy](https://github.com/Codeception/AspectMock/blob/master/src/AspectMock/Proxy/FuncProxy.php)
+
+Replaces function in provided namespace with user-defined function or value that the function returns.
 Function is restored to original on cleanup.
 
 ```php
@@ -180,7 +176,7 @@ test::func('demo', 'date', function($format) {
 
 ```
 
-Mocked functions can be verified for calls.
+Mocked functions can be verified for calls:
 
 ```php
 <?php
@@ -191,14 +187,13 @@ $func->verifyInvoked();
 $func->verifyInvokedOnce(['Y']);
 ```
 
- * `param` $namespace
- * `param` $function
- * `param` $body
- * return Proxy\FuncProxy
 
-#### *public static* clean($classOrInstance = null) 
+#### *public static* clean(string|Object $classOrInstance = null) 
+
+
+
 Clears test doubles registry.
-Should be called between tests.
+Should be called between tests:
 
 ``` php
 <?php
@@ -206,7 +201,7 @@ test::clean();
 ?>
 ```
 
-Also you can clean registry only for the specific class or object.
+Also you can clean registry only for the specific class or object:
 
 ``` php
 <?php
@@ -215,6 +210,7 @@ test::clean($user);
 ?>
 ```
 
- * api
 
 #### *public static* cleanInvocations() 
+
+return void
