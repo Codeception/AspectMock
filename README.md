@@ -126,10 +126,10 @@ function testSimpleStubAndMock()
 {	
 	$user = test::double(new User, ['getName' => 'davert']);
 	$this->assertEquals('davert', $user->getName());
-	$user->verifyMethodInvoked('getName');
-	$user->verifyMethodInvokedOnce('getName');
-	$user->verifyMethodNeverInvoked('setName');
-	$user->verifyMethodInvokedMultipleTimes('setName',1);
+	$user->verifyInvoked('getName');
+	$user->verifyInvokedOnce('getName');
+	$user->verifyNeverInvoked('setName');
+	$user->verifyInvokedMultipleTimes('setName',1);
 }
 ?>
 ```
