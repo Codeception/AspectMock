@@ -97,7 +97,6 @@ class Test {
             if (!class_exists($classOrObject)) {
                 throw new \Exception("Class $classOrObject not loaded.\nIf you want to test undefined class use 'test::spec' method");
             }
-            if (!\class_exists($classOrObject)) $classOrObject = Registry::getNamespace().'\\'.$classOrObject;
 
             Core\Registry::registerClass($classOrObject, $params);
             return new Proxy\ClassProxy($classOrObject);
@@ -106,6 +105,7 @@ class Test {
             Core\Registry::registerObject($classOrObject, $params);
             return new Proxy\InstanceProxy($classOrObject);
         }
+        return null;
     }
 
     /**

@@ -14,7 +14,8 @@
        },
     "require": {
         "php": ">=5.4.0",
-        "goaop/framework": "0.6.*"
+        "goaop/framework": "0.6.*",
+        "symfony/finder": "~2.4"
     },
     "require-dev": {
         "codeception/base": "~2.1",

@@ -40,11 +40,6 @@ $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 ?>
 ```
 
-
-
-
-
-
 #### *public* getCallsForMethod($method) 
 #### *public* isDefined() 
 Returns true if class exists.
@@ -75,7 +70,6 @@ Returns array of all trait names of a class.
 
  * return array
 
-
 #### *public* construct() 
 Creates an instance of a class via constructor.
 
@@ -100,9 +94,6 @@ $user = test::double('User')->make();
 ?>
 ```
  * return object
-
-
-
 
 #### *public* verifyInvoked($name, $params = null) 
 Verifies a method was invoked at least once.
@@ -161,4 +152,5 @@ $user->verifyNeverInvoked('setName',[]); // success
  * `param` $name
  * `param null` $params
  * throws \PHPUnit_Framework_ExpectationFailedException
+
 

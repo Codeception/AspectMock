@@ -22,9 +22,6 @@ $func->verifyNeverInvoked(['bye']);
 ```
 
 
-
-
-
 #### *public* verifyInvoked($params = null) 
  * `param null` $params
 
@@ -38,5 +35,5 @@ $func->verifyNeverInvoked(['bye']);
  * `param` $times
  * `param null` $params
 
-
 #### *public* getCallsForMethod($func) 
+

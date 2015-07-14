@@ -53,22 +53,12 @@ $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
 ```
 
 
-
-
-
-
-
-
 #### *public* getObject() 
 Returns a real object that is proxified.
 
  * return mixed
 
 #### *public* getCallsForMethod($method) 
-
-
-
-
 #### *public* verifyInvoked($name, $params = null) 
 Verifies a method was invoked at least once.
 In second argument you can specify with which params method expected to be invoked;
@@ -126,4 +116,5 @@ $user->verifyNeverInvoked('setName',[]); // success
  * `param` $name
  * `param null` $params
  * throws \PHPUnit_Framework_ExpectationFailedException
+
 
