@@ -14,10 +14,10 @@
        },
     "require": {
         "php": ">=5.4.0",
-        "lisachenko/go-aop-php": "0.5.*"
+        "goaop/framework": "0.6.*"
     },
     "require-dev": {
-        "codeception/codeception": "~2.0",
+        "codeception/base": "~2.1",
         "codeception/verify": "~0.2",
         "codeception/specify": "~0.3"
     }

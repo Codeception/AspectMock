@@ -1,7 +1,7 @@
 
 ## AspectMock\Proxy\FuncProxy
 
-* *Extends* `AspectMock\Proxy\Verifier`
+
 
 FuncProxy is a wrapper around mocked function, used to verify function calls.
 Has the same verification methods as `InstanceProxy` and `ClassProxy` do.
@@ -25,11 +25,6 @@ $func->verifyNeverInvoked(['bye']);
 
 
 
-
-
-
-
-
 #### *public* verifyInvoked($params = null) 
  * `param null` $params
 
@@ -45,4 +40,3 @@ $func->verifyNeverInvoked(['bye']);
 
 
 #### *public* getCallsForMethod($func) 
-

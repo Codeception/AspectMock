@@ -1,5 +1,9 @@
 # Changelog
 
+#### 0.5.2
+
+* updated to goaop/framework 0.6.x and codeception 2.1
+
 #### 0.5.1
 
 * Fixed strict errors for func verifier *2014-10-16*
