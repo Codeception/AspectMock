@@ -94,6 +94,15 @@ class BeforeMockTransformer extends WeavingTransformer
                         $pos = strpos($dataArray[$i], '{');
                         if ($pos === false) {
                             continue;
+                        } else {
+                            // Bug FIX for functions that have the curly bracket as default on their own parameters:
+                            // Launch a "continue" command if the bracket found have a quote (') or a double quote (")
+                            // exactly just before or after
+                            if (in_array(substr($dataArray[$i], $pos - 1, 1), ['"', "'"]) ||
+                                in_array(substr($dataArray[$i], $pos + 1, 1), ['"', "'"])
+                            ) {
+                                continue;
+                            }
                         }
                         $dataArray[$i] = substr($dataArray[$i], 0, $pos + 1) . $beforeDefinition . substr($dataArray[$i], $pos + 1);
                         break;
