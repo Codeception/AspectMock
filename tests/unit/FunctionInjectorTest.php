@@ -59,6 +59,18 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
         $func->verifyNeverInvoked(['hee']);
     }
 
+    public function testVerifierFullyQualifiedNamespace()
+    {
+        $func = test::func('\demo', 'strlen', 10);
+        expect(strlen('hello'))->equals(10);
+        $func->verifyInvoked();
+        $func->verifyInvoked(['hello']);
+        $func->verifyInvokedOnce();
+        $func->verifyInvokedOnce(['hello']);
+        $func->verifyInvokedMultipleTimes(1, ['hello']);
+        $func->verifyNeverInvoked(['hee']);
+    }
+
     public function testFailedVerification()
     {
         $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
@@ -68,4 +80,3 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     }
 
 }
-

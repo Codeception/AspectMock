@@ -26,6 +26,21 @@ class testDoubleTest extends \Codeception\TestCase\Test
         });
     }
 
+    public function testDoubleFullyQualifiedClass()
+    {
+        $user = test::double('\demo\UserModel', ['save' => null]);
+        (new demo\UserModel())->save();
+        $user->verifyInvoked('save');
+        \demo\UserModel::tableName();
+        \demo\UserModel::tableName();
+        $user->verifyInvokedMultipleTimes('tableName',2);
+
+        $this->specify('disabling all methods', function() use ($user) {
+            test::methods($user, []);
+            verify(\demo\UserModel::tableName())->null();
+        });
+    }
+
     public function testDoubleObject()
     {
         $user = new demo\UserModel();
@@ -68,7 +83,7 @@ class testDoubleTest extends \Codeception\TestCase\Test
             $this->any->that = 'xxx';
            $this->assertInstanceOf('AspectMock\Proxy\Anything', $this->any->this->that->another);
         });
-        
+
         $this->specify('can be used as array', function() {
             $this->any['has keys'];
             unset($this->any['this']);

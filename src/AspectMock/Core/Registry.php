@@ -37,6 +37,7 @@ class Registry {
 
     static function getClassCallsFor($class)
     {
+        $class = ltrim($class,'\\');
         return isset(self::$classCalls[$class])
             ? self::$classCalls[$class]
             : [];
@@ -52,6 +53,7 @@ class Registry {
 
     static function getFuncCallsFor($func)
     {
+        $func = ltrim($func,'\\');
         return isset(self::$funcCalls[$func]) ? self::$funcCalls[$func] : [];
     }
 
