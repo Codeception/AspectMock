@@ -128,7 +128,7 @@ class Mocker implements Aspect {
         if (!array_key_exists($method_name,$params)) return false;
         return $params;
     }
-    
+
     protected function stub(MethodInvocation $invocation, $params)
     {
         $name = $invocation->getMethod();
@@ -192,6 +192,7 @@ class Mocker implements Aspect {
 
     public function registerFunc($namespace, $func, $body)
     {
+        $namespace = ltrim($namespace,'\\');
         if (!function_exists("$namespace\\$func")) {
             $injector = new FunctionInjector($namespace, $func);
             $injector->save();
