@@ -5,6 +5,7 @@ php:
   - 5.5
 
 before_script:
+  - stty cols 160
   - composer install -n --prefer-source
 
 script: "php vendor/bin/codecept run"
