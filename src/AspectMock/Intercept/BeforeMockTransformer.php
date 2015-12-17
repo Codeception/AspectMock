@@ -94,7 +94,7 @@ class BeforeMockTransformer extends WeavingTransformer
                     }
                     $params = implode(", ", $params);
                     $beforeDefinition = sprintf($beforeDefinition, $params);
-                    for ($i = $method->getStartLine() - 1; $i < $method->getEndLine() - 1; $i++) {
+                    for ($i = $method->getStartLine() - 1; $i < $method->getEndLine(); $i++) {
                         $pos = strpos($dataArray[$i], '{');
                         if ($pos === false) {
                             continue;
