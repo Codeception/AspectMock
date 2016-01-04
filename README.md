@@ -15,7 +15,7 @@ AspectMock allows you to stub and mock practically anything in your PHP code!
 
 ## Motivation
 
-PHP as a language that was not designed to be testable. Really. 
+PHP is a language that was not designed to be testable. Really. 
 How would you fake the `time()` function to produce the same result for each test call?
 Is there any way to stub a static method of a class? Can you redefine a class method at runtime?
 Dynamic languages like Ruby or JavaScript allow us to do this. 
