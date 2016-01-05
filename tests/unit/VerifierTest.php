@@ -57,5 +57,18 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
             // Assert rename was counted.
             $userProxy->verifyInvoked('renameUser');
         });
+
+        $this->specify('works for instance proxy', function() {
+            // Set up user object.
+            $user = new UserModel(['name'=>"John Smith"]);
+            double::registerObject($user);
+            $user = new InstanceProxy($user);
+
+            // Rename the user via magic method.
+            $user->renameUser("Bob Jones");
+
+            // Assert rename was counted.
+            $user->verifyInvoked('renameUser');
+        });
     }
 }
