@@ -15,6 +15,12 @@ class UserService {
         $user->save();
     }
 
+    public function renameUser(UserModel $user, $name)
+    {
+        $user->renameUser($name);
+        $user->save();
+    }
+
     public function __call($name, $args)
     {
         if ($name == 'rename') {

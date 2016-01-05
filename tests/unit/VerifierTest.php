@@ -42,4 +42,20 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
         });
     }
 
+    public function testVerifyMagicMethods()
+    {
+        $this->specify('works for class proxy', function() {
+            // Set up user object.
+            double::registerClass("demo\UserModel",
+                                  ['renameUser'=>"Bob Jones", 'save'=>null]);
+            $userProxy = new ClassProxy("demo\UserModel");
+            $user = new UserModel(['name'=>"John Smith"]);
+
+            // Rename the user via magic method.
+            UserService::renameUser($user, "Bob Jones");
+
+            // Assert rename was counted.
+            $userProxy->verifyInvoked('renameUser');
+        });
+    }
 }
