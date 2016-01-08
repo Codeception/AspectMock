@@ -10,6 +10,7 @@ class Mocker implements Aspect {
     protected $objectMap = [];
     protected $funcMap = [];
     protected $methodMap = ['__call', '__callStatic'];
+    protected $dynamicMethods = ['__call', '__callStatic'];
 
     public function fakeMethodsAndRegisterCalls($class, $declaredClass, $method, $params, $static)
     {
@@ -25,6 +26,12 @@ class Mocker implements Aspect {
             $invocation->isStatic($static);
             $invocation->setDeclaredClass($declaredClass);
             $result = $this->invokeFakedMethods($invocation);
+        }
+
+        // Record actual method called, not faked method.
+        if (in_array($method, $this->dynamicMethods)) {
+            $method = array_shift($params);
+            $params = array_shift($params);
         }
 
         if (!$static) {
