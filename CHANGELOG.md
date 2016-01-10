@@ -1,5 +1,9 @@
 # Changelog
 
+#### 0.5.5
+
+* compatible with Symfony3
+
 #### 0.5.4
 
 * Improved namespace handling
