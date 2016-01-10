@@ -2,7 +2,7 @@
 
 #### 0.5.5
 
-* compatible with Symfony3
+* compatible with Symfony3 and PHP7
 
 #### 0.5.4
 
