@@ -52,7 +52,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
             $user = new UserModel(['name'=>"John Smith"]);
 
             // Rename the user via magic method.
-            UserService::renameUser($user, "Bob Jones");
+            UserService::renameStatic($user, "Bob Jones");
 
             // Assert rename was counted.
             $userProxy->verifyInvoked('renameUser');

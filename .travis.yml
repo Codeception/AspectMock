@@ -1,14 +1,12 @@
 language: php
 
 php:
-  - 5.4
   - 5.5
   - 5.6
   - 7.0
 
 before_script:
   - stty cols 160
-  - 'if [ "$TRAVIS_PHP_VERSION" = "5.4" ]; then composer require symfony/finder=~2.4 --no-update ; fi'
   - composer install -n --prefer-source
 
 script: "php vendor/bin/codecept run"
