@@ -16,8 +16,8 @@ abstract class Verifier {
      */
     public $className;
 
-    protected $invokedFail = "Expected %s to be invoked but it never occur. Got: %s";
-    protected $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occur.";
+    protected $invokedFail = "Expected %s to be invoked but it never occurred. Got: %s";
+    protected $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occurred.";
     protected $invokedMultipleTimesFail = "Expected %s to be invoked but called %s times but called %s.";
 
     protected $neverInvoked = "Expected %s not to be invoked but it was.";
