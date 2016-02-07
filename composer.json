@@ -21,5 +21,6 @@
         "codeception/base": "~2.1",
         "codeception/verify": "~0.2",
         "codeception/specify": "~0.3"
-    }
+    },
+    "license": "MIT"
 }
