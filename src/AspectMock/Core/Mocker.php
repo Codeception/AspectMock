@@ -145,7 +145,7 @@ class Mocker implements Aspect {
         $replacedMethod = $this->turnToClosure($replacedMethod);
 
         if ($invocation->isStatic()) {
-            \Closure::bind($replacedMethod, null, $invocation->getThis());
+            $replacedMethod = \Closure::bind($replacedMethod, null, $invocation->getThis());
         } else {
             $replacedMethod = $replacedMethod->bindTo($invocation->getThis(), get_class($invocation->getThis()));
         }
