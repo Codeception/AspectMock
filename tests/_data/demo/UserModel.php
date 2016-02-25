@@ -6,6 +6,13 @@ class UserModel {
     protected $name;
     protected $info;
 
+    private static $topSecret = 'awesome';
+
+    public static function getTopSecret()
+    {
+        throw new \PHPUnit_Framework_AssertionFailedError("I am not going to tell you");
+    }
+
     static function tableName()
     {
         return "users";
