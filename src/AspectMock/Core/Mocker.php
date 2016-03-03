@@ -40,6 +40,8 @@ class Mocker implements Aspect {
         }
 
         if (isset($this->classMap[$class])) Registry::registerClassCall($class, $method, $params);
+        if ($class != $declaredClass && isset($this->classMap[$declaredClass])) Registry::registerClassCall($declaredClass, $method, $params);
+
         return $result;
     }
 
