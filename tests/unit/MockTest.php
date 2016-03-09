@@ -82,4 +82,54 @@ class MockTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * Allow verifying extended methods.
+     *
+     * Given:
+     *
+     * <code>
+     * <?php
+     * class A {
+     *     public function super() {}
+     * }
+     *
+     * class B extends A {}
+     * ?>
+     * </code>
+     *
+     * Verification:
+     *
+     * <code>
+     * <?php
+     * double::registerClass('A');
+     * double::registerClass('B');
+     *
+     * $parentProxy = new ClassProxy('A');
+     * $childProxy = new ClassProxy('B');
+     *
+     * $b = new B();
+     * $b->super();
+     *
+     * // Will pass
+     * $parentProxy->verifyInvoked('super');
+     * $childProxy->verifyInvoked('super');
+     * ?>
+     * </code>
+     */
+    public function testVerifyClassInheritedMethodCalled()
+    {
+        $adminUser = new AdminUserModel();
+
+        double::registerClass(\demo\UserModel::class);
+        double::registerClass(\demo\AdminUserModel::class);
+
+        $userProxy = new ClassProxy(\demo\UserModel::class);
+        $adminUserProxy = new ClassProxy(\demo\AdminUserModel::class);
+
+        $adminUser->getName();
+
+        $userProxy->verifyInvokedOnce('getName');
+        $adminUserProxy->verifyInvokedOnce('getName');
+    }
+
 }
