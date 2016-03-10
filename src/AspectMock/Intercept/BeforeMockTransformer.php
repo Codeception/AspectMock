@@ -81,7 +81,7 @@ class BeforeMockTransformer extends WeavingTransformer
                         ? $this->beforeStatic
                         : $this->before;
                     // replace return with yield when doccomment shows it returns a Generator
-                    if(stripos($method->getDocComment(), '@return \Generator') !== false) {
+                    if (preg_match('/(\@return\s+[\\\]?Generator)/', $method->getDocComment())) {
                         $beforeDefinition = str_replace('return', 'yield', $beforeDefinition);
                     }
                     $reflectedParams = $method->getParameters();
