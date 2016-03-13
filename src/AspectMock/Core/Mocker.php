@@ -40,6 +40,8 @@ class Mocker implements Aspect {
         }
 
         if (isset($this->classMap[$class])) Registry::registerClassCall($class, $method, $params);
+        if ($class != $declaredClass && isset($this->classMap[$declaredClass])) Registry::registerClassCall($declaredClass, $method, $params);
+
         return $result;
     }
 
@@ -145,7 +147,7 @@ class Mocker implements Aspect {
         $replacedMethod = $this->turnToClosure($replacedMethod);
 
         if ($invocation->isStatic()) {
-            \Closure::bind($replacedMethod, null, $invocation->getThis());
+            $replacedMethod = \Closure::bind($replacedMethod, null, $invocation->getThis());
         } else {
             $replacedMethod = $replacedMethod->bindTo($invocation->getThis(), get_class($invocation->getThis()));
         }

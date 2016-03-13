@@ -33,6 +33,15 @@ class StubTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testBindSelfCallback()
+    {
+        double::registerClass('\demo\UserModel', ['getTopSecret' => function () {
+            return UserModel::$topSecret;
+        }]);
+        $topSecret = UserModel::getTopSecret();
+        $this->assertEquals('awesome', $topSecret);
+    }
+
     public function testObjectInstance()
     {
         $user = new UserModel(['name' => 'davert']);
