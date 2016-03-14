@@ -6,6 +6,7 @@ use AspectMock\Intercept\ClosureTransformer;
 use AspectMock\Intercept\LoadPreachedTransformer;
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
+use Go\Instrument\CleanableMemory;
 use Go\Instrument\Transformer\FilterInjectorTransformer;
 use Symfony\Component\Finder\Finder;
 use Go\Instrument\ClassLoading\SourceTransformingLoader;
@@ -57,19 +58,24 @@ class Kernel extends AspectKernel
 
     protected function registerTransformers()
     {
+        $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');;
+
         $sourceTransformers = array(
-            new FilterInjectorTransformer($this->options, SourceTransformingLoader::getId()),
+            new FilterInjectorTransformer($this, SourceTransformingLoader::getId(), $cachePathManager),
+            new MagicConstantTransformer($this),
             new BeforeMockTransformer(
                 $this,
                 new TokenReflection\Broker(
-                    new TokenReflection\Broker\Backend\Memory()
+                    new CleanableMemory()
                 ),
-                $this->container->get('aspect.advice_matcher')
+                $this->getContainer()->get('aspect.advice_matcher'),
+                $cachePathManager,
+                $this->getContainer()->get('aspect.cached.loader')
             )
         );
 
         return array(
-            new CachingTransformer($this, $sourceTransformers)
+            new CachingTransformer($this, $sourceTransformers, $cachePathManager)
         );
     }
 }

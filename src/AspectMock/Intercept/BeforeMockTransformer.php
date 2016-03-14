@@ -1,6 +1,6 @@
 <?php
 namespace AspectMock\Intercept;
-use AspectMock\Core\Registry;
+use Go\Instrument\CleanableMemory;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
 use TokenReflection\Exception\FileProcessingException;
@@ -19,29 +19,13 @@ class BeforeMockTransformer extends WeavingTransformer
     {
         $fileName = $metadata->uri;
 
-        if ($this->includePaths) {
-            $found = false;
-            foreach ($this->includePaths as $includePath) {
-                if (strpos($fileName, $includePath) === 0) {
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) {
-                return;
-            }
-        }
-
-        foreach ($this->excludePaths as $excludePath) {
-            if (strpos($fileName, $excludePath) === 0) {
-                return;
-            }
-        }
-
         try {
+            CleanableMemory::enterProcessing();
             $parsedSource = $this->broker->processString($metadata->source, $fileName, true);
         } catch (FileProcessingException $e) {
-            throw new \RuntimeException("AspectMock couldn't parse some of files.\n Try to exclude them from parsing list.\n" . $e->getDetail());
+            CleanableMemory::leaveProcessing();
+
+            return false;
         }
 
         /** @var $namespaces ParsedFileNamespace[] */
@@ -80,6 +64,7 @@ class BeforeMockTransformer extends WeavingTransformer
                     $beforeDefinition = $method->isStatic()
                         ? $this->beforeStatic
                         : $this->before;
+
                     // replace return with yield when doccomment shows it returns a Generator
                     if (preg_match('/(\@return\s+[\\\]?Generator)/', $method->getDocComment())) {
                         $beforeDefinition = str_replace('return', 'yield', $beforeDefinition);
