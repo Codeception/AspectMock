@@ -9,6 +9,8 @@ AspectMock allows you to stub and mock practically anything in your PHP code!
 
 [![Build Status](https://travis-ci.org/Codeception/AspectMock.png?branch=master)](https://travis-ci.org/Codeception/AspectMock)
 [![Latest Stable Version](https://poser.pugx.org/codeception/aspect-mock/v/stable.png)](https://packagist.org/packages/codeception/aspect-mock)
+[![Total Downloads](https://poser.pugx.org/codeception/aspect-mock/downloads)](https://packagist.org/packages/codeception/aspect-mock)
+[![Monthly Downloads](https://poser.pugx.org/codeception/aspect-mock/d/monthly)](https://packagist.org/packages/codeception/aspect-mock)
 [![PHP 7 ready](http://php7ready.timesplinter.ch/Codegyre/Robo/badge.svg)](https://travis-ci.org/Codegyre/Robo)
 
 
@@ -147,7 +149,7 @@ No PECL extensions is required. The [Go! AOP](http://go.aopphp.com/) library doe
 
 ## Requirements
 
-PHP >= 5.4 + [Go! AOP Requirements](https://github.com/lisachenko/go-aop-php#requirements)
+PHP >= 5.4 + [Go! AOP Requirements](https://github.com/goaop/framework#requirements)
 
 ## Installation
 
