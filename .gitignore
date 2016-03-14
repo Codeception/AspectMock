@@ -2,3 +2,4 @@ vendor
 .idea
 composer.phar
 tests/_data/cache
+composer.lock

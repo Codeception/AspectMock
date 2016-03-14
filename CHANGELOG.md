@@ -1,5 +1,12 @@
 # Changelog
 
+#### 1.0.0
+
+* **Updated to Go AOP Framework 1.0**
+* Added verifying inherited method calls by @torreytsui. See #90
+* Replaces `return` with `yield` for non-root namespaces. By @faridanthony See #93
+* Fix bug that class does not bind in static double by @torreytsui. See #89
+
 #### 0.5.5
 
 * compatible with Symfony3 and PHP7
