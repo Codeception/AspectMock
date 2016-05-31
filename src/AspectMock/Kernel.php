@@ -65,9 +65,6 @@ class Kernel extends AspectKernel
             new MagicConstantTransformer($this),
             new BeforeMockTransformer(
                 $this,
-                new TokenReflection\Broker(
-                    new CleanableMemory()
-                ),
                 $this->getContainer()->get('aspect.advice_matcher'),
                 $cachePathManager,
                 $this->getContainer()->get('aspect.cached.loader')

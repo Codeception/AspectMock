@@ -3,12 +3,6 @@ namespace AspectMock\Intercept;
 use Go\Instrument\CleanableMemory;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
-use TokenReflection\Exception\FileProcessingException;
-use TokenReflection\Broker;
-use TokenReflection\Php\ReflectionMethod;
-use TokenReflection\Php\ReflectionParameter;
-use TokenReflection\ReflectionClass as ParsedClass;
-use TokenReflection\ReflectionFileNamespace as ParsedFileNamespace;
 
 class BeforeMockTransformer extends WeavingTransformer
 {
