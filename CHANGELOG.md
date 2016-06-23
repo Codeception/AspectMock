@@ -2,9 +2,10 @@
 
 #### 2.0.0
 
-* **Updated to Go AOP Framework 1.0**
+* **Updated to Go AOP Framework 2.0**
 * PHP7 (with typehints) supported
 * Minimal PHP version is PHP 5.6
+* Stacked support for mocked methods. You can register a chain of methods as a stub, and to control their execution.
 
 #### 1.0.0
 
