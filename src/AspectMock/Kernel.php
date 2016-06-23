@@ -1,28 +1,28 @@
 <?php
 namespace AspectMock;
+
 use AspectMock\Core\Registry;
 use AspectMock\Intercept\BeforeMockTransformer;
-use AspectMock\Intercept\ClosureTransformer;
-use AspectMock\Intercept\LoadPreachedTransformer;
 use Go\Core\AspectContainer;
 use Go\Core\AspectKernel;
-use Go\Instrument\CleanableMemory;
-use Go\Instrument\Transformer\FilterInjectorTransformer;
-use Symfony\Component\Finder\Finder;
 use Go\Instrument\ClassLoading\SourceTransformingLoader;
 use Go\Instrument\Transformer\CachingTransformer;
+use Go\Instrument\Transformer\FilterInjectorTransformer;
 use Go\Instrument\Transformer\MagicConstantTransformer;
-use TokenReflection;
+use Symfony\Component\Finder\Finder;
 
-require_once __DIR__.'/Core/Registry.php';
+require_once __DIR__ . '/Core/Registry.php';
 
 class Kernel extends AspectKernel
 {
-    public function init(array $options = array())
+    public function init(array $options = [])
     {
-        if (!isset($options['excludePaths'])) $options['excludePaths'] = [];
-        if (!isset($options['debug'])) $options['debug'] = true;
+        if (!isset($options['excludePaths'])) {
+            $options['excludePaths'] = [];
+        }
+        $options['debug'] = true;
         $options['excludePaths'][] = __DIR__;
+
         parent::init($options);
     }
 
@@ -60,7 +60,7 @@ class Kernel extends AspectKernel
     {
         $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');;
 
-        $sourceTransformers = array(
+        $sourceTransformers = [
             new FilterInjectorTransformer($this, SourceTransformingLoader::getId(), $cachePathManager),
             new MagicConstantTransformer($this),
             new BeforeMockTransformer(
@@ -69,11 +69,11 @@ class Kernel extends AspectKernel
                 $cachePathManager,
                 $this->getContainer()->get('aspect.cached.loader')
             )
-        );
+        ];
 
-        return array(
+        return [
             new CachingTransformer($this, $sourceTransformers, $cachePathManager)
-        );
+        ];
     }
 }
 

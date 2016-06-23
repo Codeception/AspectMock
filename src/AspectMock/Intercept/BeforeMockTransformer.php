@@ -1,8 +1,8 @@
 <?php
 namespace AspectMock\Intercept;
-use Go\Instrument\CleanableMemory;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
+use Go\ParserReflection\ReflectionFile;
 
 class BeforeMockTransformer extends WeavingTransformer
 {
@@ -13,22 +13,13 @@ class BeforeMockTransformer extends WeavingTransformer
     {
         $fileName = $metadata->uri;
 
-        try {
-            CleanableMemory::enterProcessing();
-            $parsedSource = $this->broker->processString($metadata->source, $fileName, true);
-        } catch (FileProcessingException $e) {
-            CleanableMemory::leaveProcessing();
+        $reflectedFile = new ReflectionFile($fileName);
+        $namespaces = $reflectedFile->getFileNamespaces();
 
-            return false;
-        }
-
-        /** @var $namespaces ParsedFileNamespace[] */
-        $namespaces = $parsedSource->getNamespaces();
         $dataArray = explode("\n", $metadata->source);
 
         foreach ($namespaces as $namespace) {
 
-            /** @var $classes ParsedClass[] */
             $classes = $namespace->getClasses();
             foreach ($classes as $class) {
 
@@ -44,8 +35,7 @@ class BeforeMockTransformer extends WeavingTransformer
 
                 $methods = $class->getMethods();
                 foreach ($methods as $method) {
-                    /** @var $method ReflectionMethod`  * */
-                    if ($method->getDeclaringClassName() != $class->getName()) {
+                    if ($method->getDeclaringClass()->name != $class->getName()) {
                         continue;
                     }
                     // methods from traits have the same declaring class name, so check that the filenames match, too
@@ -68,7 +58,6 @@ class BeforeMockTransformer extends WeavingTransformer
                     $params = [];
 
                     foreach ($reflectedParams as $reflectedParam) {
-                        /** @var $reflectedParam ReflectionParameter  * */
                         $params[] = ($reflectedParam->isPassedByReference() ? '&$' : '$') . $reflectedParam->getName();
                     }
                     $params = implode(", ", $params);
@@ -95,5 +84,4 @@ class BeforeMockTransformer extends WeavingTransformer
         }
         $metadata->source = implode("\n", $dataArray);
     }
-
 }

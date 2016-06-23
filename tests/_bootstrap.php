@@ -7,7 +7,6 @@ $loader->register();
 
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
-    'debug' => true,
     'cacheDir' => __DIR__.'/_data/cache',
     'includePaths' => [__DIR__.'/_data/demo'],
     'interceptFunctions' => true
