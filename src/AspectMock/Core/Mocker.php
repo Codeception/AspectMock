@@ -142,8 +142,35 @@ class Mocker implements Aspect {
     {
         $name = $invocation->getMethod();
 
-        $replacedMethod = $params[$name];
+        return $this->stubIteratively($name, $params, $invocation);
+    }
 
+    protected function stubMagicMethod(MethodInvocation $invocation, $params)
+    {
+        $args = $invocation->getArguments();
+        $name = array_shift($args);
+
+        return $this->stubIteratively($name, $params, $invocation);
+    }
+
+    protected function stubIteratively($name, $params, MethodInvocation $invocation)
+    {
+        $replacedMethods = $params[$name];
+
+        if (!is_array($replacedMethods)) $replacedMethods = [$replacedMethods];
+
+        $result = __AM_CONTINUE__;
+
+        while ($result === __AM_CONTINUE__ && count($replacedMethods) > 0) {
+            $replacedMethod = array_pop($replacedMethods);
+            $result = $this->doStub($invocation, $replacedMethod);
+        }
+
+        return $result;
+    }
+
+    protected function doStub(MethodInvocation $invocation, $replacedMethod)
+    {
         $replacedMethod = $this->turnToClosure($replacedMethod);
 
         if ($invocation->isStatic()) {
@@ -152,22 +179,6 @@ class Mocker implements Aspect {
             $replacedMethod = $replacedMethod->bindTo($invocation->getThis(), get_class($invocation->getThis()));
         }
         return call_user_func_array($replacedMethod, $invocation->getArguments());
-    }
-
-    protected function stubMagicMethod(MethodInvocation $invocation, $params)
-    {
-        $args = $invocation->getArguments();
-        $name = array_shift($args);
-
-        $replacedMethod = $params[$name];
-        $replacedMethod = $this->turnToClosure($replacedMethod);
-
-        if ($invocation->isStatic()) {
-            \Closure::bind($replacedMethod, null, $invocation->getThis());
-        } else {
-            $replacedMethod = $replacedMethod->bindTo($invocation->getThis(), get_class($invocation->getThis()));
-        }
-        return call_user_func_array($replacedMethod, $args);
     }
 
 
@@ -183,7 +194,7 @@ class Mocker implements Aspect {
     {
         $class = ltrim($class,'\\');
         if (isset($this->classMap[$class])) {
-            $params = array_merge($this->classMap[$class], $params);
+            $params = array_merge_recursive($this->classMap[$class], $params);
         }
         $this->methodMap = array_merge($this->methodMap, array_keys($params));
         $this->classMap[$class] = $params;
@@ -193,7 +204,7 @@ class Mocker implements Aspect {
     {
         $hash = spl_object_hash($object);
         if (isset($this->objectMap[$hash])) {
-            $params = array_merge($this->objectMap[$hash], $params);
+            $params = array_merge_recursive($this->objectMap[$hash], $params);
         }
         $this->objectMap[$hash] = $params;
         $this->methodMap = array_merge($this->methodMap, array_keys($params));
