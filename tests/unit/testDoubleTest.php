@@ -1,5 +1,6 @@
 <?php
 use AspectMock\Test as test;
+use Test\ns1\TestPhp7Class;
 
 class testDoubleTest extends \Codeception\TestCase\Test
 {
@@ -125,6 +126,46 @@ class testDoubleTest extends \Codeception\TestCase\Test
         test::clean($user1);
         verify($user1->getName())->null();
         verify($user2->getName())->equals('good boy');
+    }
+
+    public function testPhp7Features()
+    {
+        if (PHP_MAJOR_VERSION < 7) {
+            $this->markTestSkipped('PHP 7 only');
+        }
+        \AspectMock\Kernel::getInstance()->loadFile(codecept_data_dir() . 'php7.php');
+        test::double(TestPhp7Class::class, [
+            'stringSth' => true,
+            'floatSth' => true,
+            'boolSth' => true,
+            'intSth' => true,
+            'callableSth' => true,
+            'arraySth' => true,
+            'variadicStringSthByRef' => true,
+            'stringRth' => 'hey',
+            'floatRth' => 12.2,
+            'boolRth' => true,
+            'intRth' => 12,
+            'callableRth' => function() { return function() {}; },
+            'arrayRth' => [1],
+            'exceptionRth' => new \Exception(),
+        ]);
+        $obj = new TestPhp7Class;
+        $this->assertTrue($obj->stringSth('123'));
+        $this->assertTrue($obj->floatSth(123));
+        $this->assertTrue($obj->boolSth(false));
+        $this->assertTrue($obj->intSth(12));
+        $this->assertTrue($obj->callableSth(function() {}));
+        $this->assertTrue($obj->arraySth([]));
+        $str = 'hello';
+        $this->assertTrue($obj->variadicStringSthByRef($str, $str));
+        $this->assertEquals('hey', $obj->stringRth($str));
+        $this->assertEquals(12.2, $obj->floatRth(12.12));
+        $this->assertTrue($obj->boolRth(false));
+        $this->assertEquals(12, $obj->intRth(15));
+        $this->assertInternalType('callable', $obj->callableRth(function() {}));
+        $this->assertEquals([1], $obj->arrayRth([]));
+        $this->assertInstanceOf('Exception', $obj->exceptionRth(new \Exception('ups')));
     }
 
 

@@ -29,9 +29,9 @@ class Robofile extends \Robo\Tasks
             ->push()
             ->run();
 
-        $this->taskGitHubRelease($this->version())
-            ->uri('Codeception/AspectMock')
-            ->askDescription()
+        $this->taskGitStack()
+            ->tag($this->version())
+            ->push(' --tags')
             ->run();
         
         $this->bump();
