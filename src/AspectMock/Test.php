@@ -81,16 +81,6 @@ class Test {
      * $user = new User(['name' => 'davert']);
      * $user->save(); // false
      *
-     * # on conflicted stubs
-     * test::double('User', ['getGroup' => function () { return $this->group; }]);
-     * $user = new User;
-     * $user->group = 'guest';
-     * $user->getGroup(); // => guest
-     * test::double('User', ['getGroup' => function ($supersede = false) { return $supersede ? 'root' : __AM_CONTINUE__; }]);
-     * $user->group = 'user';
-     * $user->getGroup(true); // => root
-     * $user->getGroup(); // => user
-     *
      * ?>
      * ```
      *
