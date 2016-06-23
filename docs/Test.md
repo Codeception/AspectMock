@@ -74,8 +74,53 @@ test::double('ActiveRecord', ['save' => false]);
 $user = new User(['name' => 'davert']);
 $user->save(); // false
 
+# on conflicted stubs
+test::double('User', ['getGroup' => function () { return $this->group; }]);
+$user = new User;
+$user->group = 'guest';
+$user->getGroup(); // => guest
+test::double('User', ['getGroup' => function ($supersede = false) { return $supersede ? 'root' : __AM_CONTINUE__; }]);
+$user->group = 'user';
+$user->getGroup(true); // => root
+$user->getGroup(); // => user
+
 ?>
 ```
+
+#### Stacked Calls Support
+
+Since 2.0 you can register multiple functions inside stib which will be executed in chain.
+You can pass control to next function in a stack by returning `__AM_CONTINUE__` constant:
+
+```php
+class User {
+    public function getGroup() { return 'guest'; }
+}
+$user = new User;
+```
+
+So, it is for conflicted stubs, when a test double (e.g., getGroup) has been redefined.
+
+```php
+$stub1 = function () {
+    return 'user';
+};
+$stub2 = function ($supersede = false) {
+ return $supersede ? 'root' : __AM_CONTINUE__;
+};
+test::double('User', ['getGroup' => $stub1]);
+test::double('User', ['getGroup' => $stub2]);
+
+```
+
+The idea basically is to allow a chain of responsibility passing through every conflicted stubs until a result returns. Use stack structure so that the latest defined stub will gain highest priority.
+So, the result will look like this:
+
+```php
+$user->getGroup(true) // => root (handled by $stub2)
+$user->getGroup() // => user (handled by $stub2 and then $stub1)
+```
+The $user->getGroup() // => user first handled by $stub2 and it gives up control by returning __AM_CONTINUE__, $stub1 then take place and return "user". If $stub1 return __AM_CONTINUE__, it will return control to the real object, as every stub has returned __AM_CONTINUE__.
 
  * api
  * `param string|object` $classOrObject
