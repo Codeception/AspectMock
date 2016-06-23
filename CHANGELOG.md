@@ -1,5 +1,11 @@
 # Changelog
 
+#### 2.0.0
+
+* **Updated to Go AOP Framework 1.0**
+* PHP7 (with typehints) supported
+* Minimal PHP version is PHP 5.6
+
 #### 1.0.0
 
 * **Updated to Go AOP Framework 1.0**
