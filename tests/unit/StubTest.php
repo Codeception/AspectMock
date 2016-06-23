@@ -42,11 +42,43 @@ class StubTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('awesome', $topSecret);
     }
 
+    public function testStackedStub()
+    {
+        double::registerClass(\demo\UserModel::class, ['getName' => function () {
+            return 'tsui';
+        }]);
+        double::registerClass(\demo\UserModel::class, ['getName' => function () {
+            return 'tt';
+        }]);
+        double::registerClass(\demo\UserModel::class, ['getName' => function () {
+            return __AM_CONTINUE__;
+        }]);
+        $user = new AdminUserModel(['name' => 'torreytsui']);
+        $name = $user->getName();
+        $this->assertEquals('tt', $name);
+    }
+
     public function testObjectInstance()
     {
         $user = new UserModel(['name' => 'davert']);
         double::registerObject($user,['save' => null]);
         $user->save();
+    }
+
+    public function testObjectInstanceStackedStub()
+    {
+        $user = new AdminUserModel(['name' => 'torreytsui']);
+        double::registerObject($user, ['getName' => function () {
+            return 'tsui';
+        }]);
+        double::registerObject($user, ['getName' => function () {
+            return 'tt';
+        }]);
+        double::registerObject($user, ['getName' => function () {
+            return __AM_CONTINUE__;
+        }]);
+        $name = $user->getName();
+        $this->assertEquals('tt', $name);
     }
 
     public function testStaticAccess()
