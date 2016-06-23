@@ -169,7 +169,7 @@ class ClassProxy extends Verifier  {
 
     public function __call($method, $args)
     {
-        throw new \Exception("Called {$this->className}->$method, but this is a proxy for a class definition.\nProbably you was trying to access instance method.\nConstruct an instance from this class");
+        throw new \Exception("Called {$this->className}->$method, but this is a proxy for a class definition.\nProbably you were trying to access an instance method.\nConstruct an instance from this class");
     }
 
 }
