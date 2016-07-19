@@ -58,7 +58,7 @@ $user = new User;
 test::double($user, ['getName' => 'davert']);
 test::double($user, ['getEmail' => 'davert@mail.ua']);
 $user->getName(); // => 'davert'
-$user->getEmail(); => 'davert@mail.ua'
+$user->getEmail();// => 'davert@mail.ua'
 
 # create an instance of mocked class
 test::double('User')->construct(['name' => 'davert']); // via constructir
