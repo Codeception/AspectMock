@@ -28,7 +28,7 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     public function testSave()
     {
         $this->funcInjector->save();
-        exec('php -l '.__FILE__, $output, $code);
+        exec('php -l '.$this->funcInjector->getFileName(), $output, $code);
         verify($code)->equals(0);
         codecept_debug($this->funcInjector->getPHP());
     }
