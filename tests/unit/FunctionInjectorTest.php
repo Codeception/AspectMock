@@ -28,7 +28,7 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     public function testSave()
     {
         $this->funcInjector->save();
-        exec('php -l '.$this->getFileName(), $output, $code);
+        exec('php -l '.$this->funcInjector->getFileName(), $output, $code);
         verify($code)->equals(0);
         codecept_debug($this->funcInjector->getPHP());
     }
@@ -71,9 +71,12 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
         $func->verifyNeverInvoked(['hee']);
     }
 
+    /**
+     * @test
+     * @expectedException PHPUnit_Framework_ExpectationFailedException
+     */
     public function testFailedVerification()
     {
-        $this->setExpectedException('PHPUnit_Framework_ExpectationFailedException');
         $func = test::func('demo', 'strlen', function() { return 10; });
         expect(strlen('hello'))->equals(10);
         $func->verifyNeverInvoked('strlen');
