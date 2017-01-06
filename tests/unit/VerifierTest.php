@@ -74,7 +74,7 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
     public function testverifyWithMutliplesParams()
     {
-        $this->specify('works for instance proxy', function() {
+        $this->specify('works for instance proxy', function () {
             // Set up user object.
             $user = new UserModel(['name' => "John Smith"]);
             double::registerObject($user);
@@ -85,20 +85,29 @@ class VerifierTest extends \PHPUnit_Framework_TestCase
 
             // Assert rename was counted.
             $user->verifyInvoked('setName', "Bob Jones");
+            // if verifyInvoked is ok, verifyNeverInvoked have to fail
+            try {
+                $user->verifyNeverInvoked('setName', "Bob Jones");
+                // If i dont fail, my test fail
+                throw new fail('verifyNeverInvoked');
+            } catch (\Exception $e) {}
+
             $user->verifyNeverInvoked('setName', ["Boby Jones"]);
 
             // call function with multiple params
             $user->setNameAndInfo("Bob Jones", "Infos");
 
             // verify
-            $user->verifyInvoked('setNameAndInfo',["Bob Jones", "Infos"]);
+            $user->verifyInvoked('setNameAndInfo', ["Bob Jones", "Infos"]);
 
             // if verifyInvoked is ok, verifyNeverInvoked have to fail
             try {
                 $user->verifyNeverInvoked('setNameAndInfo', ["Bob Jones", "Infos"]);
                 // If i dont fail, my test fail
                 throw new fail('verifyNeverInvoked');
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+
+            }
         });
     }
 }
