@@ -114,7 +114,7 @@ abstract class Verifier {
         if (is_array($params)) {
             $equals = 0;
             foreach ($calls as $args) {
-                if ($this->onlyExpectedArguments($params, $args) == $params) $equals++;
+                if ($this->onlyExpectedArguments($params, $args) === $params) $equals++;
             }
             if ($equals == $times) return;
             $params = ArgumentsFormatter::toString($params);
@@ -153,7 +153,7 @@ abstract class Verifier {
              if (empty($calls)) return;
              $params = ArgumentsFormatter::toString($params);
              foreach ($calls as $args) {
-                 if ($this->onlyExpectedArguments($params, $args) == $params) throw new fail(sprintf($this->neverInvoked, $this->className));
+                 if ($this->onlyExpectedArguments($params, $args) === $params) throw new fail(sprintf($this->neverInvoked, $this->className));
              }
              return;
          }
