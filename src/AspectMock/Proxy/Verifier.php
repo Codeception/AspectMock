@@ -152,7 +152,9 @@ abstract class Verifier {
         $separator = $this->callSyntax($name);
 
         if (is_array($params)) {
-            if (empty($calls)) return;
+            if (empty($calls)) {
+                return;
+            }
             $params = ArgumentsFormatter::toString($params);
             foreach ($calls as $args) {
                 if ($this->onlyExpectedArguments($params, $args) === $params) {
@@ -161,7 +163,9 @@ abstract class Verifier {
             }
             return;
         }
-        if (count($calls)) throw new fail(sprintf($this->neverInvoked, $this->className.$separator.$name));
+        if (count($calls)) {
+            throw new fail(sprintf($this->neverInvoked, $this->className.$separator.$name));
+        }
     }
 
 }
