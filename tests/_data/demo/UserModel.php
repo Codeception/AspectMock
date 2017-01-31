@@ -44,6 +44,24 @@ class UserModel {
     }
 
     /**
+     * @param mixed $name
+     */
+    public function setNameAndInfo($name, $info)
+    {
+        $this->name = $name;
+        $this->info = $info;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNameAndInfo()
+    {
+        return array($this->name, $this->info);
+    }
+
+    /**
      * @param array $info
      */
     public function setInfo($info)

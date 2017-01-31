@@ -155,7 +155,7 @@ abstract class Verifier {
             if (empty($calls)) {
                 return;
             }
-            $params = ArgumentsFormatter::toString($params);
+
             foreach ($calls as $args) {
                 if ($this->onlyExpectedArguments($params, $args) === $params) {
                     throw new fail(sprintf($this->neverInvoked, $this->className));
