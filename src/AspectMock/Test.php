@@ -88,7 +88,7 @@ class Test {
      * @param string|object $classOrObject
      * @param array $params [ 'methodName' => 'returnValue' ]
      * @throws \Exception
-     * @return Verifier Usually Proxy\ClassProxy|Proxy\InstanceProxy
+     * @return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
      */
     public static function double($classOrObject, array $params = array())
     {
@@ -155,7 +155,7 @@ class Test {
      * @api
      * @param string|object $classOrObject
      * @param array $params
-     * @return Verifier Usually Proxy\ClassProxy|Proxy\InstanceProxy
+     * @return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
      */
     public static function spec($classOrObject, array $params = array())
     {
@@ -189,7 +189,7 @@ class Test {
      * @api
      * @param string|object $classOrObject
      * @param string[] $only
-     * @return Verifier Usually Proxy\ClassProxy|Proxy\InstanceProxy
+     * @return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
      * @throws \Exception
      */
     public static function methods($classOrObject, array $only = array())
