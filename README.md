@@ -62,11 +62,11 @@ Testing code developed with the **ActiveRecord** pattern. Does the use of the Ac
 ``` php
 <?php
 class UserService {
-    function createUserByName($name)
+    function createUserByName($name) {
     	$user = new User;
     	$user->setName($name);
     	$user->save();
-	}
+    }
 }
 ?>
 ```
@@ -149,7 +149,7 @@ No PECL extensions is required. The [Go! AOP](http://go.aopphp.com/) library doe
 
 ## Requirements
 
-PHP >= 5.4 + [Go! AOP Requirements](https://github.com/goaop/framework#requirements)
+PHP >= 5.6 + [Go! AOP Requirements](https://github.com/goaop/framework#requirements)
 
 ## Installation
 
