@@ -53,6 +53,9 @@ $user = test::double('User', ['tableName' => 'fake_users']);
 User::tableName(); // 'fake_users'
 $user->verifyInvoked('tableName'); // success
 
+# on a static property where the property is an object.
+User::$staticProperty = test::double('PropertyClass', ['Method'=>"return value"]);
+
 # append declaration
 $user = new User;
 test::double($user, ['getName' => 'davert']);
