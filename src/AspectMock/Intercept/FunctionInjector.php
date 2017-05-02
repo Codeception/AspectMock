@@ -46,7 +46,7 @@ EOF;
         $this->place('func', $this->function);
     }
 
-    public function getParameterDeclaration(\ReflectionParameter $parameter)
+    public function getParameterDeclaration(\ReflectionParameter $parameter, $internal)
     {
         $text = (string)$parameter;
         if (preg_match('@Parameter\s#[0-9]+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s\]@', $text, $match)) {
@@ -56,7 +56,7 @@ EOF;
         } else {
             throw new \Exception('reflection api changed. adjust code.');
         }
-        if ($parameter->isOptional()) {
+        if ($internal && $parameter->isOptional()) {
             $text .= "=NULL";
         }
         return $text;
@@ -70,10 +70,11 @@ EOF;
         $byRef = false;
         $optionals = false;
         $names = [];
+        $internal = $reflect->isInternal();
         foreach ($reflect->getParameters() as $parameter) {
             $name = '$'.$parameter->getName();
             $newname = '$p'.$parameter->getPosition();
-            $declaration = str_replace($name, $newname, $this->getParameterDeclaration($parameter));
+            $declaration = str_replace($name, $newname, $this->getParameterDeclaration($parameter, $internal));
             $name = $newname;
             if (!$optionals && $parameter->isOptional()) {
                 $optionals = true;
