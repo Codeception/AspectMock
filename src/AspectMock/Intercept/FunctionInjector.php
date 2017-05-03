@@ -86,7 +86,7 @@ EOF;
             $names[] = $name;
             $parameters[$newname] = $declaration;
         }
-        if ($optionals || $byRef) {
+        if ($byRef) {
             $this->template = $this->templateByRefOptional;
             $this->place('arguments', join(', ', $parameters));
             $code = '';

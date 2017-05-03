@@ -31,26 +31,8 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     public function testTemplate()
     {
         $php = $this->funcInjector->getPHP();
-        if ((int)ini_get('mbstring.func_overload') & 2 !== 0) {
-            // in this case strlen is overloaded by mb_strlen with optional parameter charset
-            verify($php)->contains("function strlen(\$p0, \$p1=NULL)");
-            verify($php)->contains("case 2: \$args = [\$p0, \$p1]; break;");
-            verify($php)->contains("case 1: \$args = [\$p0]; break;");
-            verify($php)->contains("return call_user_func_array('strlen', \$args);");
-        } else {
-            verify($php)->contains("function strlen()");
-            verify($php)->contains("return call_user_func_array('strlen', func_get_args());");
-        }
-    }
-
-    public function testOptionalParameterTemplate()
-    {
-        $php = $this->funcOptionalParameterInjector->getPHP();
-        verify($php)->contains("function explode(\$p0, \$p1, \$p2=NULL)");
-        verify($php)->contains("case 3: \$args = [\$p0, \$p1, \$p2]; break;");
-        verify($php)->contains("case 2: \$args = [\$p0, \$p1]; break;");
-        verify($php)->contains("case 1: \$args = [\$p0]; break;");
-        verify($php)->contains("return call_user_func_array('explode', \$args);");
+        verify($php)->contains("function strlen()");
+        verify($php)->contains("return call_user_func_array('strlen', func_get_args());");
     }
 
     public function testReferencedParameterTemplate()
