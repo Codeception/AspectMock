@@ -11,10 +11,20 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
      * @var FunctionInjector
      */
     protected $funcInjector;
+    /**
+     * @var FunctionInjector
+     */
+    protected $funcOptionalParameterInjector;
+    /**
+     * @var FunctionInjector
+     */
+    protected $funcReferencedParameterInjector;
 
     public function _before()
     {
         $this->funcInjector = new FunctionInjector('demo', 'strlen');
+        $this->funcOptionalParameterInjector = new FunctionInjector('demo', 'explode');
+        $this->funcReferencedParameterInjector = new FunctionInjector('demo', 'preg_match');
         test::clean();
     }
 
@@ -23,6 +33,18 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
         $php = $this->funcInjector->getPHP();
         verify($php)->contains("function strlen()");
         verify($php)->contains("return call_user_func_array('strlen', func_get_args());");
+    }
+
+    public function testReferencedParameterTemplate()
+    {
+        $php = $this->funcReferencedParameterInjector->getPHP();
+        verify($php)->contains("function preg_match(\$p0, \$p1, &\$p2=NULL, \$p3=NULL, \$p4=NULL)");
+        verify($php)->contains("case 5: \$args = [\$p0, \$p1, &\$p2, \$p3, \$p4]; break;");
+        verify($php)->contains("case 4: \$args = [\$p0, \$p1, &\$p2, \$p3]; break;");
+        verify($php)->contains("case 3: \$args = [\$p0, \$p1, &\$p2]; break;");
+        verify($php)->contains("case 2: \$args = [\$p0, \$p1]; break;");
+        verify($php)->contains("case 1: \$args = [\$p0]; break;");
+        verify($php)->contains("return call_user_func_array('preg_match', \$args);");
     }
 
     public function testSave()
@@ -80,6 +102,15 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
         $func = test::func('demo', 'strlen', function() { return 10; });
         expect(strlen('hello'))->equals(10);
         $func->verifyNeverInvoked('strlen');
+    }
+
+    public function testReferencedParameter()
+    {
+        $func = test::func('\demo', 'preg_match', 10);
+        expect(preg_match('@[0-9]+@', '1234', $match))->equals(10);
+        test::clean();
+        expect(preg_match('@[0-9]+@', '1234#', $match))->equals(1);
+        expect($match[0])->equals('1234');
     }
 
 }
