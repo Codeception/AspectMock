@@ -25,8 +25,19 @@ use AspectMock\Core\Registry;
  */
 class FuncProxy
 {
+    /**
+     * @var string
+     */
     protected $func;
+    
+    /**
+     * @var string
+     */
     protected $ns;
+    
+    /**
+     * @var string
+     */
     protected $fullFuncName;
 
     /**
@@ -34,6 +45,10 @@ class FuncProxy
      */
     protected $funcVerifier;
 
+    /**
+     * @param string
+     * @param string
+     */
     public function __construct($namespace, $func)
     {
         $this->func = $func;
@@ -43,34 +58,34 @@ class FuncProxy
     }
 
     /**
-     * @param null $params
+     * @param null|array $params
      */
-    public function verifyInvoked($params = null)
+    public function verifyInvoked(array $params = null)
     {
         $this->funcVerifier->verifyInvoked($this->func, $params);
     }
 
     /**
-     * @param null $params
+     * @param null|array $params
      */
-    public function verifyInvokedOnce($params = null)
+    public function verifyInvokedOnce(array $params = null)
     {
         $this->funcVerifier->verifyInvokedMultipleTimes($this->func, 1, $params);
     }
 
     /**
-     * @param null $params
+     * @param null|array $params
      */
-    public function verifyNeverInvoked($params = null)
+    public function verifyNeverInvoked(array $params = null)
     {
         $this->funcVerifier->verifyNeverInvoked($this->func, $params);
     }
 
     /**
-     * @param $times
-     * @param null $params
+     * @param int        $times
+     * @param null|array $params
      */
-    public function verifyInvokedMultipleTimes($times, $params = null)
+    public function verifyInvokedMultipleTimes($times, array $params = null)
     {
         $this->funcVerifier->verifyInvokedMultipleTimes($this->func, $times, $params);
     }
@@ -84,7 +99,10 @@ class FuncProxy
         return call_user_func_array($this->ns .'\\'.$this->func, func_get_args());
     }
 
-
+    /**
+     * @param string
+     * @return array
+     */
     public function getCallsForMethod($func)
     {
         $calls = Registry::getFuncCallsFor($this->ns . '\\' . $func);

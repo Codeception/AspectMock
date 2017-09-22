@@ -3,7 +3,6 @@ namespace demo;
 
 use AspectMock\Intercept\FunctionInjector;
 use AspectMock\Test as test;
-use Codeception\TestCase;
 
 class FunctionInjectorTest extends \Codeception\TestCase\Test
 {
@@ -11,10 +10,12 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
      * @var FunctionInjector
      */
     protected $funcInjector;
+
     /**
      * @var FunctionInjector
      */
     protected $funcOptionalParameterInjector;
+
     /**
      * @var FunctionInjector
      */
@@ -101,7 +102,7 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     {
         $func = test::func('demo', 'strlen', function() { return 10; });
         expect(strlen('hello'))->equals(10);
-        $func->verifyNeverInvoked('strlen');
+        $func->verifyNeverInvoked();
     }
 
     public function testReferencedParameter()
