@@ -1,5 +1,11 @@
 # Changelog
 
+#### 2.1.0
+
+* Add missing type hints and parameter types to FuncProxy. See #135 by @SenseException
+* Added support for optional and referenced parameters in built-in functions. See #133 by @bhoehl
+* Fixed `return void` issue #123 by @zuozp8. See #130
+
 #### 2.0.0
 
 * **Updated to Go AOP Framework 2.0**

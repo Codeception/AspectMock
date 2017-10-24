@@ -4,7 +4,7 @@
     "authors": [
         {
             "name": "Michael Bodnarchuk",
-            "email": "davert.php@mailican.com"
+            "email": "davert@codeception.com"
         }
     ],
     "autoload": {
