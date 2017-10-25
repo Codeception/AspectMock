@@ -1,8 +1,6 @@
 <?php
 namespace AspectMock\Proxy;
-use AspectMock\Test;
 use AspectMock\Core\Registry;
-use PHPUnit_Framework_Assert as a;
 
 /**
  * ClassProxy represents a class of your project.
