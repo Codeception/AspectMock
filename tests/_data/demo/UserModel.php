@@ -80,7 +80,7 @@ class UserModel {
 
     function save()
     {
-        throw new \PHPUnit_Framework_AssertionFailedError("I should not be called");
+        throw new \PHPUnit\Framework\AssertionFailedError("I should not be called");
     }
 
     public function __call($name, $args = array())

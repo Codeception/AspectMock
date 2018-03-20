@@ -96,7 +96,7 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
 
     /**
      * @test
-     * @expectedException PHPUnit_Framework_ExpectationFailedException
+     * @expectedException PHPUnit\Framework\ExpectationFailedException
      */
     public function testFailedVerification()
     {

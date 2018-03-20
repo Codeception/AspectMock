@@ -12,7 +12,7 @@ class MockFailedTest extends \PHPUnit\Framework\TestCase
     
     protected function setUp()
     {
-        $this->expectException('PHPUnit_Framework_ExpectationFailedException');
+        $this->expectException('PHPUnit\Framework\ExpectationFailedException');
     }        
     
     protected function tearDown()

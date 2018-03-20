@@ -1,6 +1,6 @@
 <?php
 namespace AspectMock\Proxy;
-use \PHPUnit_Framework_ExpectationFailedException as fail;
+use \PHPUnit\Framework\ExpectationFailedException as fail;
 use AspectMock\Util\ArgumentsFormatter;
 
 /**
@@ -52,7 +52,7 @@ abstract class Verifier {
      *
      * @param $name
      * @param null $params
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      * @param array $params
      * @throws fail
      */
@@ -101,7 +101,7 @@ abstract class Verifier {
      * @param $name
      * @param $times
      * @param array $params
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function verifyInvokedMultipleTimes($name, $times, $params = null)
     {
@@ -144,7 +144,7 @@ abstract class Verifier {
      *
      * @param $name
      * @param null $params
-     * @throws \PHPUnit_Framework_ExpectationFailedException
+     * @throws \PHPUnit\Framework\ExpectationFailedException
      */
     public function verifyNeverInvoked($name, $params = null)
     {
