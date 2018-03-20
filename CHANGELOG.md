@@ -1,5 +1,10 @@
 # Changelog
 
+#### 3.0.0
+
+* Upgraded to Go AOP 2.2 
+* PHPUnit > 6.x support
+
 #### 2.1.0
 
 * Add missing type hints and parameter types to FuncProxy. See #135 by @SenseException
