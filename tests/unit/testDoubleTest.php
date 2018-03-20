@@ -2,7 +2,7 @@
 use AspectMock\Test as test;
 use Test\ns1\TestPhp7Class;
 
-class testDoubleTest extends \Codeception\TestCase\Test
+class testDoubleTest extends \Codeception\Test\Unit
 {
     use Codeception\Specify;
     use demo\WorkingTrait;

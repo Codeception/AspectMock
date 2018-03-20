@@ -1,7 +1,7 @@
 <?php
 namespace demo;
 
-class AccessDemoClassesTest extends \PHPUnit_Framework_TestCase
+class AccessDemoClassesTest extends \PHPUnit\Framework\TestCase
 {
     public function testUserModel()
     {
@@ -10,7 +10,7 @@ class AccessDemoClassesTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException PHPUnit_Framework_AssertionFailedError
+     * @expectedException \PHPUnit\Framework\AssertionFailedError
      */
     public function testUserService()
     {

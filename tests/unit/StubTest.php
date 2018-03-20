@@ -2,7 +2,7 @@
 namespace demo;
 use \AspectMock\Core\Registry as double;
 
-class StubTest extends \PHPUnit_Framework_TestCase
+class StubTest extends \PHPUnit\Framework\TestCase
 {
     protected function tearDown()
     {

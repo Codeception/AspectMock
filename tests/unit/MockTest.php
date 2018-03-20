@@ -4,7 +4,7 @@ use \AspectMock\Core\Registry as double;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 
-class MockTest extends \PHPUnit_Framework_TestCase
+class MockTest extends \PHPUnit\Framework\TestCase
 {
     use \Codeception\Specify;
 

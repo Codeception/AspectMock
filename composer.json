@@ -18,7 +18,7 @@
         "symfony/finder": "~2.4|~3.0"
     },
     "require-dev": {
-        "codeception/base": "~2.1",
+        "codeception/base": "^2.4",
         "codeception/verify": "~0.2",
         "codeception/specify": "~0.3"
     },
