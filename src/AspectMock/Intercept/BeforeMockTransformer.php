@@ -1,8 +1,10 @@
 <?php
 namespace AspectMock\Intercept;
+use Go\Aop\Aspect;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
 use Go\ParserReflection\ReflectionFile;
+use Go\ParserReflection\ReflectionMethod;
 
 class BeforeMockTransformer extends WeavingTransformer
 {
@@ -11,12 +13,9 @@ class BeforeMockTransformer extends WeavingTransformer
 
     public function transform(StreamMetaData $metadata)
     {
-        $fileName = $metadata->uri;
-
-        $reflectedFile = new ReflectionFile($fileName);
-        $namespaces = $reflectedFile->getFileNamespaces();
-
-        $dataArray = explode("\n", $metadata->source);
+        $result        = self::RESULT_ABSTAIN;
+        $reflectedFile = new ReflectionFile($metadata->uri, $metadata->syntaxTree);
+        $namespaces    = $reflectedFile->getFileNamespaces();
 
         foreach ($namespaces as $namespace) {
 
@@ -29,10 +28,11 @@ class BeforeMockTransformer extends WeavingTransformer
                 }
 
                 // Look for aspects
-                if (in_array('Go\Aop\Aspect', $class->getInterfaceNames())) {
+                if (in_array(Aspect::class, $class->getInterfaceNames())) {
                     continue;
                 }
 
+                /** @var ReflectionMethod[] $methods */
                 $methods = $class->getMethods();
                 foreach ($methods as $method) {
                     if ($method->getDeclaringClass()->name != $class->getName()) {
@@ -49,8 +49,8 @@ class BeforeMockTransformer extends WeavingTransformer
                         ? $this->beforeStatic
                         : $this->before;
 
-                    // replace return with yield when doccomment shows it returns a Generator
-                    if (preg_match('/(\@return\s+[\\\]?Generator)/', $method->getDocComment())) {
+                    // replace return with yield when method is Generator
+                    if ($method->isGenerator()) {
                         $beforeDefinition = str_replace('return', 'yield', $beforeDefinition);
                     }
                     if (method_exists($method, 'getReturnType') && $method->getReturnType() == 'void') {
@@ -65,28 +65,21 @@ class BeforeMockTransformer extends WeavingTransformer
                     foreach ($reflectedParams as $reflectedParam) {
                         $params[] = ($reflectedParam->isPassedByReference() ? '&$' : '$') . $reflectedParam->getName();
                     }
-                    $params = implode(", ", $params);
+                    $params           = implode(", ", $params);
                     $beforeDefinition = sprintf($beforeDefinition, $params);
-                    for ($i = $method->getStartLine() - 1; $i < $method->getEndLine(); $i++) {
-                        $pos = strpos($dataArray[$i], '{');
-                        if ($pos === false) {
-                            continue;
-                        } else {
-                            // Bug FIX for functions that have the curly bracket as default on their own parameters:
-                            // Launch a "continue" command if the bracket found have a quote (') or a double quote (")
-                            // exactly just before or after
-                            if (in_array(substr($dataArray[$i], $pos - 1, 1), ['"', "'"]) ||
-                                in_array(substr($dataArray[$i], $pos + 1, 1), ['"', "'"])
-                            ) {
-                                continue;
-                            }
+                    $tokenPosition    = $method->getNode()->getAttribute('startTokenPos');
+                    do {
+                        if ($metadata->tokenStream[$tokenPosition][1] === '{') {
+                            $metadata->tokenStream[$tokenPosition][1] .= $beforeDefinition;
+                            $result = self::RESULT_TRANSFORMED;
+                            break;
                         }
-                        $dataArray[$i] = substr($dataArray[$i], 0, $pos + 1) . $beforeDefinition . substr($dataArray[$i], $pos + 1);
-                        break;
-                    }
+                        $tokenPosition++;
+                    } while (isset($metadata->tokenStream[$tokenPosition]));
                 }
             }
         }
-        $metadata->source = implode("\n", $dataArray);
+
+        return $result;
     }
 }
