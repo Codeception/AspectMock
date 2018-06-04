@@ -318,7 +318,7 @@ There is guaranteed to be room for improvements. This framework was not designed
 
 Follow [**@codeception**](http://twitter.com/codeception) for updates.
 
-Daveloped by **Michael Bodnarchuk**.
+Developed by **Michael Bodnarchuk**.
 
 License: **MIT**.
 
