@@ -61,7 +61,7 @@ $user->getName(); // => 'davert'
 $user->getEmail();// => 'davert@mail.ua'
 
 # create an instance of mocked class
-test::double('User')->construct(['name' => 'davert']); // via constructir
+test::double('User')->construct(['name' => 'davert']); // via constructor
 test::double('User')->make(); // without calling constructor
 
 # stub for magic method
