@@ -50,7 +50,7 @@ EOF;
     {
         $text = (string)$parameter;
         if (preg_match('@Parameter\s#[0-9]+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s\]@', $text, $match)) {
-            $text = $match(2).$match[4];
+            $text = $match[2].$match[4];
         } elseif (preg_match('@Parameter\s#[0-9]+\s\[\s<(required|optional)>\s(.*)\s\]@', $text, $match)) {
             $text = $match[2];
         } else {
