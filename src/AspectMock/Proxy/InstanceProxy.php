@@ -67,7 +67,7 @@ class InstanceProxy extends Verifier {
 
     protected function callSyntax($method)
     {
-        return "->";
+        return'->';
     }
 
     /**
@@ -99,7 +99,8 @@ class InstanceProxy extends Verifier {
             $reflMethod  = new \ReflectionMethod($this->instance, $method);
             $params      = $reflMethod->getParameters();
 
-            for($i = 0; $i < count($params); $i++)
+            $count = count($params);
+            for($i = 0; $i < $count; $i++)
             {
                 if(!isset($args[$i]))
                 {
@@ -135,9 +136,19 @@ class InstanceProxy extends Verifier {
         return $this->instance->$property;
     }
 
+    /**
+     * @param $property
+     * @param $value
+     */
     public function __set($property, $value)
     {
         $this->instance->$property = $value;
     }
-    
+
+    public function __isset($name): bool
+    {
+        return isset($this->instance->$name);
+    }
+
+
 }

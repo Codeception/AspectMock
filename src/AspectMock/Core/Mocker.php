@@ -6,21 +6,53 @@ use AspectMock\Intercept\FunctionInjector;
 use Go\Aop\Aspect;
 use AspectMock\Intercept\MethodInvocation;
 
+/**
+ * Class Mocker
+ * @package AspectMock\Core
+ */
 class Mocker implements Aspect
 {
 
-    protected $classMap       = [];
-    protected $objectMap      = [];
-    protected $funcMap        = [];
-    protected $methodMap      = ['__call', '__callStatic'];
+    /**
+     * @var array
+     */
+    protected $classMap = [];
+
+    /**
+     * @var array
+     */
+    protected $objectMap = [];
+
+    /**
+     * @var array
+     */
+    protected $funcMap = [];
+
+    /**
+     * @var array
+     */
+    protected $methodMap = ['__call', '__callStatic'];
+
+    /**
+     * @var array
+     */
     protected $dynamicMethods = ['__call', '__callStatic'];
 
+
+    /**
+     * @param $class
+     * @param $declaredClass
+     * @param $method
+     * @param $params
+     * @param $static
+     * @return mixed|string
+     */
     public function fakeMethodsAndRegisterCalls($class, $declaredClass, $method, $params, $static)
     {
         $result = __AM_CONTINUE__;
 
-        if (in_array($method, $this->methodMap)) {
-            $invocation = new \AspectMock\Intercept\MethodInvocation();
+        if (in_array($method, $this->methodMap, true)) {
+            $invocation = new MethodInvocation();
             $invocation->setThis($class);
             $invocation->setMethod($method);
             $invocation->setArguments($params);
@@ -30,7 +62,7 @@ class Mocker implements Aspect
         }
 
         // Record actual method called, not faked method.
-        if (in_array($method, $this->dynamicMethods)) {
+        if (in_array($method, $this->dynamicMethods, true)) {
             $method = array_shift($params);
             $params = array_shift($params);
         }
@@ -45,16 +77,22 @@ class Mocker implements Aspect
         if (isset($this->classMap[$class])) {
             Registry::registerClassCall($class, $method, $params);
         }
-        if ($class != $declaredClass && isset($this->classMap[$declaredClass])) {
+        if ($class !== $declaredClass && isset($this->classMap[$declaredClass])) {
             Registry::registerClassCall($declaredClass, $method, $params);
         }
 
         return $result;
     }
 
+    /**
+     * @param $namespace
+     * @param $function
+     * @param $args
+     * @return mixed|string
+     */
     public function fakeFunctionAndRegisterCalls($namespace, $function, $args)
     {
-        $result       = __AM_CONTINUE__;
+        $result = __AM_CONTINUE__;
         $fullFuncName = "$namespace\\$function";
         Registry::registerFunctionCall($fullFuncName, $args);
 
@@ -69,10 +107,14 @@ class Mocker implements Aspect
         return $result;
     }
 
+    /**
+     * @param MethodInvocation $invocation
+     * @return mixed|string
+     */
     protected function invokeFakedMethods(MethodInvocation $invocation)
     {
         $method = $invocation->getMethod();
-        if (!in_array($method, $this->methodMap)) {
+        if (!in_array($method, $this->methodMap, true)) {
             return __AM_CONTINUE__;
         }
 
@@ -98,8 +140,8 @@ class Mocker implements Aspect
             }
 
             // magic methods
-            if ($method == '__call') {
-                $args   = $invocation->getArguments();
+            if ($method === '__call') {
+                $args = $invocation->getArguments();
                 $method = array_shift($args);
 
                 $params = $this->getObjectMethodStubParams($obj, $method);
@@ -115,7 +157,7 @@ class Mocker implements Aspect
 
                 // inheritance
                 $calledClass = $invocation->getDeclaredClass();
-                $params      = $this->getClassMethodStubParams($calledClass, $method);
+                $params = $this->getClassMethodStubParams($calledClass, $method);
                 if ($params !== false) {
                     return $this->stubMagicMethod($invocation, $params);
                 }
@@ -134,8 +176,8 @@ class Mocker implements Aspect
             }
 
             // magic static method (facade)
-            if ($method == '__callStatic') {
-                $args   = $invocation->getArguments();
+            if ($method === '__callStatic') {
+                $args = $invocation->getArguments();
                 $method = array_shift($args);
 
                 $params = $this->getClassMethodStubParams($obj, $method);
@@ -145,7 +187,7 @@ class Mocker implements Aspect
 
                 // inheritance
                 $calledClass = $invocation->getDeclaredClass();
-                $params      = $this->getClassMethodStubParams($calledClass, $method);
+                $params = $this->getClassMethodStubParams($calledClass, $method);
                 if ($params !== false) {
                     return $this->stubMagicMethod($invocation, $params);
                 }
@@ -154,6 +196,11 @@ class Mocker implements Aspect
         return __AM_CONTINUE__;
     }
 
+    /**
+     * @param $obj
+     * @param $method_name
+     * @return bool|mixed
+     */
     protected function getObjectMethodStubParams($obj, $method_name)
     {
         $oid = spl_object_hash($obj);
@@ -167,6 +214,11 @@ class Mocker implements Aspect
         return $params;
     }
 
+    /**
+     * @param $class_name
+     * @param $method_name
+     * @return bool|mixed
+     */
     protected function getClassMethodStubParams($class_name, $method_name)
     {
         if (!isset($this->classMap[$class_name])) {
@@ -179,6 +231,11 @@ class Mocker implements Aspect
         return $params;
     }
 
+    /**
+     * @param MethodInvocation $invocation
+     * @param $params
+     * @return mixed
+     */
     protected function stub(MethodInvocation $invocation, $params)
     {
         $name = $invocation->getMethod();
@@ -195,6 +252,11 @@ class Mocker implements Aspect
         return call_user_func_array($replacedMethod, $invocation->getArguments());
     }
 
+    /**
+     * @param MethodInvocation $invocation
+     * @param $params
+     * @return mixed
+     */
     protected function stubMagicMethod(MethodInvocation $invocation, $params)
     {
         $args = $invocation->getArguments();
@@ -212,6 +274,10 @@ class Mocker implements Aspect
     }
 
 
+    /**
+     * @param $returnValue
+     * @return \Closure
+     */
     protected function turnToClosure($returnValue)
     {
         if ($returnValue instanceof \Closure) {
@@ -222,16 +288,24 @@ class Mocker implements Aspect
         };
     }
 
+    /**
+     * @param $class
+     * @param array $params
+     */
     public function registerClass($class, $params = [])
     {
         $class = ltrim($class, '\\');
         if (isset($this->classMap[$class])) {
             $params = array_merge($this->classMap[$class], $params);
         }
-        $this->methodMap        = array_merge($this->methodMap, array_keys($params));
+        $this->methodMap = array_merge($this->methodMap, array_keys($params));
         $this->classMap[$class] = $params;
     }
 
+    /**
+     * @param $object
+     * @param array $params
+     */
     public function registerObject($object, $params = [])
     {
         $hash = spl_object_hash($object);
@@ -239,9 +313,14 @@ class Mocker implements Aspect
             $params = array_merge($this->objectMap[$hash], $params);
         }
         $this->objectMap[$hash] = $params;
-        $this->methodMap        = array_merge($this->methodMap, array_keys($params));
+        $this->methodMap = array_merge($this->methodMap, array_keys($params));
     }
 
+    /**
+     * @param $namespace
+     * @param $func
+     * @param $body
+     */
     public function registerFunc($namespace, $func, $body)
     {
         $namespace = ltrim($namespace, '\\');
@@ -253,13 +332,16 @@ class Mocker implements Aspect
         $this->funcMap["$namespace\\$func"] = $body;
     }
 
+    /**
+     * @param null $objectOrClass
+     */
     public function clean($objectOrClass = null)
     {
         if (!$objectOrClass) {
-            $this->classMap  = [];
+            $this->classMap = [];
             $this->objectMap = [];
             $this->methodMap = ['__call', '__callStatic'];
-            $this->funcMap   = [];
+            $this->funcMap = [];
         } elseif (is_object($objectOrClass)) {
             unset($this->objectMap[spl_object_hash($objectOrClass)]);
         } else {

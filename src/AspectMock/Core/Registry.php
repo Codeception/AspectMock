@@ -1,5 +1,7 @@
 <?php
+
 namespace AspectMock\Core;
+
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 
@@ -9,10 +11,22 @@ use AspectMock\Proxy\InstanceProxy;
  * Class Registry
  * @package AspectMock
  */
-class Registry {
+class Registry
+{
 
+    /**
+     * @var array
+     */
     protected static $classCalls = [];
+
+    /**
+     * @var array
+     */
     protected static $instanceCalls = [];
+
+    /**
+     * @var array
+     */
     protected static $funcCalls = [];
 
     /**
@@ -20,30 +34,51 @@ class Registry {
      */
     public static $mocker;
 
-    static function registerClass($name, $params = array())
+    /**
+     * @param $name
+     * @param array $params
+     */
+    public static function registerClass($name, $params = array())
     {
         self::$mocker->registerClass($name, $params);
     }
 
-    static function registerObject($object, $params = array())
+    /**
+     * @param $object
+     * @param array $params
+     */
+    public static function registerObject($object, $params = array())
     {
         self::$mocker->registerObject($object, $params);
     }
 
-    static function registerFunc($namespace, $function, $resultOrClosure)
+    /**
+     * @param $namespace
+     * @param $function
+     * @param $resultOrClosure
+     */
+    public static function registerFunc($namespace, $function, $resultOrClosure)
     {
         self::$mocker->registerFunc($namespace, $function, $resultOrClosure);
     }
 
-    static function getClassCallsFor($class)
+    /**
+     * @param $class
+     * @return array|mixed
+     */
+    public static function getClassCallsFor($class)
     {
-        $class = ltrim($class,'\\');
+        $class = ltrim($class, '\\');
         return isset(self::$classCalls[$class])
             ? self::$classCalls[$class]
             : [];
     }
 
-    static function getInstanceCallsFor($instance)
+    /**
+     * @param $instance
+     * @return array|mixed
+     */
+    public static function getInstanceCallsFor($instance)
     {
         $oid = spl_object_hash($instance);
         return isset(self::$instanceCalls[$oid])
@@ -51,13 +86,20 @@ class Registry {
             : [];
     }
 
-    static function getFuncCallsFor($func)
+    /**
+     * @param $func
+     * @return array|mixed
+     */
+    public static function getFuncCallsFor($func)
     {
-        $func = ltrim($func,'\\');
+        $func = ltrim($func, '\\');
         return isset(self::$funcCalls[$func]) ? self::$funcCalls[$func] : [];
     }
 
-    static function clean($classOrInstance = null)
+    /**
+     * @param null $classOrInstance
+     */
+    public static function clean($classOrInstance = null)
     {
         $classOrInstance = self::getRealClassOrObject($classOrInstance);
         self::$mocker->clean($classOrInstance);
@@ -73,17 +115,27 @@ class Registry {
         }
     }
 
-    static function cleanInvocations()
+    /**
+     *
+     */
+    public static function cleanInvocations()
     {
         self::$instanceCalls = [];
         self::$classCalls = [];
         self::$funcCalls = [];
     }
 
-    static function registerInstanceCall($instance, $method, $args = array())
+    /**
+     * @param $instance
+     * @param $method
+     * @param array $args
+     */
+    public static function registerInstanceCall($instance, $method, $args = array())
     {
         $oid = spl_object_hash($instance);
-        if (!isset(self::$instanceCalls[$oid])) self::$instanceCalls[$oid] = [];
+        if (!isset(self::$instanceCalls[$oid])) {
+            self::$instanceCalls[$oid] = [];
+        }
 
         isset(self::$instanceCalls[$oid][$method])
             ? self::$instanceCalls[$oid][$method][] = $args
@@ -91,9 +143,16 @@ class Registry {
 
     }
 
-    static function registerClassCall($class, $method, $args = array())
+    /**
+     * @param $class
+     * @param $method
+     * @param array $args
+     */
+    public static function registerClassCall($class, $method, $args = array())
     {
-        if (!isset(self::$classCalls[$class])) self::$classCalls[$class] = [];
+        if (!isset(self::$classCalls[$class])) {
+            self::$classCalls[$class] = [];
+        }
 
         isset(self::$classCalls[$class][$method])
             ? self::$classCalls[$class][$method][] = $args
@@ -101,19 +160,33 @@ class Registry {
 
     }
 
-    static function registerFunctionCall($functionName, $args)
+    /**
+     * @param $functionName
+     * @param $args
+     */
+    public static function registerFunctionCall($functionName, $args)
     {
-        if (!isset(self::$funcCalls[$functionName])) self::$funcCalls[$functionName] = [];
+        if (!isset(self::$funcCalls[$functionName])) {
+            self::$funcCalls[$functionName] = [];
+        }
 
         isset(self::$funcCalls[$functionName])
             ? self::$funcCalls[$functionName][] = $args
             : self::$funcCalls[$functionName] = array($args);
     }
 
+    /**
+     * @param $classOrObject
+     * @return mixed
+     */
     public static function getRealClassOrObject($classOrObject)
     {
-        if ($classOrObject instanceof ClassProxy) return $classOrObject->className;
-        if ($classOrObject instanceof InstanceProxy) return $classOrObject->getObject();
+        if ($classOrObject instanceof ClassProxy) {
+            return $classOrObject->className;
+        }
+        if ($classOrObject instanceof InstanceProxy) {
+            return $classOrObject->getObject();
+        }
         return $classOrObject;
     }
 

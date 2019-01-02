@@ -1,5 +1,7 @@
 <?php
+
 namespace AspectMock;
+
 use AspectMock\Core\Registry;
 use AspectMock\Proxy\Anything;
 use AspectMock\Proxy\AnythingClassProxy;
@@ -21,7 +23,8 @@ use AspectMock\Proxy\Verifier;
  * ?>
  * ```
  */
-class Test {
+class Test
+{
 
     /**
      * `test::double` registers class or object to track its calls.
@@ -156,11 +159,16 @@ class Test {
      * @param string|object $classOrObject
      * @param array $params
      * @return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
+     * @throws \Exception
      */
     public static function spec($classOrObject, array $params = array())
     {
-        if (is_object($classOrObject)) return self::double($classOrObject, $params);
-        if (class_exists($classOrObject)) return self::double($classOrObject, $params);
+        if (is_object($classOrObject)) {
+            return self::double($classOrObject, $params);
+        }
+        if (class_exists($classOrObject)) {
+            return self::double($classOrObject, $params);
+        }
 
         return new AnythingClassProxy($classOrObject);
     }
@@ -198,15 +206,23 @@ class Test {
         if (is_object($classOrObject)) {
             $reflected = new \ReflectionClass(get_class($classOrObject));
         } else {
-            if (!class_exists($classOrObject)) throw new \Exception("Class $classOrObject not defined.");
+            if (!class_exists($classOrObject)) {
+                throw new \Exception("Class $classOrObject not defined.");
+            }
             $reflected = new \ReflectionClass($classOrObject);
         }
         $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
         $params = array();
         foreach ($methods as $m) {
-            if ($m->isConstructor()) continue;
-            if ($m->isDestructor()) continue;
-            if (in_array($m->name, $only)) continue;
+            if ($m->isConstructor()) {
+                continue;
+            }
+            if ($m->isDestructor()) {
+                continue;
+            }
+            if (in_array($m->name, $only, true)) {
+                continue;
+            }
             $params[$m->name] = null;
         }
         return self::double($classOrObject, $params);
@@ -274,7 +290,7 @@ class Test {
      * ```
      *
      * @api
-     * @param string|object $classOrObject
+     * @param null $classOrInstance
      * @return void
      */
     public static function clean($classOrInstance = null)

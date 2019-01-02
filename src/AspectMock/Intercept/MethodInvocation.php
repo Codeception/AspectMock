@@ -1,11 +1,28 @@
 <?php
+
 namespace AspectMock\Intercept;
 
+/**
+ * Class MethodInvocation
+ * @package AspectMock\Intercept
+ */
 class MethodInvocation
 {
+    /**
+     * @var
+     */
     protected $method;
+    /**
+     * @var
+     */
     protected $arguments;
+    /**
+     * @var
+     */
     protected $isStatic;
+    /**
+     * @var
+     */
     protected $declaredClass;
 
     /**
@@ -30,11 +47,16 @@ class MethodInvocation
      */
     public function isStatic($isStatic = null)
     {
-        if ($isStatic === null) return $this->isStatic;
+        if ($isStatic === null) {
+            return $this->isStatic;
+        }
         $this->isStatic = $isStatic;
     }
 
 
+    /**
+     * @var
+     */
     protected $class;
 
     /**

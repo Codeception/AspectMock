@@ -14,24 +14,24 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
 
     public function __construct($className = null)
     {
-        $this->className = $className;             
+        $this->className = $className;
     }
 
-    function __toString()
+    public function __toString()
     {
-        return "| Undefined | ".$this->className;
+        return '| Undefined | ' .$this->className;
     }
 
-    function __get($key)
+    public function __get($key)
     {
         return new Anything($this->className);
     }
 
-    function __set($key, $val)
+    public function __set($key, $val)
     {
     }
 
-    function __call($method, $args)
+    public function __call($method, $args)
     {
         return new Anything($this->className);
     }

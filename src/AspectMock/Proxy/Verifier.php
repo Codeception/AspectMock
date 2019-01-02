@@ -16,11 +16,11 @@ abstract class Verifier {
      */
     public $className;
 
-    protected $invokedFail = "Expected %s to be invoked but it never occurred. Got: %s";
-    protected $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occurred.";
-    protected $invokedMultipleTimesFail = "Expected %s to be invoked but called %s times but called %s.";
+    protected $invokedFail = 'Expected %s to be invoked but it never occurred. Got: %s';
+    protected $notInvokedMultipleTimesFail = 'Expected %s to be invoked %s times but it never occurred.';
+    protected $invokedMultipleTimesFail = 'Expected %s to be invoked but called %s times but called %s.';
 
-    protected $neverInvoked = "Expected %s not to be invoked but it was.";
+    protected $neverInvoked = 'Expected %s not to be invoked but it was.';
 
     abstract public function getCallsForMethod($method);
 
@@ -61,7 +61,9 @@ abstract class Verifier {
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
 
-        if (empty($calls)) throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name, ''));
+        if (empty($calls)) {
+            throw new fail(sprintf($this->invokedFail, $this->className . $separator . $name, ''));
+        }
 
         if (is_array($params)) {
             foreach ($calls as $args) {
@@ -71,7 +73,7 @@ abstract class Verifier {
             $gotParams = ArgumentsFormatter::toString($calls[0]);
 
             throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name."($params)", $this->className.$separator.$name."($gotParams)"));
-        } else if(is_callable($params)) {
+        } elseif (is_callable($params)) {
             $params($calls);
         }
     }
@@ -105,12 +107,16 @@ abstract class Verifier {
      */
     public function verifyInvokedMultipleTimes($name, $times, $params = null)
     {
-        if ($times == 0) return $this->verifyNeverInvoked($name, $params);
+        if ($times === 0) {
+            return $this->verifyNeverInvoked($name, $params);
+        }
 
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
 
-        if (empty($calls)) throw new fail(sprintf($this->notInvokedMultipleTimesFail, $this->className.$separator.$name, $times));
+        if (empty($calls)) {
+            throw new fail(sprintf($this->notInvokedMultipleTimesFail, $this->className . $separator . $name, $times));
+        }
         if (is_array($params)) {
             $equals = 0;
             foreach ($calls as $args) {
@@ -118,14 +124,20 @@ abstract class Verifier {
                     $equals++;
                 }
             }
-            if ($equals == $times) return;
+            if ($equals === $times) {
+                return;
+            }
             $params = ArgumentsFormatter::toString($params);
-            throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name."($params)", $times, $equals));
-        } else if(is_callable($params)) {
+            throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className . $separator . $name . "($params)",
+                $times, $equals));
+        } elseif (is_callable($params)) {
             $params($calls);
         }
         $num_calls = count($calls);
-        if ($num_calls != $times) throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
+        if ($num_calls !== $times) {
+            throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className . $separator . $name, $times,
+                $num_calls));
+        }
     }
 
     /**

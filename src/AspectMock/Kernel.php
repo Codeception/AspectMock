@@ -1,4 +1,5 @@
 <?php
+
 namespace AspectMock;
 
 use AspectMock\Core\Registry;
@@ -56,9 +57,9 @@ class Kernel extends AspectKernel
         include FilterInjectorTransformer::rewrite($file);
     }
 
-    protected function registerTransformers()
+    protected function registerTransformers(): array
     {
-        $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');;
+        $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');
 
         $sourceTransformers = [
             new FilterInjectorTransformer($this, SourceTransformingLoader::getId(), $cachePathManager),

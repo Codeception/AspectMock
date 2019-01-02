@@ -1,4 +1,5 @@
 <?php
+
 namespace AspectMock\Proxy;
 
 use AspectMock\Core\Registry;
@@ -29,12 +30,12 @@ class FuncProxy
      * @var string
      */
     protected $func;
-    
+
     /**
      * @var string
      */
     protected $ns;
-    
+
     /**
      * @var string
      */
@@ -82,7 +83,7 @@ class FuncProxy
     }
 
     /**
-     * @param int        $times
+     * @param int $times
      * @param null|array $params
      */
     public function verifyInvokedMultipleTimes($times, array $params = null)
@@ -96,14 +97,14 @@ class FuncProxy
      */
     public function __invoke()
     {
-        return call_user_func_array($this->ns .'\\'.$this->func, func_get_args());
+        return call_user_func_array($this->ns . '\\' . $this->func, func_get_args());
     }
 
     /**
      * @param string
      * @return array
      */
-    public function getCallsForMethod($func)
+    public function getCallsForMethod($func): array
     {
         $calls = Registry::getFuncCallsFor($this->ns . '\\' . $func);
         return $calls;

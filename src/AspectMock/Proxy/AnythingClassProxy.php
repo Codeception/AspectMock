@@ -1,16 +1,15 @@
 <?php
 namespace AspectMock\Proxy;
 
-
 class AnythingClassProxy extends ClassProxy {
 
     public function __construct($class_name)
     {
         $this->className = $class_name;
-        $this->reflected = new \ReflectionClass('AspectMock\Proxy\Anything');
+        $this->reflected = new \ReflectionClass(Anything::class);
     }
 
-    public function isDefined()
+    public function isDefined(): bool
     {
        return false;
     }
@@ -25,12 +24,12 @@ class AnythingClassProxy extends ClassProxy {
         return new Anything($this->className);
     }
 
-    public function interfaces()
+    public function interfaces(): array
     {
-        return array();
+        return [];
     }
 
-    public function hasMethod($method)
+    public function hasMethod($method): bool
     {
         return false;
     }

@@ -1,5 +1,6 @@
 <?php
 namespace AspectMock\Intercept;
+
 use Go\Aop\Aspect;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
@@ -8,10 +9,21 @@ use Go\ParserReflection\ReflectionMethod;
 
 class BeforeMockTransformer extends WeavingTransformer
 {
-    protected $before = " if ((\$__am_res = __amock_before(\$this, __CLASS__, __FUNCTION__, array(%s), false)) !== __AM_CONTINUE__) return \$__am_res; ";
-    protected $beforeStatic = " if ((\$__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true)) !== __AM_CONTINUE__) return \$__am_res; ";
+    /**
+     * @var string
+     */
+    protected $before = ' if (($__am_res = __amock_before($this, __CLASS__, __FUNCTION__, array(%s), false)) !== __AM_CONTINUE__) return $__am_res; ';
 
-    public function transform(StreamMetaData $metadata)
+    /**
+     * @var string
+     */
+    protected $beforeStatic = ' if (($__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true)) !== __AM_CONTINUE__) return $__am_res; ';
+
+    /**
+     * @param StreamMetaData $metadata
+     * @return string
+     */
+    public function transform(StreamMetaData $metadata): string
     {
         $result        = self::RESULT_ABSTAIN;
         $reflectedFile = new ReflectionFile($metadata->uri, $metadata->syntaxTree);
@@ -28,18 +40,18 @@ class BeforeMockTransformer extends WeavingTransformer
                 }
 
                 // Look for aspects
-                if (in_array(Aspect::class, $class->getInterfaceNames())) {
+                if (in_array(Aspect::class, $class->getInterfaceNames(), true)) {
                     continue;
                 }
 
                 /** @var ReflectionMethod[] $methods */
                 $methods = $class->getMethods();
                 foreach ($methods as $method) {
-                    if ($method->getDeclaringClass()->name != $class->getName()) {
+                    if ($method->getDeclaringClass()->name !== $class->getName()) {
                         continue;
                     }
                     // methods from traits have the same declaring class name, so check that the filenames match, too
-                    if ($method->getFileName() != $class->getFileName()) {
+                    if ($method->getFileName() !== $class->getFileName()) {
                         continue;
                     }
                     if ($method->isAbstract()) {
@@ -65,7 +77,7 @@ class BeforeMockTransformer extends WeavingTransformer
                     foreach ($reflectedParams as $reflectedParam) {
                         $params[] = ($reflectedParam->isPassedByReference() ? '&$' : '$') . $reflectedParam->getName();
                     }
-                    $params           = implode(", ", $params);
+                    $params           = implode(', ', $params);
                     $beforeDefinition = sprintf($beforeDefinition, $params);
                     $tokenPosition    = $method->getNode()->getAttribute('startTokenPos');
                     do {

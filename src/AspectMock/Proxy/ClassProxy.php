@@ -42,6 +42,9 @@ use AspectMock\Core\Registry;
  */
 class ClassProxy extends Verifier  {
 
+    /**
+     * @var \ReflectionClass
+     */
     protected $reflected;
     
 
@@ -66,7 +69,7 @@ class ClassProxy extends Verifier  {
      *
      * @return bool
      */
-    public function isDefined()
+    public function isDefined(): bool
     {
        return true;
     }
@@ -76,7 +79,7 @@ class ClassProxy extends Verifier  {
      *
      * @return array
      */
-    public function interfaces()
+    public function interfaces(): array
     {
         $interfaces = $this->getRealClass()->getInterfaceNames();
         return $interfaces;
@@ -90,7 +93,9 @@ class ClassProxy extends Verifier  {
     public function parent()
     {
         $parent = $this->getRealClass()->getParentClass();
-        if ($parent) return $parent->name;
+        if ($parent) {
+            return $parent->name;
+        }
         return null;
     }
 
@@ -98,7 +103,7 @@ class ClassProxy extends Verifier  {
      * @param $method
      * @return bool
      */
-    public function hasMethod($method)
+    public function hasMethod($method): bool
     {
         return $this->getRealClass()->hasMethod($method);
     }
@@ -107,7 +112,7 @@ class ClassProxy extends Verifier  {
      * @param $property
      * @return bool
      */
-    public function hasProperty($property)
+    public function hasProperty($property): bool
     {
         return $this->getRealClass()->hasProperty($property);
     }
@@ -117,14 +122,14 @@ class ClassProxy extends Verifier  {
      *
      * @return array
      */
-    public function traits()
+    public function traits(): array
     {
         return $this->getRealClass()->getTraitNames();
     }
 
-    private function getRealClass()
+    private function getRealClass(): \ReflectionClass
     {
-        if (in_array('Go\Aop\Proxy', $this->reflected->getInterfaceNames())) {
+        if (in_array('Go\Aop\Proxy', $this->reflected->getInterfaceNames(), true)) {
             return $this->reflected->getParentClass();
         }
         return $this->reflected;

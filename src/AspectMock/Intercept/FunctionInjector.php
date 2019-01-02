@@ -37,7 +37,7 @@ EOF;
     protected $function;
     protected $fileName;
 
-    function __construct($namespace, $function)
+    public function __construct($namespace, $function)
     {
         $this->namespace = $namespace;
         $this->function = $function;
@@ -46,7 +46,13 @@ EOF;
         $this->place('func', $this->function);
     }
 
-    public function getParameterDeclaration(\ReflectionParameter $parameter, $internal)
+    /**
+     * @param \ReflectionParameter $parameter
+     * @param $internal
+     * @return string
+     * @throws \Exception
+     */
+    public function getParameterDeclaration(\ReflectionParameter $parameter, $internal): string
     {
         $text = (string)$parameter;
         if (preg_match('@Parameter\s#[0-9]+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s\]@', $text, $match)) {
@@ -57,7 +63,7 @@ EOF;
             throw new \Exception('reflection api changed. adjust code.');
         }
         if ($internal && $parameter->isOptional()) {
-            $text .= "=NULL";
+            $text .= '=NULL';
         }
         return $text;
     }
@@ -66,16 +72,15 @@ EOF;
     {
         $reflect = new \ReflectionFunction($function);
         $parameters = [];
-        $args = '';
         $byRef = false;
         $optionals = false;
         $names = [];
         $internal = $reflect->isInternal();
         foreach ($reflect->getParameters() as $parameter) {
             $name = '$'.$parameter->getName();
-            $newname = '$p'.$parameter->getPosition();
-            $declaration = str_replace($name, $newname, $this->getParameterDeclaration($parameter, $internal));
-            $name = $newname;
+            $newName = '$p'.$parameter->getPosition();
+            $declaration = str_replace($name, $newName, $this->getParameterDeclaration($parameter, $internal));
+            $name = $newName;
             if (!$optionals && $parameter->isOptional()) {
                 $optionals = true;
             }
@@ -84,14 +89,14 @@ EOF;
                 $byRef = true;
             }
             $names[] = $name;
-            $parameters[$newname] = $declaration;
+            $parameters[$newName] = $declaration;
         }
         if ($byRef) {
             $this->template = $this->templateByRefOptional;
-            $this->place('arguments', join(', ', $parameters));
+            $this->place('arguments', implode(', ', $parameters));
             $code = '';
             for ($i = count($parameters); $i > 0; $i--) {
-                $code .= "             case {$i}: \$args = [" . join(', ', $names) . "]; break;\n";
+                $code .= "             case {$i}: \$args = [" . implode(', ', $names) . "]; break;\n";
                 array_pop($names);
             }
             $this->place('code', $code);

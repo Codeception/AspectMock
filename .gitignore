@@ -2,5 +2,4 @@ vendor
 .idea
 composer.phar
 tests/_data/cache
-composer.lock
 tests/_helpers/_generated

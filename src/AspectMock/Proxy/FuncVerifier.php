@@ -5,6 +5,9 @@ use AspectMock\Core\Registry;
 
 class FuncVerifier extends Verifier
 {
+    /**
+     * @var
+     */
     protected $ns;
 
     public function __construct($namespace)
@@ -14,7 +17,7 @@ class FuncVerifier extends Verifier
 
     protected function callSyntax($method)
     {
-        return "";
+        return '';
     }
 
     public function getCallsForMethod($func)
