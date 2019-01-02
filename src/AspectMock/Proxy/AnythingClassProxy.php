@@ -5,7 +5,7 @@ class AnythingClassProxy extends ClassProxy {
 
     public function __construct($class_name)
     {
-        parent::__construct($class_name);
+        $this->className = $class_name;
         $this->reflected = new \ReflectionClass(Anything::class);
     }
 
