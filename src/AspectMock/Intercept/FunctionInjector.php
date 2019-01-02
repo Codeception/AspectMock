@@ -1,8 +1,15 @@
 <?php
 namespace AspectMock\Intercept;
 
+/**
+ * Class FunctionInjector
+ * @package AspectMock\Intercept
+ */
 class FunctionInjector
 {
+    /**
+     * @var string
+     */
     protected $template = <<<EOF
 <?php
 namespace {{ns}};
@@ -16,6 +23,9 @@ if (!function_exists('{{ns}}\{{func}}')) {
 }
 EOF;
 
+    /**
+     * @var string
+     */
     protected $templateByRefOptional = <<<EOF
 <?php
 namespace {{ns}};
@@ -32,11 +42,26 @@ if (!function_exists('{{ns}}\{{func}}')) {
 }
 EOF;
 
+    /**
+     * @var
+     */
     protected $namespace;
 
+    /**
+     * @var
+     */
     protected $function;
+    /**
+     * @var
+     */
     protected $fileName;
 
+    /**
+     * FunctionInjector constructor.
+     * @param $namespace
+     * @param $function
+     * @throws \ReflectionException
+     */
     public function __construct($namespace, $function)
     {
         $this->namespace = $namespace;
@@ -68,6 +93,11 @@ EOF;
         return $text;
     }
 
+    /**
+     * @param $namespace
+     * @param $function
+     * @throws \ReflectionException
+     */
     public function placeOptionalAndReferenceFunction($namespace, $function)
     {
         $reflect = new \ReflectionFunction($function);
@@ -103,27 +133,43 @@ EOF;
         }
     }
 
+    /**
+     *
+     */
     public function save()
     {
         $this->fileName = tempnam(sys_get_temp_dir(), $this->function);
         file_put_contents($this->fileName, $this->template);
     }
 
+    /**
+     *
+     */
     public function inject()
     {
         require_once $this->fileName;
     }
 
+    /**
+     * @return mixed
+     */
     public function getFileName()
     {
         return $this->fileName;
     }
 
+    /**
+     * @return string
+     */
     public function getPHP()
     {
         return $this->template;
     }
 
+    /**
+     * @param $var
+     * @param $value
+     */
     protected function place($var, $value)
     {
         $this->template = str_replace("{{{$var}}}", $value, $this->template);

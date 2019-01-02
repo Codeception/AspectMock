@@ -3,10 +3,7 @@
 namespace AspectMock;
 
 use AspectMock\Core\Registry;
-use AspectMock\Proxy\Anything;
 use AspectMock\Proxy\AnythingClassProxy;
-use AspectMock\Proxy\ClassProxy;
-use AspectMock\Proxy\InstanceProxy;
 use AspectMock\Proxy\Verifier;
 
 /**

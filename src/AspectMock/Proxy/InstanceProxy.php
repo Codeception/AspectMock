@@ -1,7 +1,8 @@
 <?php
 namespace AspectMock\Proxy;
+
 use AspectMock\Core\Registry;
-use AspectMock\Test;
+
 
 /**
  * InstanceProxy is a proxy for underlying object, mocked with test::double.

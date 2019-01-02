@@ -51,10 +51,7 @@ abstract class Verifier {
      * ```
      *
      * @param $name
-     * @param null $params
-     * @throws \PHPUnit\Framework\ExpectationFailedException
      * @param array $params
-     * @throws fail
      */
     public function verifyInvoked($name, $params = null)
     {
@@ -67,7 +64,9 @@ abstract class Verifier {
 
         if (is_array($params)) {
             foreach ($calls as $args) {
-                if ($this->onlyExpectedArguments($params, $args) === $params) return;
+                if ($this->onlyExpectedArguments($params, $args) === $params) {
+                    return;
+                }
             }
             $params    = ArgumentsFormatter::toString($params);
             $gotParams = ArgumentsFormatter::toString($calls[0]);

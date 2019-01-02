@@ -1,7 +1,9 @@
 <?php
+
 namespace AspectMock\Proxy;
 
 use AspectMock\Util\Undefined;
+
 /**
  * A class to mimic any other class in PHP.
  *
@@ -19,7 +21,7 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
 
     public function __toString()
     {
-        return '| Undefined | ' .$this->className;
+        return '| Undefined | ' . $this->className;
     }
 
     public function __get($key)
@@ -29,6 +31,12 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
 
     public function __set($key, $val)
     {
+    }
+
+
+    public function __isset($key)
+    {
+
     }
 
     public function __call($method, $args)
