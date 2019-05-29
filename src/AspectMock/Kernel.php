@@ -56,7 +56,7 @@ class Kernel extends AspectKernel
         include FilterInjectorTransformer::rewrite($file);
     }
 
-    protected function registerTransformers()
+    protected function registerTransformers(): array
     {
         $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');;
 
