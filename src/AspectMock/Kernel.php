@@ -21,6 +21,7 @@ class Kernel extends AspectKernel
             $options['excludePaths'] = [];
         }
         $options['debug'] = true;
+        $options['excludePaths'] = [];
         $options['excludePaths'][] = __DIR__;
 
         parent::init($options);
