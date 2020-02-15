@@ -72,8 +72,8 @@ class testDoubleTest extends \Codeception\Test\Unit
         $this->any = $class->construct();
 
         $this->specify('should return original class name', function() {
-            $this->assertContains('Undefined', (string)$this->any);
-            $this->assertContains('MyVirtualClass', (string)$this->any->__toString());
+            $this->assertStringContainsString('Undefined', (string)$this->any);
+            $this->assertStringContainsString('MyVirtualClass', (string)$this->any->__toString());
         });
 
         $this->specify('any method can be invoked', function() {

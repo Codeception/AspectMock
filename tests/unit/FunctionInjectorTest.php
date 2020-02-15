@@ -33,20 +33,20 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     public function testTemplate()
     {
         $php = $this->funcInjector->getPHP();
-        verify($php)->contains("function strlen()");
-        verify($php)->contains("return call_user_func_array('strlen', func_get_args());");
+        verify($php)->stringContainsString("function strlen()");
+        verify($php)->stringContainsString("return call_user_func_array('strlen', func_get_args());");
     }
 
     public function testReferencedParameterTemplate()
     {
         $php = $this->funcReferencedParameterInjector->getPHP();
-        verify($php)->contains("function preg_match(\$p0, \$p1, &\$p2=NULL, \$p3=NULL, \$p4=NULL)");
-        verify($php)->contains("case 5: \$args = [\$p0, \$p1, &\$p2, \$p3, \$p4]; break;");
-        verify($php)->contains("case 4: \$args = [\$p0, \$p1, &\$p2, \$p3]; break;");
-        verify($php)->contains("case 3: \$args = [\$p0, \$p1, &\$p2]; break;");
-        verify($php)->contains("case 2: \$args = [\$p0, \$p1]; break;");
-        verify($php)->contains("case 1: \$args = [\$p0]; break;");
-        verify($php)->contains("return call_user_func_array('preg_match', \$args);");
+        verify($php)->stringContainsString("function preg_match(\$p0, \$p1, &\$p2=NULL, \$p3=NULL, \$p4=NULL)");
+        verify($php)->stringContainsString("case 5: \$args = [\$p0, \$p1, &\$p2, \$p3, \$p4]; break;");
+        verify($php)->stringContainsString("case 4: \$args = [\$p0, \$p1, &\$p2, \$p3]; break;");
+        verify($php)->stringContainsString("case 3: \$args = [\$p0, \$p1, &\$p2]; break;");
+        verify($php)->stringContainsString("case 2: \$args = [\$p0, \$p1]; break;");
+        verify($php)->stringContainsString("case 1: \$args = [\$p0]; break;");
+        verify($php)->stringContainsString("return call_user_func_array('preg_match', \$args);");
     }
 
     public function testSave()
