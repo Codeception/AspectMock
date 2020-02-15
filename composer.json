@@ -19,9 +19,9 @@
         "symfony/finder": "~2.4|~3.0|~4.0"
     },
     "require-dev": {
-        "codeception/base": "^2.4",
-        "codeception/verify": "~0.2",
-        "codeception/specify": "~0.3"
+        "codeception/codeception": "^4.0",
+        "codeception/verify": "^1.2",
+        "codeception/specify": "^1.0"
     },
     "license": "MIT"
 }
