@@ -3,6 +3,7 @@ namespace demo;
 
 use AspectMock\Intercept\FunctionInjector;
 use AspectMock\Test as test;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class FunctionInjectorTest extends \Codeception\TestCase\Test
 {
@@ -96,10 +97,10 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
 
     /**
      * @test
-     * @expectedException PHPUnit\Framework\ExpectationFailedException
      */
     public function testFailedVerification()
     {
+        $this->expectException(ExpectationFailedException::class);
         $func = test::func('demo', 'strlen', function() { return 10; });
         expect(strlen('hello'))->equals(10);
         $func->verifyNeverInvoked();

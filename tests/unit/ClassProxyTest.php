@@ -35,7 +35,7 @@ class ClassProxyTest extends \Codeception\TestCase\Test {
 
     public function testUndefinedClass()
     {
-        $this->setExpectedException('Exception');
+        $this->expectException('Exception');
         test::double('MyUndefinedClass');
     }
 
