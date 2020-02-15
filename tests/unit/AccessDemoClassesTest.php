@@ -1,6 +1,8 @@
 <?php
 namespace demo;
 
+use PHPUnit\Framework\AssertionFailedError;
+
 class AccessDemoClassesTest extends \PHPUnit\Framework\TestCase
 {
     public function testUserModel()
@@ -9,11 +11,9 @@ class AccessDemoClassesTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('davert', $user->getName());
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\AssertionFailedError
-     */
     public function testUserService()
     {
+        $this->expectException(AssertionFailedError::class);
         $service = new UserService();
         $service->create(['name' => 'davert']);
     }

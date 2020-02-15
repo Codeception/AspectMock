@@ -1,10 +1,11 @@
 <?php
 namespace demo;
 use \AspectMock\Core\Registry as double;
+use Codeception\PHPUnit\TestCase;
 
-class StubTest extends \PHPUnit\Framework\TestCase
+class StubTest extends TestCase
 {
-    protected function tearDown()
+    protected function _tearDown()
     {
         double::clean();
     }

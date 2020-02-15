@@ -6,16 +6,17 @@ use AspectMock\Proxy\AnythingClassProxy;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 use \AspectMock\Core\Registry as double;
+use Codeception\PHPUnit\TestCase;
 
-class MockFailedTest extends \PHPUnit\Framework\TestCase 
+class MockFailedTest extends TestCase
 {
     
-    protected function setUp()
+    protected function _setUp()
     {
         $this->expectException('PHPUnit\Framework\ExpectationFailedException');
     }        
     
-    protected function tearDown()
+    protected function _tearDown()
     {
         double::clean();
     }

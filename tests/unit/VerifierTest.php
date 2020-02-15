@@ -3,12 +3,13 @@ namespace demo;
 use \AspectMock\Core\Registry as double;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
+use Codeception\PHPUnit\TestCase;
 
-class VerifierTest extends \PHPUnit\Framework\TestCase
+class VerifierTest extends TestCase
 {
     use \Codeception\Specify;
 
-    protected function tearDown()
+    protected function _tearDown()
     {
         double::clean();
     }
