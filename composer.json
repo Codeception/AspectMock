@@ -14,9 +14,9 @@
        },
     "require": {
         "php": ">=7.0.0",
-        "goaop/framework": "^2.2.0",
+        "goaop/framework": "^2.2.0 | ^3.0.0-RC2",
         "phpunit/phpunit": "> 6.0.0",
-        "symfony/finder": "~2.4|~3.0|~4.0|~5.0"
+        "symfony/finder": ">=2.4 <6.0"
     },
     "require-dev": {
         "codeception/codeception": "^4.0",
