@@ -18,6 +18,7 @@ class Mocker implements Aspect
     public function fakeMethodsAndRegisterCalls($class, $declaredClass, $method, $params, $static)
     {
         $result = __AM_CONTINUE__;
+        $invocation = null;
 
         if (in_array($method, $this->methodMap)) {
             $invocation = new \AspectMock\Intercept\MethodInvocation();
@@ -26,7 +27,6 @@ class Mocker implements Aspect
             $invocation->setArguments($params);
             $invocation->isStatic($static);
             $invocation->setDeclaredClass($declaredClass);
-            $result = $this->invokeFakedMethods($invocation);
         }
 
         // Record actual method called, not faked method.
@@ -49,6 +49,10 @@ class Mocker implements Aspect
             Registry::registerClassCall($declaredClass, $method, $params);
         }
 
+        if ($invocation instanceof \AspectMock\Intercept\MethodInvocation) {
+            $result = $this->invokeFakedMethods($invocation);
+        }
+        
         return $result;
     }
 
