@@ -1,5 +1,7 @@
 <?php
 namespace AspectMock\Proxy;
+
+use \PHPUnit\Framework\Assert;
 use \PHPUnit\Framework\ExpectationFailedException as fail;
 use AspectMock\Util\ArgumentsFormatter;
 
@@ -118,7 +120,10 @@ abstract class Verifier {
                     $equals++;
                 }
             }
-            if ($equals == $times) return;
+            if ($equals == $times) {
+                Assert::assertTrue(true);
+                return;
+            }
             $params = ArgumentsFormatter::toString($params);
             throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name."($params)", $times, $equals));
         } else if(is_callable($params)) {
@@ -126,6 +131,7 @@ abstract class Verifier {
         }
         $num_calls = count($calls);
         if ($num_calls != $times) throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
+        Assert::assertTrue(true);
     }
 
     /**
@@ -153,6 +159,7 @@ abstract class Verifier {
 
         if (is_array($params)) {
             if (empty($calls)) {
+                Assert::assertTrue(true);
                 return;
             }
 
@@ -161,11 +168,13 @@ abstract class Verifier {
                     throw new fail(sprintf($this->neverInvoked, $this->className));
                 }
             }
+            Assert::assertTrue(true);
             return;
         }
         if (count($calls)) {
             throw new fail(sprintf($this->neverInvoked, $this->className.$separator.$name));
         }
+        Assert::assertTrue(true);
     }
 
 }
