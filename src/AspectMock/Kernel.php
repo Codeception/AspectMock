@@ -19,6 +19,8 @@ class Kernel extends AspectKernel
     {
         if (!isset($options['excludePaths'])) {
             $options['excludePaths'] = [];
+        } elseif (!is_array($options['excludePaths'])) {
+            $options['excludePaths'] = [ $options['excludePaths'] ];
         }
         $options['debug'] = true;
         $options['excludePaths'][] = __DIR__;
