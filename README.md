@@ -81,7 +81,7 @@ Instead we will replace it with a dummy and verify that it gets called by `creat
 <?php
 function testUserCreate()
 {
-	$user = test::double('User', ['save' => null]));
+	$user = test::double('User', ['save' => null]);
 	$service = new UserService;
 	$service->createUserByName('davert');
 	$this->assertEquals('davert', $user->getName());
