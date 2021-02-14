@@ -69,7 +69,7 @@ class BeforeMockTransformer extends WeavingTransformer
                     $beforeDefinition = sprintf($beforeDefinition, $params);
                     $tokenPosition    = $method->getNode()->getAttribute('startTokenPos');
                     do {
-                        if ($metadata->tokenStream[$tokenPosition][1] === '{') {
+                        if (($metadata->tokenStream[$tokenPosition][1] ?? '') === '{') {
                             $metadata->tokenStream[$tokenPosition][1] .= $beforeDefinition;
                             $result = self::RESULT_TRANSFORMED;
                             break;
