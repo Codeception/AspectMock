@@ -67,7 +67,7 @@ class testDoubleTest extends \Codeception\Test\Unit
         $this->assertFalse($class->isDefined());
         $this->assertFalse($class->hasMethod('__toString'));
         $this->assertFalse($class->hasMethod('edit'));
-        verify($class->interfaces())->isEmpty();
+        verify($class->interfaces())->empty();
         $this->any = $class->make();
         $this->any = $class->construct();
 

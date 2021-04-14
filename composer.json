@@ -20,7 +20,7 @@
     },
     "require-dev": {
         "codeception/codeception": "^4.0",
-        "codeception/verify": "^1.2",
+        "codeception/verify": "^2.1",
         "codeception/specify": "^1.0"
     },
     "license": "MIT"
