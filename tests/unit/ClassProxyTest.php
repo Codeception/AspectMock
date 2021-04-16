@@ -17,8 +17,8 @@ class ClassProxyTest extends \Codeception\TestCase\Test {
         verify($class->hasMethod('setNothing'))->false();
         verify($class->hasProperty('name'))->true();
         verify($class->hasProperty('otherName'))->false();
-        verify($class->traits())->isEmpty();
-        verify($class->interfaces())->isEmpty();
+        verify($class->traits())->empty();
+        verify($class->interfaces())->empty();
         verify($class->parent())->null();
     }
 
@@ -28,8 +28,8 @@ class ClassProxyTest extends \Codeception\TestCase\Test {
         /** @var $class ClassProxy **/
         verify($class->isDefined())->true();
         verify($class->hasMethod('setName'))->false();
-        verify($class->traits())->contains('Codeception\Specify');
-        verify($class->interfaces())->contains('Iterator');
+        verify($class->traits())->arrayContains('Codeception\Specify');
+        verify($class->interfaces())->arrayContains('Iterator');
         verify($class->parent())->equals('stdClass');
     }
 

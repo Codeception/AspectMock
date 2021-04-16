@@ -13,15 +13,15 @@
            }
        },
     "require": {
-        "php": "^7.0",
-        "goaop/framework": "^2.2.0",
-        "phpunit/phpunit": "> 6.0.0",
-        "symfony/finder": ">=2.4 <6.0"
+        "php": "^7.4",
+        "goaop/framework": "^3.0",
+        "phpunit/phpunit": "^9.5",
+        "symfony/finder": ">=4.4 <6.0"
     },
     "require-dev": {
-        "codeception/codeception": "^4.0",
-        "codeception/verify": "^1.2",
-        "codeception/specify": "^1.0"
+        "codeception/codeception": "^4.1",
+        "codeception/verify": "^2.1",
+        "codeception/specify": "^1.4"
     },
     "license": "MIT"
 }

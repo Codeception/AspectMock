@@ -74,7 +74,7 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     public function testVerifier()
     {
         $func = test::func('demo', 'strlen', 10);
-        expect(strlen('hello'))->equals(10);
+        verify(strlen('hello'))->equals(10);
         $func->verifyInvoked();
         $func->verifyInvoked(['hello']);
         $func->verifyInvokedOnce();
@@ -86,7 +86,7 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     public function testVerifierFullyQualifiedNamespace()
     {
         $func = test::func('\demo', 'strlen', 10);
-        expect(strlen('hello'))->equals(10);
+        verify(strlen('hello'))->equals(10);
         $func->verifyInvoked();
         $func->verifyInvoked(['hello']);
         $func->verifyInvokedOnce();
@@ -102,17 +102,17 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
     {
         $this->expectException(ExpectationFailedException::class);
         $func = test::func('demo', 'strlen', function() { return 10; });
-        expect(strlen('hello'))->equals(10);
+        verify(strlen('hello'))->equals(10);
         $func->verifyNeverInvoked();
     }
 
     public function testReferencedParameter()
     {
         $func = test::func('\demo', 'preg_match', 10);
-        expect(preg_match('@[0-9]+@', '1234', $match))->equals(10);
+        verify(preg_match('@[0-9]+@', '1234', $match))->equals(10);
         test::clean();
-        expect(preg_match('@[0-9]+@', '1234#', $match))->equals(1);
-        expect($match[0])->equals('1234');
+        verify(preg_match('@[0-9]+@', '1234#', $match))->equals(1);
+        verify($match[0])->equals('1234');
     }
 
 }

@@ -15,7 +15,7 @@ require_once __DIR__ . '/Core/Registry.php';
 
 class Kernel extends AspectKernel
 {
-    public function init(array $options = [])
+    public function init(array $options = []): void
     {
         if (!isset($options['excludePaths'])) {
             $options['excludePaths'] = [];

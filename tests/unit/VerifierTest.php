@@ -34,7 +34,7 @@ class VerifierTest extends TestCase
             $empty = $params[1][0]; // second call, first arg
 
             verify($info)->equals($args);
-            verify($empty)->isEmpty();
+            verify($empty)->empty();
         };
 
         $this->specify('closure was called', function() use ($user, $info, $matcher) {
