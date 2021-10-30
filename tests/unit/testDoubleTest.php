@@ -134,9 +134,6 @@ final class testDoubleTest extends Unit
 
     public function testPhp7Features()
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $this->markTestSkipped('PHP 7 only');
-        }
         Kernel::getInstance()->loadFile(codecept_data_dir() . 'php7.php');
         test::double(TestPhp7Class::class, [
             'stringSth' => true,

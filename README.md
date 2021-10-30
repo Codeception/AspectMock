@@ -7,7 +7,7 @@ AspectMock allows you to stub and mock practically anything in your PHP code!
 
 **Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [ClassProxy](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) | [InstanceProxy](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) | [FuncProxy](https://github.com/Codeception/AspectMock/blob/master/docs/FuncProxy.md)
 
-[![Actions Status](https://github.com/Codeception/aspectMock/workflows/CI/badge.svg)](https://github.com/Codeception/aspectMock/actions)
+[![Actions Status](https://github.com/Codeception/AspectMock/workflows/CI/badge.svg)](https://github.com/Codeception/AspectMock/actions)
 [![Latest Stable Version](https://poser.pugx.org/codeception/aspect-mock/v/stable.png)](https://packagist.org/packages/codeception/aspect-mock)
 [![Total Downloads](https://poser.pugx.org/codeception/aspect-mock/downloads)](https://packagist.org/packages/codeception/aspect-mock)
 [![Monthly Downloads](https://poser.pugx.org/codeception/aspect-mock/d/monthly)](https://packagist.org/packages/codeception/aspect-mock)
@@ -147,7 +147,8 @@ No PECL extensions is required. The [Go! AOP](http://go.aopphp.com/) library doe
 
 ## Requirements
 
-PHP >= 7.4 [Go! AOP Requirements](https://github.com/goaop/framework#requirements)
+* `PHP 7.4`.
+* `Go! AOP 3.0`
 
 ## Installation
 
