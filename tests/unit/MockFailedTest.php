@@ -1,35 +1,35 @@
 <?php
+
+declare(strict_types=1);
+
 namespace demo;
 
-use AspectMock\Proxy\Anything;
+use AspectMock\Core\Registry as double;
 use AspectMock\Proxy\AnythingClassProxy;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
-use \AspectMock\Core\Registry as double;
 use Codeception\PHPUnit\TestCase;
 
-class MockFailedTest extends TestCase
+final class MockFailedTest extends TestCase
 {
-    
     protected function _setUp()
     {
         $this->expectException('PHPUnit\Framework\ExpectationFailedException');
-    }        
-    
+    }
+
     protected function _tearDown()
     {
         double::clean();
     }
 
-    protected function user()
+    protected function user(): InstanceProxy
     {
         $user = new UserModel();
         double::registerObject($user);
-        $user = new InstanceProxy($user);
-        return $user;
+        return new InstanceProxy($user);
     }
 
-    protected function userProxy()
+    protected function userProxy(): ClassProxy
     {
         $userProxy = new ClassProxy('demo\UserModel');
         double::registerClass('demo\UserModel');
@@ -41,7 +41,7 @@ class MockFailedTest extends TestCase
         $this->user()->verifyInvoked('setName');
     }
 
-    public function testInstanceInvokedWothoutParams()
+    public function testInstanceInvokedWithoutParams()
     {
         $user = $this->user();
         $user->setName('davert');
@@ -96,7 +96,6 @@ class MockFailedTest extends TestCase
         $userProxy = $this->userProxy();
         $user->setName(1111);
         $userProxy->verifyInvoked('setName',[2222]);
-
     }
 
     public function testAnythingFail()
@@ -106,5 +105,4 @@ class MockFailedTest extends TestCase
         $any->hello();
         $anyProxy->verifyInvoked('hello');
     }
-    
 }

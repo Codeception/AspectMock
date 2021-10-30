@@ -1,5 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Intercept;
+
+use Exception;
+use ReflectionFunction;
 
 class FunctionInjector
 {
@@ -35,6 +41,7 @@ EOF;
     protected $namespace;
 
     protected $function;
+
     protected $fileName;
 
     function __construct($namespace, $function)
@@ -49,22 +56,24 @@ EOF;
     public function getParameterDeclaration(\ReflectionParameter $parameter, $internal)
     {
         $text = (string)$parameter;
-        if (preg_match('@Parameter\s#[0-9]+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s\]@', $text, $match)) {
+        if (preg_match('#Parameter\s\#\d+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s\]#', $text, $match)) {
             $text = $match[2].$match[4];
-        } elseif (preg_match('@Parameter\s#[0-9]+\s\[\s<(required|optional)>\s(.*)\s\]@', $text, $match)) {
+        } elseif (preg_match('#Parameter\s\#\d+\s\[\s<(required|optional)>\s(.*)\s\]#', $text, $match)) {
             $text = $match[2];
         } else {
-            throw new \Exception('reflection api changed. adjust code.');
+            throw new Exception('reflection api changed. adjust code.');
         }
+
         if ($internal && $parameter->isOptional()) {
             $text .= "=NULL";
         }
+
         return $text;
     }
 
-    public function placeOptionalAndReferenceFunction($namespace, $function)
+    public function placeOptionalAndReferenceFunction($namespace, $function): void
     {
-        $reflect = new \ReflectionFunction($function);
+        $reflect = new ReflectionFunction($function);
         $parameters = [];
         $args = '';
         $byRef = false;
@@ -79,32 +88,36 @@ EOF;
             if (!$optionals && $parameter->isOptional()) {
                 $optionals = true;
             }
+
             if ($parameter->isPassedByReference()) {
                 $name = '&'.$name;
                 $byRef = true;
             }
+
             $names[] = $name;
             $parameters[$newname] = $declaration;
         }
+
         if ($byRef) {
             $this->template = $this->templateByRefOptional;
-            $this->place('arguments', join(', ', $parameters));
+            $this->place('arguments', implode(', ', $parameters));
             $code = '';
-            for ($i = count($parameters); $i > 0; $i--) {
-                $code .= "             case {$i}: \$args = [" . join(', ', $names) . "]; break;\n";
+            for ($i = count($parameters); $i > 0; --$i) {
+                $code .= sprintf('             case %d: $args = [', $i) . implode(', ', $names) . "]; break;\n";
                 array_pop($names);
             }
+
             $this->place('code', $code);
         }
     }
 
-    public function save()
+    public function save(): void
     {
         $this->fileName = tempnam(sys_get_temp_dir(), $this->function);
         file_put_contents($this->fileName, $this->template);
     }
 
-    public function inject()
+    public function inject(): void
     {
         require_once $this->fileName;
     }
@@ -119,8 +132,8 @@ EOF;
         return $this->template;
     }
 
-    protected function place($var, $value)
+    protected function place($var, $value): void
     {
-        $this->template = str_replace("{{{$var}}}", $value, $this->template);
+        $this->template = str_replace(sprintf('{{%s}}', $var), $value, $this->template);
     }
 } 

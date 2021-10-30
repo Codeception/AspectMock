@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock;
 
 use AspectMock\Core\Registry;
@@ -37,7 +40,7 @@ class Kernel extends AspectKernel
      * Scans a directory provided and includes all PHP files from it.
      * All files will be parsed and aspects will be added.
      *
-     * @param $dir
+     * @param string|string[] $dir
      */
     public function loadPhpFiles($dir)
     {
@@ -50,10 +53,8 @@ class Kernel extends AspectKernel
 
     /**
      * Includes file and injects aspect pointcuts into int
-     *
-     * @param $file
      */
-    public function loadFile($file)
+    public function loadFile(string $file)
     {
         include FilterInjectorTransformer::rewrite($file);
     }

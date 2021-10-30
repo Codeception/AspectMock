@@ -1,6 +1,7 @@
 {
     "name": "codeception/aspect-mock",
     "description": "Experimental Mocking Framework powered by Aspects",
+    "license": "MIT",
     "authors": [
         {
             "name": "Michael Bodnarchuk",
@@ -21,7 +22,7 @@
     "require-dev": {
         "codeception/codeception": "^4.1",
         "codeception/verify": "^2.1",
-        "codeception/specify": "^1.4"
-    },
-    "license": "MIT"
+        "codeception/specify": "^1.4",
+        "consolidation/robo": "^3.0"
+    }
 }

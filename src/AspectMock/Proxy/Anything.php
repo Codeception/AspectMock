@@ -1,14 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Proxy;
 
+use ArrayAccess;
 use AspectMock\Util\Undefined;
+use Iterator;
+
 /**
  * A class to mimic any other class in PHP.
  *
  * Originally written from Codeception.
  *
  */
-class Anything implements Undefined, \ArrayAccess, \Iterator
+class Anything implements Undefined, ArrayAccess, Iterator
 {
     private $className;
 
@@ -22,7 +28,7 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
         return "| Undefined | ".$this->className;
     }
 
-    function __get($key)
+    function __get($key): Anything
     {
         return new Anything($this->className);
     }
@@ -31,27 +37,27 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
     {
     }
 
-    function __call($method, $args)
+    function __call($method, $args): Anything
     {
         return new Anything($this->className);
     }
 
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return false;
     }
 
-    public function offsetGet($offset)
+    public function offsetGet($offset): Anything
     {
         return new Anything($this->className);
     }
 
 
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
     }
 
@@ -60,7 +66,7 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
         return null;
     }
 
-    public function next()
+    public function next(): void
     {
     }
 
@@ -69,13 +75,12 @@ class Anything implements Undefined, \ArrayAccess, \Iterator
         return null;
     }
 
-    public function valid()
+    public function valid(): bool
     {
         return false;
     }
 
-    public function rewind()
+    public function rewind(): void
     {
     }
-
 }

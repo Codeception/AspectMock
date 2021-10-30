@@ -1,13 +1,17 @@
 <?php
+
 namespace demo;
-use \AspectMock\Core\Registry as double;
+
+use AspectMock\Core\Registry as double;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 use Codeception\PHPUnit\TestCase;
+use Codeception\Specify;
+use Exception;
 
-class VerifierTest extends TestCase
+final class VerifierTest extends TestCase
 {
-    use \Codeception\Specify;
+    use Specify;
 
     protected function _tearDown()
     {
@@ -91,7 +95,7 @@ class VerifierTest extends TestCase
                 $user->verifyNeverInvoked('setName', "Bob Jones");
                 // If i dont fail, my test fail
                 throw new fail('verifyNeverInvoked');
-            } catch (\Exception $e) {}
+            } catch (Exception $e) {}
 
             $user->verifyNeverInvoked('setName', ["Boby Jones"]);
 
@@ -106,7 +110,7 @@ class VerifierTest extends TestCase
                 $user->verifyNeverInvoked('setNameAndInfo', ["Bob Jones", "Infos"]);
                 // If i dont fail, my test fail
                 throw new fail('verifyNeverInvoked');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
 
             }
         });

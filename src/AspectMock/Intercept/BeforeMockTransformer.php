@@ -1,5 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Intercept;
+
 use Go\Aop\Aspect;
 use Go\Instrument\Transformer\StreamMetaData;
 use Go\Instrument\Transformer\WeavingTransformer;
@@ -8,8 +12,8 @@ use Go\ParserReflection\ReflectionMethod;
 
 class BeforeMockTransformer extends WeavingTransformer
 {
-    protected $before = " if ((\$__am_res = __amock_before(\$this, __CLASS__, __FUNCTION__, array(%s), false)) !== __AM_CONTINUE__) return \$__am_res; ";
-    protected $beforeStatic = " if ((\$__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true)) !== __AM_CONTINUE__) return \$__am_res; ";
+    protected string $before = " if ((\$__am_res = __amock_before(\$this, __CLASS__, __FUNCTION__, array(%s), false)) !== __AM_CONTINUE__) return \$__am_res; ";
+    protected string $beforeStatic = " if ((\$__am_res = __amock_before(get_called_class(), __CLASS__, __FUNCTION__, array(%s), true)) !== __AM_CONTINUE__) return \$__am_res; ";
 
     public function transform(StreamMetaData $metadata): string
     {

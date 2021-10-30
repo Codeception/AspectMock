@@ -2,7 +2,7 @@
 
 namespace AspectMock\Util;
 
-
-interface Undefined {
+interface Undefined
+{
 
 }

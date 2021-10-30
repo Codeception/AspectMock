@@ -1,11 +1,15 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock;
+
 use AspectMock\Core\Registry;
-use AspectMock\Proxy\Anything;
 use AspectMock\Proxy\AnythingClassProxy;
-use AspectMock\Proxy\ClassProxy;
-use AspectMock\Proxy\InstanceProxy;
 use AspectMock\Proxy\Verifier;
+use Exception;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * `AspectMock\Test` class is a builder of test doubles.
@@ -18,11 +22,10 @@ use AspectMock\Proxy\Verifier;
  * ``` php
  * <?php
  * use AspectMock\Test as test;
- * ?>
  * ```
  */
-class Test {
-
+class Test
+{
     /**
      * `test::double` registers class or object to track its calls.
      * In second argument you may pass values that mocked mathods should return.
@@ -81,13 +84,12 @@ class Test {
      * $user = new User(['name' => 'davert']);
      * $user->save(); // false
      *
-     * ?>
      * ```
      *
      * @api
      * @param string|object $classOrObject
      * @param array $params [ 'methodName' => 'returnValue' ]
-     * @throws \Exception
+     * @throws Exception
      * @return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
      */
     public static function double($classOrObject, array $params = array())
@@ -95,7 +97,7 @@ class Test {
         $classOrObject = Registry::getRealClassOrObject($classOrObject);
         if (is_string($classOrObject)) {
             if (!class_exists($classOrObject)) {
-                throw new \Exception("Class $classOrObject not loaded.\nIf you want to test undefined class use 'test::spec' method");
+                throw new Exception("Class $classOrObject not loaded.\nIf you want to test undefined class use 'test::spec' method");
             }
 
             Core\Registry::registerClass($classOrObject, $params);
@@ -117,7 +119,6 @@ class Test {
      * <?php
      * $userClass = test::spec('User');
      * $userClass->defined(); // false
-     * ?>
      * ```
      *
      * You can create instances of undefined classes and play with them:
@@ -128,7 +129,6 @@ class Test {
      * $user->setName('davert');
      * $user->setNumPosts(count($user->getPosts()));
      * $this->assertEquals('davert', $user->getName()); // fail
-     * ?>
      * ```
      *
      * The test will be executed normally and will fail at the first assertion.
@@ -144,7 +144,6 @@ class Test {
      * foreach ($user->names as $name) {
      *      $name->canBeIterated();
      * }
-     * ?>
      * ```
      *
      * None of those calls will trigger an error in your test.
@@ -174,7 +173,6 @@ class Test {
      * test::methods($user, ['getName']);
      * $user->setName('davert'); // not invoked
      * $user->getName(); // jon
-     * ?>
      * ```
      *
      * You can create a dummy without a constructor with all methods disabled:
@@ -183,25 +181,24 @@ class Test {
      * <?php
      * $user = test::double('User')->make();
      * test::methods($user, []);
-     * ?>
      * ```
      *
      * @api
      * @param string|object $classOrObject
      * @param string[] $only
      * @return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
-     * @throws \Exception
+     * @throws Exception
      */
     public static function methods($classOrObject, array $only = array())
     {
         $classOrObject = Registry::getRealClassOrObject($classOrObject);
         if (is_object($classOrObject)) {
-            $reflected = new \ReflectionClass(get_class($classOrObject));
+            $reflected = new ReflectionClass(get_class($classOrObject));
         } else {
-            if (!class_exists($classOrObject)) throw new \Exception("Class $classOrObject not defined.");
-            $reflected = new \ReflectionClass($classOrObject);
+            if (!class_exists($classOrObject)) throw new Exception("Class $classOrObject not defined.");
+            $reflected = new ReflectionClass($classOrObject);
         }
-        $methods = $reflected->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $methods = $reflected->getMethods(ReflectionMethod::IS_PUBLIC);
         $params = array();
         foreach ($methods as $m) {
             if ($m->isConstructor()) continue;
@@ -243,12 +240,10 @@ class Test {
      * $func->verifyInvokedOnce(['Y']);
      * ```
      *
-     * @param string $namespace
-     * @param string $functionName
      * @param mixed $body whatever a function might return or Callable substitute
      * @return Proxy\FuncProxy
      */
-    public static function func($namespace, $functionName, $body)
+    public static function func(string $namespace, string $functionName, $body)
     {
         Core\Registry::registerFunc($namespace, $functionName, $body);
         return new Proxy\FuncProxy($namespace, $functionName);
@@ -261,7 +256,6 @@ class Test {
      * ``` php
      * <?php
      * test::clean();
-     * ?>
      * ```
      *
      * Also you can clean registry only for the specific class or object.
@@ -270,7 +264,6 @@ class Test {
      * <?php
      * test::clean('User');
      * test::clean($user);
-     * ?>
      * ```
      *
      * @api
@@ -292,5 +285,4 @@ class Test {
     {
         Core\Registry::cleanInvocations();
     }
-
 }

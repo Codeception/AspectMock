@@ -1,9 +1,13 @@
 <?php
+
+declare(strict_types=1);
+
 namespace demo;
 
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\TestCase;
 
-class AccessDemoClassesTest extends \PHPUnit\Framework\TestCase
+final class AccessDemoClassesTest extends TestCase
 {
     public function testUserModel()
     {
@@ -17,5 +21,4 @@ class AccessDemoClassesTest extends \PHPUnit\Framework\TestCase
         $service = new UserService();
         $service->create(['name' => 'davert']);
     }
-
 }

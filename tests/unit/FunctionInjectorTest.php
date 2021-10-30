@@ -1,26 +1,20 @@
 <?php
+
+declare(strict_types=1);
+
 namespace demo;
 
 use AspectMock\Intercept\FunctionInjector;
 use AspectMock\Test as test;
 use PHPUnit\Framework\ExpectationFailedException;
 
-class FunctionInjectorTest extends \Codeception\TestCase\Test
+final class FunctionInjectorTest extends \Codeception\TestCase\Test
 {
-    /**
-     * @var FunctionInjector
-     */
-    protected $funcInjector;
+    protected FunctionInjector $funcInjector;
 
-    /**
-     * @var FunctionInjector
-     */
-    protected $funcOptionalParameterInjector;
+    protected FunctionInjector $funcOptionalParameterInjector;
 
-    /**
-     * @var FunctionInjector
-     */
-    protected $funcReferencedParameterInjector;
+    protected FunctionInjector $funcReferencedParameterInjector;
 
     public function _before()
     {
@@ -114,5 +108,4 @@ class FunctionInjectorTest extends \Codeception\TestCase\Test
         verify(preg_match('@[0-9]+@', '1234#', $match))->equals(1);
         verify($match[0])->equals('1234');
     }
-
 }

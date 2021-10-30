@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Proxy;
 
 use AspectMock\Core\Registry;
@@ -12,16 +15,13 @@ class FuncVerifier extends Verifier
         $this->ns = $namespace;
     }
 
-    protected function callSyntax($method)
+    protected function callSyntax($method): string
     {
-        return "";
+        return '';
     }
 
     public function getCallsForMethod($func)
     {
-        $calls = Registry::getFuncCallsFor($this->ns . '\\' . $func);
-        return $calls;
+        return Registry::getFuncCallsFor($this->ns . '\\' . $func);
     }
-
-
-} 
+}
