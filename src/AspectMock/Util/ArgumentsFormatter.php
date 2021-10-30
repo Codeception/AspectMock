@@ -6,9 +6,9 @@ namespace AspectMock\Util;
 
 use Closure;
 
-class ArgumentsFormatter
+final class ArgumentsFormatter
 {
-    static function toString($args): string
+    public static function toString($args): string
     {
         return implode(',',array_map('self::format', $args));
     }

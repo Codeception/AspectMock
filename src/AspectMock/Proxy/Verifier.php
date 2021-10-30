@@ -54,7 +54,7 @@ abstract class Verifier {
      *
      * ```
      */
-    public function verifyInvoked(string $name, array $params = null)
+    public function verifyInvoked(string $name, $params = null)
     {
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
@@ -77,7 +77,7 @@ abstract class Verifier {
     /**
      * Verifies that method was invoked only once.
      */
-    public function verifyInvokedOnce(string $name, array $params = null): void
+    public function verifyInvokedOnce(string $name, $params = null): void
     {
         $this->verifyInvokedMultipleTimes($name, 1, $params);
     }
@@ -94,7 +94,7 @@ abstract class Verifier {
      *
      * @throws ExpectationFailedException
      */
-    public function verifyInvokedMultipleTimes(string $name, int $times, array $params = null)
+    public function verifyInvokedMultipleTimes(string $name, int $times, $params = null)
     {
         if ($times == 0) return $this->verifyNeverInvoked($name, $params);
 
@@ -143,7 +143,7 @@ abstract class Verifier {
      *
      * @throws ExpectationFailedException
      */
-    public function verifyNeverInvoked(string $name, array $params = null)
+    public function verifyNeverInvoked(string $name, $params = null)
     {
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);

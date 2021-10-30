@@ -23,21 +23,21 @@ class Anything implements Undefined, ArrayAccess, Iterator
         $this->className = $className;             
     }
 
-    function __toString()
+    public function __toString()
     {
         return "| Undefined | ".$this->className;
     }
 
-    function __get($key): Anything
+    public function __get($key): Anything
     {
         return new Anything($this->className);
     }
 
-    function __set($key, $val)
+    public function __set($key, $val)
     {
     }
 
-    function __call($method, $args): Anything
+    public function __call($method, $args): Anything
     {
         return new Anything($this->className);
     }

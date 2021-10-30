@@ -6,7 +6,8 @@ use AspectMock\Proxy\ClassProxy;
 use AspectMock\Test as test;
 use Codeception\Specify;
 
-final class ClassProxyTest extends \Codeception\TestCase\Test {
+final class ClassProxyTest extends \Codeception\TestCase\Test
+{
 
     use Specify;
 

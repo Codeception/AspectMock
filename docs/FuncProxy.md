@@ -18,22 +18,11 @@ $func->verifyInvoked(); // true
 $func->verifyInvoked(['hello']); // true
 $func->verifyInvokedMultipleTimes(2);
 $func->verifyNeverInvoked(['bye']);
-
 ```
 
-
-#### *public* verifyInvoked($params = null) 
- * `param null` $params
-
-#### *public* verifyInvokedOnce($params = null) 
- * `param null` $params
-
-#### *public* verifyNeverInvoked($params = null) 
- * `param null` $params
-
-#### *public* verifyInvokedMultipleTimes($times, $params = null) 
- * `param` $times
- * `param null` $params
-
+#### *public* verifyInvoked(array $params = null) 
+#### *public* verifyInvokedOnce(array $params = null) 
+#### *public* verifyNeverInvoked(array $params = null) 
+#### *public* verifyInvokedMultipleTimes($times, array $params = null) 
 #### *public* getCallsForMethod($func) 
 

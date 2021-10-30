@@ -13,12 +13,11 @@ This allows to redefine any method of object with your own, and adds mock verifi
 ``` php
 <?php
 use AspectMock\Test as test;
-?>
 ```
 
 #### *public static* double($classOrObject, array $params = Array ( ) ) 
 `test::double` registers class or object to track its calls.
-In second argument you may pass values that mocked methods should return.
+In second argument you may pass values that mocked mathods should return.
 
 Returns either of [**ClassProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) (when a string was passed)
 or [**InstanceProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) (when an object was passed).
@@ -58,7 +57,7 @@ $user = new User;
 test::double($user, ['getName' => 'davert']);
 test::double($user, ['getEmail' => 'davert@mail.ua']);
 $user->getName(); // => 'davert'
-$user->getEmail();// => 'davert@mail.ua'
+$user->getEmail(); => 'davert@mail.ua'
 
 # create an instance of mocked class
 test::double('User')->construct(['name' => 'davert']); // via constructor
@@ -74,14 +73,13 @@ test::double('ActiveRecord', ['save' => false]);
 $user = new User(['name' => 'davert']);
 $user->save(); // false
 
-?>
 ```
 
  * api
  * `param string|object` $classOrObject
  * `param array` $params [ 'methodName' => 'returnValue' ]
- * throws \Exception
- * return Verifier Usually Proxy\ClassProxy|Proxy\InstanceProxy
+ * throws Exception
+ * return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
 
 #### *public static* spec($classOrObject, array $params = Array ( ) ) 
 If you follow TDD/BDD practices a test should be written before the class is defined.
@@ -92,7 +90,6 @@ Instead you can use `test::spec` method that will create a proxy for an undefine
 <?php
 $userClass = test::spec('User');
 $userClass->defined(); // false
-?>
 ```
 
 You can create instances of undefined classes and play with them:
@@ -103,7 +100,6 @@ $user = test::spec('User')->construct();
 $user->setName('davert');
 $user->setNumPosts(count($user->getPosts()));
 $this->assertEquals('davert', $user->getName()); // fail
-?>
 ```
 
 The test will be executed normally and will fail at the first assertion.
@@ -119,7 +115,6 @@ $user->can['be used as array'];
 foreach ($user->names as $name) {
      $name->canBeIterated();
 }
-?>
 ```
 
 None of those calls will trigger an error in your test.
@@ -130,7 +125,7 @@ If class is already defined, `test::spec` will act as `test::double`.
  * api
  * `param string|object` $classOrObject
  * `param array` $params
- * return Verifier Usually Proxy\ClassProxy|Proxy\InstanceProxy
+ * return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
 
 #### *public static* methods($classOrObject, array $only = Array ( ) ) 
 Replaces all methods in a class with dummies, except those specified in the `$only` param.
@@ -141,7 +136,6 @@ $user = new User(['name' => 'jon']);
 test::methods($user, ['getName']);
 $user->setName('davert'); // not invoked
 $user->getName(); // jon
-?>
 ```
 
 You can create a dummy without a constructor with all methods disabled:
@@ -150,14 +144,13 @@ You can create a dummy without a constructor with all methods disabled:
 <?php
 $user = test::double('User')->make();
 test::methods($user, []);
-?>
 ```
 
  * api
  * `param string|object` $classOrObject
  * `param string[]` $only
- * return Verifier Usually Proxy\ClassProxy|Proxy\InstanceProxy
- * throws \Exception
+ * return Verifier|Proxy\ClassProxy|Proxy\InstanceProxy
+ * throws Exception
 
 #### *public static* func($namespace, $functionName, $body) 
 Replaces function in provided namespace with user-defined function or value that function returns.
@@ -190,8 +183,6 @@ $func->verifyInvoked();
 $func->verifyInvokedOnce(['Y']);
 ```
 
- * `param string` $namespace
- * `param string` $functionName
  * `param mixed` $body whatever a function might return or Callable substitute
  * return Proxy\FuncProxy
 
@@ -202,7 +193,6 @@ Should be called between tests.
 ``` php
 <?php
 test::clean();
-?>
 ```
 
 Also you can clean registry only for the specific class or object.
@@ -211,7 +201,6 @@ Also you can clean registry only for the specific class or object.
 <?php
 test::clean('User');
 test::clean($user);
-?>
 ```
 
  * api
