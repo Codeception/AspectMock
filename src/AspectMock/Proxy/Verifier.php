@@ -1,16 +1,17 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Proxy;
 
-use \PHPUnit\Framework\Assert;
-use \PHPUnit\Framework\ExpectationFailedException as fail;
 use AspectMock\Util\ArgumentsFormatter;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 
 /**
  * Interface `Verifiable` defines methods to verify method calls.
  * Implementation may differ for class methods and instance methods.
- *   
  */
-
 abstract class Verifier {
 
     /**
@@ -18,15 +19,17 @@ abstract class Verifier {
      */
     public $className;
 
-    protected $invokedFail = "Expected %s to be invoked but it never occurred. Got: %s";
-    protected $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occurred.";
-    protected $invokedMultipleTimesFail = "Expected %s to be invoked but called %s times but called %s.";
+    protected string $invokedFail = "Expected %s to be invoked but it never occurred. Got: %s";
 
-    protected $neverInvoked = "Expected %s not to be invoked but it was.";
+    protected string $notInvokedMultipleTimesFail = "Expected %s to be invoked %s times but it never occurred.";
+
+    protected string $invokedMultipleTimesFail = "Expected %s to be invoked but called %s times but called %s.";
+
+    protected string $neverInvoked = "Expected %s not to be invoked but it was.";
 
     abstract public function getCallsForMethod($method);
 
-    protected function callSyntax($method)
+    protected function callSyntax($method): string
     {
         return method_exists($this->className,$method)
             ? '::'
@@ -49,42 +52,32 @@ abstract class Verifier {
      * $user->verifyInvoked('save');
      * $user->verifyInvoked('setName',['davert']);
      *
-     * ?>
      * ```
-     *
-     * @param $name
-     * @param null $params
-     * @throws \PHPUnit\Framework\ExpectationFailedException
-     * @param array $params
-     * @throws fail
      */
-    public function verifyInvoked($name, $params = null)
+    public function verifyInvoked(string $name, $params = null)
     {
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
 
-        if (empty($calls)) throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name, ''));
+        if (empty($calls)) throw new ExpectationFailedException(sprintf($this->invokedFail, $this->className.$separator.$name, ''));
 
         if (is_array($params)) {
             foreach ($calls as $args) {
                 if ($this->onlyExpectedArguments($params, $args) === $params) return;
             }
+
             $params    = ArgumentsFormatter::toString($params);
             $gotParams = ArgumentsFormatter::toString($calls[0]);
-
-            throw new fail(sprintf($this->invokedFail, $this->className.$separator.$name."($params)", $this->className.$separator.$name."($gotParams)"));
-        } else if(is_callable($params)) {
+            throw new ExpectationFailedException(sprintf($this->invokedFail, $this->className.$separator.$name.sprintf('(%s)', $params), $this->className.$separator.$name.sprintf('(%s)', $gotParams)));
+        } elseif (is_callable($params)) {
             $params($calls);
         }
     }
 
     /**
      * Verifies that method was invoked only once.
-     *
-     * @param $name
-     * @param array $params
      */
-    public function verifyInvokedOnce($name, $params = null)
+    public function verifyInvokedOnce(string $name, $params = null): void
     {
         $this->verifyInvokedMultipleTimes($name, 1, $params);
     }
@@ -97,40 +90,41 @@ abstract class Verifier {
      * $user->verifyInvokedMultipleTimes('save',2);
      * $user->verifyInvokedMultipleTimes('dispatchEvent',3,['before_validate']);
      * $user->verifyInvokedMultipleTimes('dispatchEvent',4,['after_save']);
-     * ?>
      * ```
      *
-     * @param $name
-     * @param $times
-     * @param array $params
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
-    public function verifyInvokedMultipleTimes($name, $times, $params = null)
+    public function verifyInvokedMultipleTimes(string $name, int $times, $params = null)
     {
         if ($times == 0) return $this->verifyNeverInvoked($name, $params);
 
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
 
-        if (empty($calls)) throw new fail(sprintf($this->notInvokedMultipleTimesFail, $this->className.$separator.$name, $times));
+        if (empty($calls)) throw new ExpectationFailedException(sprintf($this->notInvokedMultipleTimesFail, $this->className.$separator.$name, $times));
+
         if (is_array($params)) {
             $equals = 0;
             foreach ($calls as $args) {
                 if ($this->onlyExpectedArguments($params, $args) === $params) {
-                    $equals++;
+                    ++$equals;
                 }
             }
+
             if ($equals == $times) {
                 Assert::assertTrue(true);
                 return;
             }
+
             $params = ArgumentsFormatter::toString($params);
-            throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name."($params)", $times, $equals));
-        } else if(is_callable($params)) {
+            throw new ExpectationFailedException(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name.sprintf('(%s)', $params), $times, $equals));
+        } elseif (is_callable($params)) {
             $params($calls);
         }
+
         $num_calls = count($calls);
-        if ($num_calls != $times) throw new fail(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
+        if ($num_calls != $times) throw new ExpectationFailedException(sprintf($this->invokedMultipleTimesFail, $this->className.$separator.$name, $times, $num_calls));
+
         Assert::assertTrue(true);
     }
 
@@ -145,14 +139,11 @@ abstract class Verifier {
      * $user->verifyNeverInvoked('setName',['davert']); // fail
      * $user->verifyNeverInvoked('setName',['bob']); // success
      * $user->verifyNeverInvoked('setName',[]); // success
-     * ?>
      * ```
      *
-     * @param $name
-     * @param null $params
-     * @throws \PHPUnit\Framework\ExpectationFailedException
+     * @throws ExpectationFailedException
      */
-    public function verifyNeverInvoked($name, $params = null)
+    public function verifyNeverInvoked(string $name, $params = null)
     {
         $calls = $this->getCallsForMethod($name);
         $separator = $this->callSyntax($name);
@@ -165,16 +156,18 @@ abstract class Verifier {
 
             foreach ($calls as $args) {
                 if ($this->onlyExpectedArguments($params, $args) === $params) {
-                    throw new fail(sprintf($this->neverInvoked, $this->className));
+                    throw new ExpectationFailedException(sprintf($this->neverInvoked, $this->className));
                 }
             }
+
             Assert::assertTrue(true);
             return;
         }
-        if (count($calls)) {
-            throw new fail(sprintf($this->neverInvoked, $this->className.$separator.$name));
+
+        if (count($calls) > 0) {
+            throw new ExpectationFailedException(sprintf($this->neverInvoked, $this->className.$separator.$name));
         }
+
         Assert::assertTrue(true);
     }
-
 }

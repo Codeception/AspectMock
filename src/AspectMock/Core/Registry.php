@@ -1,5 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Core;
+
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 
@@ -9,55 +13,50 @@ use AspectMock\Proxy\InstanceProxy;
  * Class Registry
  * @package AspectMock
  */
-class Registry {
+class Registry
+{
+    protected static array $classCalls = [];
 
-    protected static $classCalls = [];
-    protected static $instanceCalls = [];
-    protected static $funcCalls = [];
+    protected static array $instanceCalls = [];
 
-    /**
-     * @var Mocker
-     */
-    public static $mocker;
+    protected static array $funcCalls = [];
 
-    static function registerClass($name, $params = array())
+    public static ?Mocker $mocker = null;
+
+    public static function registerClass($name, $params = array()): void
     {
         self::$mocker->registerClass($name, $params);
     }
 
-    static function registerObject($object, $params = array())
+    public static function registerObject($object, $params = array()): void
     {
         self::$mocker->registerObject($object, $params);
     }
 
-    static function registerFunc($namespace, $function, $resultOrClosure)
+    public static function registerFunc($namespace, $function, $resultOrClosure): void
     {
         self::$mocker->registerFunc($namespace, $function, $resultOrClosure);
     }
 
-    static function getClassCallsFor($class)
+    public static function getClassCallsFor($class)
     {
         $class = ltrim($class,'\\');
-        return isset(self::$classCalls[$class])
-            ? self::$classCalls[$class]
-            : [];
+        return self::$classCalls[$class] ?? [];
     }
 
-    static function getInstanceCallsFor($instance)
+    public static function getInstanceCallsFor($instance)
     {
         $oid = spl_object_hash($instance);
-        return isset(self::$instanceCalls[$oid])
-            ? self::$instanceCalls[$oid]
-            : [];
+        return self::$instanceCalls[$oid] ?? [];
     }
 
-    static function getFuncCallsFor($func)
+    public static function getFuncCallsFor($func)
     {
         $func = ltrim($func,'\\');
-        return isset(self::$funcCalls[$func]) ? self::$funcCalls[$func] : [];
+        return self::$funcCalls[$func] ?? [];
     }
 
-    static function clean($classOrInstance = null)
+    public static function clean($classOrInstance = null): void
     {
         $classOrInstance = self::getRealClassOrObject($classOrInstance);
         self::$mocker->clean($classOrInstance);
@@ -73,14 +72,14 @@ class Registry {
         }
     }
 
-    static function cleanInvocations()
+    public static function cleanInvocations(): void
     {
         self::$instanceCalls = [];
         self::$classCalls = [];
         self::$funcCalls = [];
     }
 
-    static function registerInstanceCall($instance, $method, $args = array())
+    public static function registerInstanceCall($instance, $method, $args = array()): void
     {
         $oid = spl_object_hash($instance);
         if (!isset(self::$instanceCalls[$oid])) self::$instanceCalls[$oid] = [];
@@ -91,7 +90,7 @@ class Registry {
 
     }
 
-    static function registerClassCall($class, $method, $args = array())
+    public static function registerClassCall($class, $method, $args = array()): void
     {
         if (!isset(self::$classCalls[$class])) self::$classCalls[$class] = [];
 
@@ -101,7 +100,7 @@ class Registry {
 
     }
 
-    static function registerFunctionCall($functionName, $args)
+    public static function registerFunctionCall($functionName, $args): void
     {
         if (!isset(self::$funcCalls[$functionName])) self::$funcCalls[$functionName] = [];
 
@@ -113,16 +112,14 @@ class Registry {
     public static function getRealClassOrObject($classOrObject)
     {
         if ($classOrObject instanceof ClassProxy) return $classOrObject->className;
+        
         if ($classOrObject instanceof InstanceProxy) return $classOrObject->getObject();
+        
         return $classOrObject;
     }
 
-    /**
-     * @param mixed $mocker
-     */
-    public static function setMocker(Mocker $mocker)
+    public static function setMocker(Mocker $mocker): void
     {
         self::$mocker = $mocker;
     }
-
 }

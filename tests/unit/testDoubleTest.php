@@ -1,8 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
+use AspectMock\Kernel;
 use AspectMock\Test as test;
+use Codeception\Test\Unit;
+use demo\UserModel;
 use Test\ns1\TestPhp7Class;
 
-class testDoubleTest extends \Codeception\Test\Unit
+final class testDoubleTest extends Unit
 {
     use Codeception\Specify;
     use demo\WorkingTrait;
@@ -17,13 +23,13 @@ class testDoubleTest extends \Codeception\Test\Unit
         $user = test::double('demo\UserModel', ['save' => null]);
         (new demo\UserModel())->save();
         $user->verifyInvoked('save');
-        \demo\UserModel::tableName();
-        \demo\UserModel::tableName();
+        UserModel::tableName();
+        UserModel::tableName();
         $user->verifyInvokedMultipleTimes('tableName',2);
 
         $this->specify('disabling all methods', function() use ($user) {
             test::methods($user, []);
-            verify(\demo\UserModel::tableName())->null();
+            verify(UserModel::tableName())->null();
         });
     }
 
@@ -32,13 +38,13 @@ class testDoubleTest extends \Codeception\Test\Unit
         $user = test::double('\demo\UserModel', ['save' => null]);
         (new demo\UserModel())->save();
         $user->verifyInvoked('save');
-        \demo\UserModel::tableName();
-        \demo\UserModel::tableName();
+        UserModel::tableName();
+        UserModel::tableName();
         $user->verifyInvokedMultipleTimes('tableName',2);
 
         $this->specify('disabling all methods', function() use ($user) {
             test::methods($user, []);
-            verify(\demo\UserModel::tableName())->null();
+            verify(UserModel::tableName())->null();
         });
     }
 
@@ -56,8 +62,6 @@ class testDoubleTest extends \Codeception\Test\Unit
             verify($user->getName())->null();
             verify($user->getObject()->getName())->null();
         });
-
-
     }
 
     public function testSpecUndefinedClass()
@@ -113,7 +117,7 @@ class testDoubleTest extends \Codeception\Test\Unit
         verify(demo\UserModel::tableName())->equals('my_table');
         test::clean('demo\UserModel');
         verify(demo\UserModel::tableName())->equals('users');
-        verify($service->updateName(new \demo\UserModel()))->equals('hello');
+        verify($service->updateName(new UserModel()))->equals('hello');
     }
 
     public function testCleanupSpecificObj()
@@ -130,10 +134,7 @@ class testDoubleTest extends \Codeception\Test\Unit
 
     public function testPhp7Features()
     {
-        if (PHP_MAJOR_VERSION < 7) {
-            $this->markTestSkipped('PHP 7 only');
-        }
-        \AspectMock\Kernel::getInstance()->loadFile(codecept_data_dir() . 'php7.php');
+        Kernel::getInstance()->loadFile(codecept_data_dir() . 'php7.php');
         test::double(TestPhp7Class::class, [
             'stringSth' => true,
             'floatSth' => true,
@@ -148,7 +149,7 @@ class testDoubleTest extends \Codeception\Test\Unit
             'intRth' => 12,
             'callableRth' => function() { return function() {}; },
             'arrayRth' => [1],
-            'exceptionRth' => new \Exception(),
+            'exceptionRth' => new Exception(),
         ]);
         $obj = new TestPhp7Class;
         $this->assertTrue($obj->stringSth('123'));
@@ -165,8 +166,6 @@ class testDoubleTest extends \Codeception\Test\Unit
         $this->assertEquals(12, $obj->intRth(15));
         //$this->assertInternalType('callable', $obj->callableRth(function() {}));
         $this->assertEquals([1], $obj->arrayRth([]));
-        $this->assertInstanceOf('Exception', $obj->exceptionRth(new \Exception('ups')));
+        $this->assertInstanceOf('Exception', $obj->exceptionRth(new Exception('ups')));
     }
-
-
 }

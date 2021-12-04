@@ -7,12 +7,10 @@ AspectMock allows you to stub and mock practically anything in your PHP code!
 
 **Documentation** | [Test Doubles Builder](https://github.com/Codeception/AspectMock/blob/master/docs/Test.md) | [ClassProxy](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) | [InstanceProxy](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) | [FuncProxy](https://github.com/Codeception/AspectMock/blob/master/docs/FuncProxy.md)
 
-[![Build Status](https://travis-ci.org/Codeception/AspectMock.png?branch=master)](https://travis-ci.org/Codeception/AspectMock)
+[![Actions Status](https://github.com/Codeception/AspectMock/workflows/CI/badge.svg)](https://github.com/Codeception/AspectMock/actions)
 [![Latest Stable Version](https://poser.pugx.org/codeception/aspect-mock/v/stable.png)](https://packagist.org/packages/codeception/aspect-mock)
 [![Total Downloads](https://poser.pugx.org/codeception/aspect-mock/downloads)](https://packagist.org/packages/codeception/aspect-mock)
 [![Monthly Downloads](https://poser.pugx.org/codeception/aspect-mock/d/monthly)](https://packagist.org/packages/codeception/aspect-mock)
-[![PHP 7 ready](http://php7ready.timesplinter.ch/Codeception/AspectMock/master/badge.svg)](https://packagist.org/packages/codeception/aspect-mock)
-
 
 ## Motivation
 
@@ -45,6 +43,7 @@ Let's redefine static methods and verify their calls at runtime.
 
 ``` php
 <?php
+
 function testTableName()
 {
 	$this->assertEquals('users', UserModel::tableName());	
@@ -52,7 +51,6 @@ function testTableName()
 	$this->assertEquals('my_users', UserModel::tableName());
 	$userModel->verifyInvoked('tableName');	
 }
-?>
 ```
 
 #### Allows replacement of class methods.
@@ -61,6 +59,7 @@ Testing code developed with the **ActiveRecord** pattern. Does the use of the Ac
 
 ``` php
 <?php
+
 class UserService {
     function createUserByName($name) {
     	$user = new User;
@@ -68,7 +67,6 @@ class UserService {
     	$user->save();
     }
 }
-?>
 ```
 
 Without AspectMock you need to introduce `User` as an explicit dependency into class `UserService` to get it tested.
@@ -79,6 +77,7 @@ Instead we will replace it with a dummy and verify that it gets called by `creat
 
 ``` php
 <?php
+
 function testUserCreate()
 {
 	$user = test::double('User', ['save' => null]);
@@ -87,13 +86,13 @@ function testUserCreate()
 	$this->assertEquals('davert', $user->getName());
 	$user->verifyInvoked('save');
 }
-?>
 ```
 
 #### Intercept even parent class methods and magic methods
 
 ``` php
 <?php
+
 // User extends ActiveRecord
 function testUserCreate()
 {
@@ -105,13 +104,13 @@ function testUserCreate()
 	$AR->verifyInvoked('save');
 	$this->assertEquals('miles', $user->getName());
 }
-?>
 ```
 
 #### Override even standard PHP functions
 
 ``` php
 <?php
+
 namespace demo;
 test::func('demo', 'time', 'now');
 $this->assertEquals('now', time());
@@ -123,8 +122,9 @@ Only 4 methods are necessary for method call verification and one method to defi
 
 ``` php
 <?php
+
 function testSimpleStubAndMock()
-{	
+{
 	$user = test::double(new User, ['getName' => 'davert']);
 	$this->assertEquals('davert', $user->getName());
 	$user->verifyInvoked('getName');
@@ -132,7 +132,6 @@ function testSimpleStubAndMock()
 	$user->verifyNeverInvoked('setName');
 	$user->verifyInvokedMultipleTimes('setName',1);
 }
-?>
 ```
 
 To check that method `setName` was called with `davert` as argument.
@@ -140,7 +139,6 @@ To check that method `setName` was called with `davert` as argument.
 ``` php
 <?php
 $user->verifyMethodInvoked('setName', ['davert']);
-?>
 ```
 
 ## Wow! But how does it work?
@@ -149,7 +147,8 @@ No PECL extensions is required. The [Go! AOP](http://go.aopphp.com/) library doe
 
 ## Requirements
 
-PHP >= 5.6 + [Go! AOP Requirements](https://github.com/goaop/framework#requirements)
+* `PHP 7.4`.
+* `Go! AOP 3.0`
 
 ## Installation
 
@@ -177,6 +176,7 @@ Include `AspectMock\Kernel` class into your tests bootstrap file.
 
 ``` php
 <?php
+
 include __DIR__.'/../vendor/autoload.php'; // composer autoload
 
 $kernel = \AspectMock\Kernel::getInstance();
@@ -184,7 +184,6 @@ $kernel->init([
     'debug' => true,
     'includePaths' => [__DIR__.'/../src']
 ]);
-?>
 ```
 
 If your project uses Composer's autoloader, that's all you need to get started.
@@ -195,6 +194,7 @@ If you use a custom autoloader (like in Yii/Yii2 frameworks), you should explici
 
 ``` php
 <?php
+
 include __DIR__.'/../vendor/autoload.php'; // composer autoload
 
 $kernel = \AspectMock\Kernel::getInstance();
@@ -203,7 +203,6 @@ $kernel->init([
     'includePaths' => [__DIR__.'/../src']
 ]);
 $kernel->loadFile('YourAutoloader.php'); // path to your autoloader
-?>
 ```
 
 Load all autoloaders of your project this way, if you do not rely on Composer entirely.
@@ -217,6 +216,7 @@ Explicitly load all required files before testing:
 
 ``` php
 <?php
+
 include __DIR__.'/../vendor/autoload.php'; // composer autoload
 
 $kernel = \AspectMock\Kernel::getInstance();
@@ -226,7 +226,6 @@ $kernel->init([
 ]);
 require 'YourAutoloader.php';
 $kernel->loadPhpFiles('/../common');
-?>
 ```
 
 ### Customization
@@ -244,6 +243,7 @@ Example:
 
 ``` php
 <?php
+
 $kernel = \AspectMock\Kernel::getInstance();
 $kernel->init([
     'appDir'    => __DIR__ . '/../../',
@@ -251,7 +251,6 @@ $kernel->init([
     'includePaths' => [__DIR__.'/../src']
     'excludePaths' => [__DIR__] // tests dir should be excluded
 ]);
-?>
 ```
 
 [More configs for different frameworks](https://github.com/Codeception/AspectMock/wiki/Example-configs).
@@ -271,6 +270,7 @@ Clear the test doubles registry between tests.
 
 ``` php
 <?php
+
 use AspectMock\Test as test;
 
 class UserTest extends \PHPUnit_Framework_TestCase
@@ -287,8 +287,6 @@ class UserTest extends \PHPUnit_Framework_TestCase
         \demo\UserModel::tableName();
         $user->verifyInvokedMultipleTimes('tableName',2);
     }
-
-?>
 ```
 
 ## Usage in Codeception.
@@ -298,6 +296,7 @@ We recommend including a call to `test::clean()` from your `CodeHelper` class:
 
 ``` php
 <?php
+
 namespace Codeception\Module;
 
 class CodeHelper extends \Codeception\Module
@@ -307,7 +306,6 @@ class CodeHelper extends \Codeception\Module
 		\AspectMock\Test::clean();
 	}
 }
-?>
 ```
 
 ## Improvements?

@@ -1,13 +1,16 @@
 <?php
+
 namespace demo;
-use \AspectMock\Core\Registry as double;
+
+use AspectMock\Core\Registry as double;
 use AspectMock\Proxy\ClassProxy;
 use AspectMock\Proxy\InstanceProxy;
 use Codeception\PHPUnit\TestCase;
+use Codeception\Specify;
 
-class MockTest extends TestCase
+final class MockTest extends TestCase
 {
-    use \Codeception\Specify;
+    use Specify;
 
     protected function _tearDown()
     {
@@ -34,7 +37,6 @@ class MockTest extends TestCase
             $user->verifyNeverInvoked('save');
             $user->verifyNeverInvoked('save',['params']);
         });
-
     }
 
     public function testVerifyClassMethods()
@@ -80,7 +82,6 @@ class MockTest extends TestCase
         $userProxy->verifyNeverInvoked('save');
         $userProxy->verifyNeverInvoked('setName',['bob']);
         verify($user->getName())->equals('jon');
-
     }
 
     /**
@@ -95,7 +96,6 @@ class MockTest extends TestCase
      * }
      *
      * class B extends A {}
-     * ?>
      * </code>
      *
      * Verification:
@@ -114,23 +114,21 @@ class MockTest extends TestCase
      * // Will pass
      * $parentProxy->verifyInvoked('super');
      * $childProxy->verifyInvoked('super');
-     * ?>
      * </code>
      */
     public function testVerifyClassInheritedMethodCalled()
     {
         $adminUser = new AdminUserModel();
 
-        double::registerClass(\demo\UserModel::class);
-        double::registerClass(\demo\AdminUserModel::class);
+        double::registerClass(UserModel::class);
+        double::registerClass(AdminUserModel::class);
 
-        $userProxy = new ClassProxy(\demo\UserModel::class);
-        $adminUserProxy = new ClassProxy(\demo\AdminUserModel::class);
+        $userProxy = new ClassProxy(UserModel::class);
+        $adminUserProxy = new ClassProxy(AdminUserModel::class);
 
         $adminUser->getName();
 
         $userProxy->verifyInvokedOnce('getName');
         $adminUserProxy->verifyInvokedOnce('getName');
     }
-
 }

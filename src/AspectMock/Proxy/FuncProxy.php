@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Proxy;
 
 use AspectMock\Core\Registry;
@@ -19,37 +22,19 @@ use AspectMock\Core\Registry;
  * $func->verifyInvoked(['hello']); // true
  * $func->verifyInvokedMultipleTimes(2);
  * $func->verifyNeverInvoked(['bye']);
- *
  * ```
- *
  */
 class FuncProxy
 {
-    /**
-     * @var string
-     */
-    protected $func;
-    
-    /**
-     * @var string
-     */
-    protected $ns;
-    
-    /**
-     * @var string
-     */
-    protected $fullFuncName;
+    protected string $func;
 
-    /**
-     * @var FuncVerifier
-     */
-    protected $funcVerifier;
+    protected string $ns;
+    
+    protected string $fullFuncName;
 
-    /**
-     * @param string
-     * @param string
-     */
-    public function __construct($namespace, $func)
+    protected FuncVerifier $funcVerifier;
+
+    public function __construct(string $namespace, string $func)
     {
         $this->func = $func;
         $this->ns = $namespace;
@@ -57,41 +42,29 @@ class FuncProxy
         $this->funcVerifier = new FuncVerifier($namespace);
     }
 
-    /**
-     * @param null|array $params
-     */
-    public function verifyInvoked(array $params = null)
+    public function verifyInvoked(array $params = null): void
     {
         $this->funcVerifier->verifyInvoked($this->func, $params);
     }
 
-    /**
-     * @param null|array $params
-     */
-    public function verifyInvokedOnce(array $params = null)
+    public function verifyInvokedOnce(array $params = null): void
     {
         $this->funcVerifier->verifyInvokedMultipleTimes($this->func, 1, $params);
     }
 
-    /**
-     * @param null|array $params
-     */
-    public function verifyNeverInvoked(array $params = null)
+    public function verifyNeverInvoked(array $params = null): void
     {
         $this->funcVerifier->verifyNeverInvoked($this->func, $params);
     }
 
-    /**
-     * @param int        $times
-     * @param null|array $params
-     */
-    public function verifyInvokedMultipleTimes($times, array $params = null)
+    public function verifyInvokedMultipleTimes(int $times, array $params = null): void
     {
         $this->funcVerifier->verifyInvokedMultipleTimes($this->func, $times, $params);
     }
 
     /**
      * Executes mocked function with provided parameters.
+     *
      * @return mixed
      */
     public function __invoke()
@@ -99,13 +72,8 @@ class FuncProxy
         return call_user_func_array($this->ns .'\\'.$this->func, func_get_args());
     }
 
-    /**
-     * @param string
-     * @return array
-     */
-    public function getCallsForMethod($func)
+    public function getCallsForMethod(string $func): array
     {
-        $calls = Registry::getFuncCallsFor($this->ns . '\\' . $func);
-        return $calls;
+        return Registry::getFuncCallsFor($this->ns . '\\' . $func);
     }
 }

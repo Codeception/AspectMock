@@ -1,17 +1,27 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Intercept;
 
 class MethodInvocation
 {
+    public $closure;
+
     protected $method;
+
     protected $arguments;
+
     protected $isStatic;
+
     protected $declaredClass;
+
+    protected $class;
 
     /**
      * @param mixed $declaredClass
      */
-    public function setDeclaredClass($declaredClass)
+    public function setDeclaredClass($declaredClass): void
     {
         $this->declaredClass = $declaredClass;
     }
@@ -24,23 +34,20 @@ class MethodInvocation
         return $this->declaredClass;
     }
 
-
     /**
      * @param mixed $isStatic
      */
     public function isStatic($isStatic = null)
     {
         if ($isStatic === null) return $this->isStatic;
+
         $this->isStatic = $isStatic;
     }
-
-
-    protected $class;
 
     /**
      * @param mixed $class
      */
-    public function setThis($class)
+    public function setThis($class): void
     {
         $this->class = $class;
     }
@@ -56,7 +63,7 @@ class MethodInvocation
     /**
      * @param mixed $closure
      */
-    public function setClosure($closure)
+    public function setClosure($closure): void
     {
         $this->closure = $closure;
     }
@@ -72,7 +79,7 @@ class MethodInvocation
     /**
      * @param mixed $method
      */
-    public function setMethod($method)
+    public function setMethod($method): void
     {
         $this->method = $method;
     }
@@ -88,7 +95,7 @@ class MethodInvocation
     /**
      * @param mixed $params
      */
-    public function setArguments($params)
+    public function setArguments($params): void
     {
         $this->arguments = $params;
     }

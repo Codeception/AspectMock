@@ -1,7 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 namespace AspectMock\Proxy;
+
 use AspectMock\Core\Registry;
-use AspectMock\Test;
+use ReflectionMethod;
 
 /**
  * InstanceProxy is a proxy for underlying object, mocked with test::double.
@@ -16,7 +20,6 @@ use AspectMock\Test;
  *
  * $user1 === $user2->getObject(); // true
  *
- * ?>
  * ```
  *
  * Contains verification methods and `class` property that points to `ClassProxy`.
@@ -29,7 +32,6 @@ use AspectMock\Test;
  * $this->assertEquals('davert', $user->getName()); // success
  * $user->verifyInvoked('getName'); // success
  * $this->assertInstanceOf('User', $user); // fail
- * ?>
  * ```
  *
  * A `class` property allows to verify method calls to any instance of this class.
@@ -41,7 +43,6 @@ use AspectMock\Test;
  * $user->class->hasMethod('save');
  * $user->setName('davert');
  * $user->class->verifyInvoked('setName');
- * ?>
  * ```
  * Also, you can get the list of calls for a specific method.
  *
@@ -50,13 +51,10 @@ use AspectMock\Test;
  * $user = test::double(new UserModel);
  * $user->someMethod('arg1', 'arg2');
  * $user->getCallsForMethod('someMethod') // [ ['arg1', 'arg2'] ]
- * ?>
  * ```
- *
  */
-
-class InstanceProxy extends Verifier {
-
+class InstanceProxy extends Verifier
+{
     protected $instance;
 
     public function __construct($object)
@@ -65,9 +63,9 @@ class InstanceProxy extends Verifier {
         $this->className = get_class($object);
     }
 
-    protected function callSyntax($method)
+    protected function callSyntax($method): string
     {
-        return "->";
+        return '->';
     }
 
     /**
@@ -79,15 +77,12 @@ class InstanceProxy extends Verifier {
     {
         return $this->instance;
     }
-    
+
     public function getCallsForMethod($method)
     {
         $calls = Registry::getInstanceCallsFor($this->instance);
-        return isset($calls[$method])
-            ? $calls[$method]
-            : [];
+        return $calls[$method] ?? [];
     }
-    
 
     // proxify calls to the methods
     public function __call($method, $args)
@@ -96,7 +91,7 @@ class InstanceProxy extends Verifier {
         {
             // Is the method expecting any argument passed by reference?
             $passed_args = array();
-            $reflMethod  = new \ReflectionMethod($this->instance, $method);
+            $reflMethod  = new ReflectionMethod($this->instance, $method);
             $params      = $reflMethod->getParameters();
 
             for($i = 0; $i < count($params); $i++)
@@ -139,5 +134,4 @@ class InstanceProxy extends Verifier {
     {
         $this->instance->$property = $value;
     }
-    
 }

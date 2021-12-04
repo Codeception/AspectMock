@@ -1,14 +1,19 @@
 <?php
+
+declare(strict_types=1);
+
 namespace demo;
-use \AspectMock\Core\Registry as double;
+
+use AspectMock\Core\Registry as double;
 use Codeception\PHPUnit\TestCase;
 
-class StubTest extends TestCase
+final class StubTest extends TestCase
 {
     protected function _tearDown()
     {
         double::clean();
     }
+
     // tests
     public function testSaveStub()
     {
@@ -99,5 +104,4 @@ class StubTest extends TestCase
 //        $user->setName('David Bovie');
 //        $this->assertEquals('Done', $user->dump());
 //    }
-
 }

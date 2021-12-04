@@ -1,4 +1,5 @@
 <?php
+
 require_once 'vendor/autoload.php';
 
 class Robofile extends \Robo\Tasks
