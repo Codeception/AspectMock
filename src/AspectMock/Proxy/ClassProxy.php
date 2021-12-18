@@ -47,10 +47,10 @@ class ClassProxy extends Verifier
 {
     protected ReflectionClass $reflected;
 
-    public function __construct($class_name)
+    public function __construct($className)
     {
-        $this->className = $class_name;
-        $this->reflected = new ReflectionClass($class_name);
+        $this->className = $className;
+        $this->reflected = new ReflectionClass($className);
     }
 
     public function getCallsForMethod($method)

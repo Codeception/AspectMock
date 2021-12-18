@@ -56,9 +56,9 @@ EOF;
     public function getParameterDeclaration(\ReflectionParameter $parameter, $internal)
     {
         $text = (string)$parameter;
-        if (preg_match('#Parameter\s\#\d+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s\]#', $text, $match)) {
+        if (preg_match('#Parameter\s\#\d+\s\[\s<(required|optional)>(.*)(\sor NULL)(.*)\s]#', $text, $match)) {
             $text = $match[2].$match[4];
-        } elseif (preg_match('#Parameter\s\#\d+\s\[\s<(required|optional)>\s(.*)\s\]#', $text, $match)) {
+        } elseif (preg_match('#Parameter\s\#\d+\s\[\s<(required|optional)>\s(.*)\s]#', $text, $match)) {
             $text = $match[2];
         } else {
             throw new Exception('reflection api changed. adjust code.');

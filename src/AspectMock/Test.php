@@ -28,7 +28,7 @@ class Test
 {
     /**
      * `test::double` registers class or object to track its calls.
-     * In second argument you may pass values that mocked mathods should return.
+     * In second argument you may pass values that mocked methods should return.
      *
      * Returns either of [**ClassProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/ClassProxy.md) (when a string was passed)
      * or [**InstanceProxy**](https://github.com/Codeception/AspectMock/blob/master/docs/InstanceProxy.md) (when an object was passed).
@@ -267,7 +267,7 @@ class Test
      * ```
      *
      * @api
-     * @param string|object $classOrObject
+     * @param string|object $classOrInstance
      * @return void
      */
     public static function clean($classOrInstance = null)

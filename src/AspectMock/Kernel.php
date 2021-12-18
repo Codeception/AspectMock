@@ -61,7 +61,7 @@ class Kernel extends AspectKernel
 
     protected function registerTransformers(): array
     {
-        $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');;
+        $cachePathManager = $this->getContainer()->get('aspect.cache.path.manager');
 
         $sourceTransformers = [
             new FilterInjectorTransformer($this, SourceTransformingLoader::getId(), $cachePathManager),

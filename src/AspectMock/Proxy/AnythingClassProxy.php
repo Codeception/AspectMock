@@ -8,9 +8,9 @@ use ReflectionClass;
 
 class AnythingClassProxy extends ClassProxy {
 
-    public function __construct($class_name)
+    public function __construct($className)
     {
-        $this->className = $class_name;
+        $this->className = $className;
         $this->reflected = new ReflectionClass(Anything::class);
     }
 
