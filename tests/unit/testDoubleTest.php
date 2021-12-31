@@ -160,12 +160,12 @@ final class testDoubleTest extends Unit
         $this->assertTrue($obj->arraySth([]));
         $str = 'hello';
         $this->assertTrue($obj->variadicStringSthByRef($str, $str));
-        $this->assertEquals('hey', $obj->stringRth($str));
-        $this->assertEquals(12.2, $obj->floatRth(12.12));
+        $this->assertSame('hey', $obj->stringRth($str));
+        $this->assertSame(12.2, $obj->floatRth(12.12));
         $this->assertTrue($obj->boolRth(false));
-        $this->assertEquals(12, $obj->intRth(15));
+        $this->assertSame(12, $obj->intRth(15));
         //$this->assertInternalType('callable', $obj->callableRth(function() {}));
-        $this->assertEquals([1], $obj->arrayRth([]));
+        $this->assertSame([1], $obj->arrayRth([]));
         $this->assertInstanceOf('Exception', $obj->exceptionRth(new Exception('ups')));
     }
 }
