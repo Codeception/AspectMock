@@ -46,9 +46,9 @@ Let's redefine static methods and verify their calls at runtime.
 
 function testTableName()
 {
-	$this->assertEquals('users', UserModel::tableName());	
+	$this->assertSame('users', UserModel::tableName());	
 	$userModel = test::double('UserModel', ['tableName' => 'my_users']);
-	$this->assertEquals('my_users', UserModel::tableName());
+	$this->assertSame('my_users', UserModel::tableName());
 	$userModel->verifyInvoked('tableName');	
 }
 ```
@@ -83,7 +83,7 @@ function testUserCreate()
 	$user = test::double('User', ['save' => null]);
 	$service = new UserService;
 	$service->createUserByName('davert');
-	$this->assertEquals('davert', $user->getName());
+	$this->assertSame('davert', $user->getName());
 	$user->verifyInvoked('save');
 }
 ```
@@ -99,10 +99,10 @@ function testUserCreate()
 	$AR = test::double('ActiveRecord', ['save' => null]));
 	test::double('User', ['findByNameAndEmail' => new User(['name' => 'jon'])])); 
 	$user = User::findByNameAndEmail('jon','jon@coltrane.com'); // magic method
-	$this->assertEquals('jon', $user->getName());
+	$this->assertSame('jon', $user->getName());
 	$user->save(['name' => 'miles']); // ActiveRecord->save did not hit database
 	$AR->verifyInvoked('save');
-	$this->assertEquals('miles', $user->getName());
+	$this->assertSame('miles', $user->getName());
 }
 ```
 
@@ -113,7 +113,7 @@ function testUserCreate()
 
 namespace demo;
 test::func('demo', 'time', 'now');
-$this->assertEquals('now', time());
+$this->assertSame('now', time());
 ```
 
 #### Beautifully simple
@@ -126,7 +126,7 @@ Only 4 methods are necessary for method call verification and one method to defi
 function testSimpleStubAndMock()
 {
 	$user = test::double(new User, ['getName' => 'davert']);
-	$this->assertEquals('davert', $user->getName());
+	$this->assertSame('davert', $user->getName());
 	$user->verifyInvoked('getName');
 	$user->verifyInvokedOnce('getName');
 	$user->verifyNeverInvoked('setName');

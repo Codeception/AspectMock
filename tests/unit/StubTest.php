@@ -27,7 +27,7 @@ final class StubTest extends TestCase
         double::registerClass('\demo\UserModel', ['save' => "saved!"]);
         $user = new UserModel();
         $saved = $user->save();
-        $this->assertEquals('saved!', $saved);
+        $this->assertSame('saved!', $saved);
     }
 
     public function testCallback()
@@ -35,7 +35,7 @@ final class StubTest extends TestCase
         double::registerClass('\demo\UserModel', ['save' => function () { return $this->name; }]);
         $user = new UserModel(['name' => 'davert']);
         $name = $user->save();
-        $this->assertEquals('davert', $name);
+        $this->assertSame('davert', $name);
 
     }
 
@@ -45,7 +45,7 @@ final class StubTest extends TestCase
             return UserModel::$topSecret;
         }]);
         $topSecret = UserModel::getTopSecret();
-        $this->assertEquals('awesome', $topSecret);
+        $this->assertSame('awesome', $topSecret);
     }
 
     public function testObjectInstance()
@@ -57,9 +57,9 @@ final class StubTest extends TestCase
 
     public function testStaticAccess()
     {
-        $this->assertEquals('users', UserModel::tableName());
+        $this->assertSame('users', UserModel::tableName());
         double::registerClass('\demo\UserModel', ['tableName' => 'my_users']);
-        $this->assertEquals('my_users', UserModel::tableName());
+        $this->assertSame('my_users', UserModel::tableName());
     }
 
     public function testInheritance()
@@ -67,14 +67,14 @@ final class StubTest extends TestCase
         double::registerClass('\demo\UserModel', ['save' => false]);
         $admin = new AdminUserModel();
         $admin->save();
-        $this->assertEquals('Admin_111', $admin->getName());
+        $this->assertSame('Admin_111', $admin->getName());
     }
 
     public function testMagic()
     {
         double::registerClass('\demo\UserService', ['rename' => 'David Copperfield']);
         $admin = new UserService();
-        $this->assertEquals('David Copperfield', $admin->rename());
+        $this->assertSame('David Copperfield', $admin->rename());
 
     }
 
@@ -82,19 +82,19 @@ final class StubTest extends TestCase
     {
         double::registerClass('\demo\AdminUserModel', ['renameUser' => 'David Copperfield']);
         $admin = new AdminUserModel();
-        $this->assertEquals('David Copperfield', $admin->renameUser());
+        $this->assertSame('David Copperfield', $admin->renameUser());
     }
 
     public function testMagicStaticInherited()
     {
         double::registerClass('\demo\AdminUserModel', ['defaultRole' => 'admin']);
-        $this->assertEquals('admin', AdminUserModel::defaultRole());
+        $this->assertSame('admin', AdminUserModel::defaultRole());
     }
 
     public function testMagicStatic()
     {
         double::registerClass('\demo\UserModel', ['defaultRole' => 'admin']);
-        $this->assertEquals('admin', UserModel::defaultRole());
+        $this->assertSame('admin', UserModel::defaultRole());
     }
 
 //    public function testStubFunctionCall()
@@ -102,6 +102,6 @@ final class StubTest extends TestCase
 //        double::registerFunc('file_put_contents', 'Done');
 //        $user = new UserModel();
 //        $user->setName('David Bovie');
-//        $this->assertEquals('Done', $user->dump());
+//        $this->assertSame('Done', $user->dump());
 //    }
 }

@@ -29,7 +29,7 @@ use ReflectionMethod;
  * $user = new User(['name' => 'davert']);
  * $user = test::double(new User);
  * // now $user is a proxy class of user
- * $this->assertEquals('davert', $user->getName()); // success
+ * $this->assertSame('davert', $user->getName()); // success
  * $user->verifyInvoked('getName'); // success
  * $this->assertInstanceOf('User', $user); // fail
  * ```

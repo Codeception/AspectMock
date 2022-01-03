@@ -12,7 +12,7 @@ final class AccessDemoClassesTest extends TestCase
     public function testUserModel()
     {
         $user = new UserModel(['name' => 'davert']);
-        $this->assertEquals('davert', $user->getName());
+        $this->assertSame('davert', $user->getName());
     }
 
     public function testUserService()

@@ -128,7 +128,7 @@ class Test
      * $user = test::spec('User')->construct();
      * $user->setName('davert');
      * $user->setNumPosts(count($user->getPosts()));
-     * $this->assertEquals('davert', $user->getName()); // fail
+     * $this->assertSame('davert', $user->getName()); // fail
      * ```
      *
      * The test will be executed normally and will fail at the first assertion.
