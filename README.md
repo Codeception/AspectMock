@@ -11,6 +11,7 @@ AspectMock allows you to stub and mock practically anything in your PHP code!
 [![Latest Stable Version](https://poser.pugx.org/codeception/aspect-mock/v/stable.png)](https://packagist.org/packages/codeception/aspect-mock)
 [![Total Downloads](https://poser.pugx.org/codeception/aspect-mock/downloads)](https://packagist.org/packages/codeception/aspect-mock)
 [![Monthly Downloads](https://poser.pugx.org/codeception/aspect-mock/d/monthly)](https://packagist.org/packages/codeception/aspect-mock)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 
 ## Motivation
 
