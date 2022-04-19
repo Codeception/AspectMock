@@ -14,7 +14,7 @@
            }
        },
     "require": {
-        "php": "^8.1",
+        "php": "^7.4 | ^8.1",
         "goaop/framework": "^3.0",
         "phpunit/phpunit": "^9.5",
         "symfony/finder": "^4.4 | ^5.4 | ^6.0"
