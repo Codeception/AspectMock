@@ -13,9 +13,23 @@
                "AspectMock": "src/"
            }
        },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "poster/goaop-framework",
+                "version": "1.0",
+                "source": {
+                    "url": "https://github.com/WalterWoshid/goaop-framework.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }
+    ],
     "require": {
-        "php": "^7.4",
-        "goaop/framework": "^3.0",
+        "php": ">=7.4",
+        "poster/goaop-framework": "1.0",
         "phpunit/phpunit": "^9.5",
         "symfony/finder": "^4.4 | ^5.4 | ^6.0"
     },
