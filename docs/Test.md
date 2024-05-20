@@ -168,7 +168,7 @@ test::func('demo', 'date', function($format) {
    } else {
      return \date($param);
    }
-}
+});
 
 ```
 
