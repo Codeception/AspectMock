@@ -14,8 +14,9 @@
            }
        },
     "require": {
-        "php": "^7.4",
-        "goaop/framework": "^3.0",
+        "php": "^8.2",
+        "goaop/framework": "^4.0@dev",
+        "goaop/parser-reflection": "^4.0@dev",
         "phpunit/phpunit": "^9.5",
         "symfony/finder": "^4.4 | ^5.4 | ^6.0"
     },
@@ -24,5 +25,10 @@
         "codeception/verify": "^2.2",
         "codeception/specify": "^2.0",
         "consolidation/robo": "^3.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.0-dev"
+        }
     }
 }
