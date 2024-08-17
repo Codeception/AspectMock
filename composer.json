@@ -25,5 +25,10 @@
         "codeception/verify": "^2.2",
         "codeception/specify": "^2.0",
         "consolidation/robo": "^3.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "5.0-dev"
+        }
     }
 }
