@@ -65,6 +65,12 @@ final class FunctionInjectorTest extends \Codeception\TestCase\Test
         verify(strlen('hello'))->equals(10);
     }
 
+    public function testFuncReturnsNull()
+    {
+        test::func('demo', 'strlen', null);
+        verify(strlen('hello'))->equals(null);
+    }
+
     public function testVerifier()
     {
         $func = test::func('demo', 'strlen', 10);

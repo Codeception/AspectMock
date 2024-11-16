@@ -71,7 +71,7 @@ class Mocker implements Aspect
         $fullFuncName = sprintf('%s\%s', $namespace, $function);
         Registry::registerFunctionCall($fullFuncName, $args);
 
-        if (isset($this->funcMap[$fullFuncName])) {
+        if (array_key_exists($fullFuncName, $this->funcMap)) {
             $func = $this->funcMap[$fullFuncName];
             $result = is_callable($func) ? call_user_func_array($func, $args) : $func;
         }
