@@ -148,7 +148,7 @@ No PECL extensions is required. The [Go! AOP](http://go.aopphp.com/) library doe
 
 ## Requirements
 
-* `PHP 8`
+* `PHP 8.2+`
 * `Go! AOP 4.x`
 
 ## Installation
