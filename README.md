@@ -148,17 +148,21 @@ No PECL extensions is required. The [Go! AOP](http://go.aopphp.com/) library doe
 
 ## Requirements
 
-* `PHP 7.4`.
-* `Go! AOP 3.0`
+* `PHP 8.2+`
+* `Go! AOP 4.x`
 
 ## Installation
 
 ### 1. Add aspect-mock to your composer.json.
 
+(lines with goaop @dev are needed depending on the `minimum-stability` in your composer settings)
+
 ```
 {
 	"require-dev": {
-		"codeception/aspect-mock": "*"
+		"codeception/aspect-mock": "*",
+		"goaop/framework": "@dev",
+		"goaop/parser-reflection": "@dev"
 	}
 }
 ```
