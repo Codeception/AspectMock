@@ -48,7 +48,9 @@ EOF;
     {
         $this->namespace = $namespace;
         $this->function = $function;
-        $this->placeOptionalAndReferenceFunction($namespace, $function);
+        if (function_exists($namespace . '\\' . $function)) {
+            $this->placeOptionalAndReferenceFunction($namespace, $function);
+        }
         $this->place('ns', $this->namespace);
         $this->place('func', $this->function);
     }
